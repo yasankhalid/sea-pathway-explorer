@@ -410,6 +410,34 @@ body.staff-off .draft{display:none}
 }
 @media (max-width:640px){.wallet{grid-template-columns:1fr}.search{flex:1 1 100%}.search input{width:100%}}
 html,body{margin:0;overflow:hidden}
+/* v11: map zoom + mobile step bar */
+#net{touch-action:none;cursor:grab}
+#net.grabbing{cursor:grabbing}
+.zoomctl{position:absolute;right:max(22px,env(safe-area-inset-right,0px));bottom:64px;z-index:6;display:flex;flex-direction:column;gap:6px}
+.zoomctl button{width:38px;height:38px;border-radius:12px;border:1px solid var(--line-2);background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--ink);font-size:18px;font-weight:600;cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow)}
+.zoomctl button svg{width:16px;height:16px}
+body.panel-open .zoomctl{right:420px}
+html[dir="rtl"] .zoomctl{right:auto;left:max(22px,env(safe-area-inset-left,0px))}
+html[dir="rtl"] body.panel-open .zoomctl{left:420px}
+.stepbar{position:absolute;left:12px;right:12px;bottom:12px;z-index:8;display:none;flex-direction:column;gap:8px;background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--gold);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+body.stepping .stepbar{display:flex}
+.stepbar .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+html[lang="ar"] .stepbar .k{letter-spacing:0;font-family:inherit}
+.stepbar b{font-size:15px}
+.stepbar p{margin:0;font-size:13px;color:var(--ink-2)}
+.stepbar .row2{display:flex;gap:8px}
+.stepbar .row2 .btn{flex:1;padding:8px 10px;font-size:13px}
+@media (max-width:900px){body.panel-open .zoomctl{right:max(22px,env(safe-area-inset-right,0px))}html[dir="rtl"] body.panel-open .zoomctl{left:22px}}
+@media (max-width:640px){.tools .seg:has(#m-staff){display:none}.mebtn{padding:6px 11px}.tools{gap:6px}}
+@media (max-width:760px){
+  .zoomctl{bottom:16px}
+  body.stepping .zoomctl{bottom:auto;top:12px}
+  .guide{left:12px;right:12px;width:auto;bottom:12px;max-height:72%}
+  html[dir="rtl"] .guide{left:12px;right:12px}
+  .guide-tab{top:12px}
+  body.stepping .guide-tab{display:none}
+}
+
 .tab .tcount{margin-inline-start:6px;display:inline-block;min-width:18px;padding:1px 6px;border-radius:999px;background:var(--gold);color:#fff;font-size:11px;font-weight:700;line-height:16px;text-align:center;font-variant-numeric:tabular-nums}
 .tab .tcount:empty{display:none}
 .lhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
@@ -426,6 +454,7 @@ html,body{margin:0;overflow:hidden}
 .guide .g-actions #quizbtn{flex:1 1 100%}
 .guide .g-actions .btn{white-space:nowrap}
 </style>
+<script>(function(){var t="dark";try{t=localStorage.getItem("sea-theme")||"dark"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();</script>
 <div class="backdrop" aria-hidden="true"></div>
 <div class="app">
   <header class="mast">
@@ -461,6 +490,8 @@ html,body{margin:0;overflow:hidden}
       </aside>
       <button class="guide-tab" id="show-guide" type="button" data-t="howItWorks">How it works</button>
       <div class="caption" id="caption"></div>
+      <div class="zoomctl" role="group" aria-label="Zoom"><button type="button" id="z-in" aria-label="Zoom in">+</button><button type="button" id="z-out" aria-label="Zoom out">−</button><button type="button" id="z-fit" aria-label="Show whole map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
+      <div class="stepbar" id="stepbar" aria-live="polite"></div>
       <div class="legend" id="legend"></div>
       <div class="hint"><i></i><span data-t="hint">Point at a badge for a summary · select it to see where it leads</span></div>
     </section>
@@ -960,7 +991,7 @@ function setTrack(k){S.track=k;store("sea-track",k);paintMe()}
 function paintMe(){document.getElementById("mepct").textContent=S.track?overall(S.track)+"%":""}
 document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!=="list")setView("net");if(S.sel&&S.sel.kind==="me")select(null);else{S.sel=null;select({kind:"me"})}};
 function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v);document.getElementById("view-"+x).hidden=x!==v});
-  if(v==="list")buildList();if(v!=="net"&&v!=="list"){document.body.classList.remove("panel-open")}else showPanel();store("sea-v",v)}
+  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"){document.body.classList.remove("panel-open")}else showPanel();store("sea-v",v)}
 ["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x)}});
 function listCount(){var q=S.q.trim().toLowerCase();if(!q)return 0;var tks=TRACKS.filter(function(x){return (x.en+" "+x.ar).toLowerCase().indexOf(q)>=0}).map(function(x){return x.k});
   return ITEMS.filter(function(it){if(it.type==="tbc"||it.type==="nucleus")return false;if((it.en+" "+(it.ar||"")+" "+(it.sen||"")).toLowerCase().indexOf(q)>=0)return true;return it.tracks.some(function(k){return tks.indexOf(k)>=0})}).length}
@@ -980,13 +1011,54 @@ var SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 var MOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
 function isLight(){var a=document.documentElement.getAttribute("data-theme");if(a)return a==="light";return matchMedia&&matchMedia("(prefers-color-scheme: light)").matches}
 function paintTheme(){themeBtn.innerHTML=isLight()?MOON:SUN}
-themeBtn.onclick=function(){document.documentElement.setAttribute("data-theme",isLight()?"dark":"light");paintTheme()};
+themeBtn.onclick=function(){var nt=isLight()?"dark":"light";document.documentElement.setAttribute("data-theme",nt);store("sea-theme",nt);paintTheme()};
+
+
+/* ===================================================================== map zoom + pan (pinch, drag, wheel, buttons) */
+var Z={cx:0,cy:-30,z:1},drag=null,moved=false,ptrs={};
+function narrow(){return innerWidth<760}
+function fitW(){var r=net.getBoundingClientRect();if(!r.width||!r.height)return {w:1440,h:940,cw:1,ch:1};var w=Math.max(1440,940*r.width/r.height);return {w:w,h:w*r.height/r.width,cw:r.width,ch:r.height}}
+function applyZ(){var f=fitW();Z.z=Math.max(1,Math.min(5,Z.z));var w=f.w/Z.z,h=f.h/Z.z;
+  if(Z.z===1&&w>=1440&&h>=940){Z.cx=0;Z.cy=Math.max(-40,Math.min(0,Z.cy))}else{Z.cx=Math.max(-720,Math.min(720,Z.cx));Z.cy=Math.max(-470,Math.min(470,Z.cy))}
+  net.setAttribute("viewBox",(Z.cx-w/2).toFixed(1)+" "+(Z.cy-h/2).toFixed(1)+" "+w.toFixed(1)+" "+h.toFixed(1))}
+function unitsPerPx(){var f=fitW();return (f.w/Z.z)/f.cw}
+function zoomAt(k,px,py){var r=net.getBoundingClientRect(),u=unitsPerPx();var sx=Z.cx+(px-r.left-r.width/2)*u,sy=Z.cy+(py-r.top-r.height/2)*u;var nz=Math.max(1,Math.min(5,Z.z*k)),q=Z.z/nz;Z.cx=sx-(sx-Z.cx)*q;Z.cy=sy-(sy-Z.cy)*q;Z.z=nz;applyZ()}
+function resetZ(){Z={cx:0,cy:narrow()?-10:-30,z:narrow()?1.9:1};applyZ()}
+function focusPoint(x,y,z){Z.z=Math.max(Z.z,z);Z.cx=x;var f=fitW();Z.cy=y+(narrow()&&document.body.classList.contains("panel-open")?(f.h/Z.z)*.3:0);applyZ()}
+net.addEventListener("pointerdown",function(e){ptrs[e.pointerId]={x:e.clientX,y:e.clientY};moved=false;var ids=Object.keys(ptrs);
+  if(ids.length===1)drag={x:e.clientX,y:e.clientY,cx:Z.cx,cy:Z.cy};
+  if(ids.length===2){var a=ptrs[ids[0]],b=ptrs[ids[1]];drag={pinch:Math.hypot(a.x-b.x,a.y-b.y),z:Z.z}}});
+net.addEventListener("pointermove",function(e){if(!ptrs[e.pointerId]||!drag)return;ptrs[e.pointerId]={x:e.clientX,y:e.clientY};var ids=Object.keys(ptrs);
+  if(drag.pinch&&ids.length>=2){var a=ptrs[ids[0]],b=ptrs[ids[1]],d=Math.hypot(a.x-b.x,a.y-b.y);var k=(drag.z*d/drag.pinch)/Z.z;zoomAt(k,(a.x+b.x)/2,(a.y+b.y)/2);moved=true;return}
+  if(drag.pinch)return;var dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(!moved&&Math.hypot(dx,dy)<7)return;
+  if(!moved){moved=true;try{net.setPointerCapture(e.pointerId)}catch(_){}net.classList.add("grabbing");tip.classList.remove("on")}
+  var u=unitsPerPx();Z.cx=drag.cx-dx*u;Z.cy=drag.cy-dy*u;applyZ()});
+function endPtr(e){delete ptrs[e.pointerId];net.classList.remove("grabbing");var ids=Object.keys(ptrs);if(ids.length===1){var p=ptrs[ids[0]];drag={x:p.x,y:p.y,cx:Z.cx,cy:Z.cy}}else if(!ids.length)drag=null}
+net.addEventListener("pointerup",endPtr);net.addEventListener("pointercancel",endPtr);
+net.addEventListener("click",function(e){if(moved){e.stopPropagation();e.preventDefault();moved=false}},true);
+net.addEventListener("wheel",function(e){e.preventDefault();zoomAt(e.deltaY<0?1.15:1/1.15,e.clientX,e.clientY)},{passive:false});
+function zoomBtn(k){var r=net.getBoundingClientRect();zoomAt(k,r.left+r.width/2,r.top+r.height/2)}
+document.getElementById("z-in").onclick=function(){zoomBtn(1.4)};document.getElementById("z-out").onclick=function(){zoomBtn(1/1.4)};document.getElementById("z-fit").onclick=function(){Z={cx:0,cy:-30,z:1};applyZ()};
+addEventListener("resize",function(){applyZ()});
+
+/* ===================================================================== phone step bar: steps show over the map, guide steps aside */
+var stepbar=document.getElementById("stepbar");
+function paintStepbar(){var on=narrow()&&S.sel&&S.sel.kind==="step";document.body.classList.toggle("stepping",!!on);if(!on)return;var n=S.sel.n,x=STEPS[n],ar=S.lang==="ar";
+  stepbar.innerHTML='<span class="k">'+t("stepOf",{n:n+1,m:STEPS.length})+'</span><b>'+esc(x.t)+'</b><p>'+x.body+'</p><div class="row2">'+(n>0?'<button class="btn ghost" data-sb="prev">'+(ar?"السابق":"Back")+'</button>':'')+'<button class="btn ghost" data-sb="steps">'+(ar?"كل الخطوات":"All steps")+'</button>'+(n<STEPS.length-1?'<button class="btn primary" data-sb="next">'+(ar?"التالي":"Next")+'</button>':'<button class="btn primary" data-sb="done">'+(ar?"استكشف":"Explore")+'</button>')+'</div>'}
+stepbar.addEventListener("click",function(e){if(e.target.closest(".term"))return;var b=e.target.closest("[data-sb]");if(!b)return;var a=b.getAttribute("data-sb"),n=S.sel?S.sel.n:0;
+  if(a==="next")select({kind:"step",n:n+1});else if(a==="prev")select({kind:"step",n:n-1});else if(a==="steps"){select(null);document.body.classList.remove("guide-off")}else select(null)});
+var _select=select;select=function(sel){_select(sel);
+  if(narrow()&&sel&&sel.kind==="step"){document.body.classList.add("guide-off");Z={cx:0,cy:-40,z:1.15};applyZ()}
+  else if(narrow()&&S.sel&&(S.sel.kind==="item"||S.sel.kind==="track")){var P=S.sel.kind==="item"?POS[S.sel.id]:CL[S.sel.k];if(P)focusPoint(P.x,P.y,2.2)}
+  paintStepbar()};
 
 /* ===================================================================== boot */
 if(store("sea-guide")==="off"||innerWidth<700)document.body.classList.add("guide-off");
 layout();setMode(S.mode);setLang(S.lang);paintTheme();
 var v0=store("sea-v");setView(v0&&["net","list","lv","cr"].indexOf(v0)>=0?v0:(innerWidth<760?"list":"net"));
 setTimeout(function(){net.classList.remove("enter")},60);
+requestAnimationFrame(resetZ);
+addEventListener("resize",paintStepbar);
 })();
 </script>
 
