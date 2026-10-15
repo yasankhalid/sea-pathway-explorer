@@ -668,6 +668,104 @@ html[dir="rtl"] .alab:hover .go{transform:translateX(-3px)}
 @keyframes afade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (max-width:760px){.rall .astart .amed,.rall .al1 .amed,.rall .aexp .amed{--sz:56px!important}}
 @media (max-height:820px) and (min-width:761px){.rhead .jchips button{padding:5px 10px;font-size:12px}}
+
+/* ============ ROUTE v3: ascent chart ============ */
+.alt{display:flex;flex-direction:column;gap:14px;max-width:1320px;margin:0 auto;min-width:0;width:100%;overflow:hidden}
+.alt-top{min-width:0}
+.alt-chips .hidemob{display:inline-flex}
+.alt-top{display:flex;flex-direction:column;gap:12px}
+.alt-title h2{margin:0;font-size:26px;font-weight:700;letter-spacing:-.02em}
+.alt-title p{margin:4px 0 0;font-size:14px;color:var(--ink-2);max-width:62ch}
+.alt-chips{flex-wrap:wrap;overflow:visible;margin:0;padding:0}
+.alt-chips .unfit{opacity:.45}
+.alt-ftitle{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.alt-ftitle svg{width:44px;height:44px;flex:none}
+.alt-ftitle h2{margin:0;font-size:22px;color:var(--c)}
+.alt-ftitle p{margin:2px 0 0;font-size:13px;color:var(--ink-2)}
+.alt-ftitle .racts{margin-inline-start:auto;display:flex;gap:8px;flex-wrap:wrap}
+.alt-stage{position:relative;width:100%}
+.alt-svg{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.alt-contour{stroke:var(--line);stroke-width:1;stroke-dasharray:1 5}
+.alt-line{fill:none;stroke:var(--tc);stroke-width:2;stroke-linecap:round;opacity:.85;transition:opacity .3s,stroke-width .3s}
+.alt-line.solo{stroke-width:3}
+.alt-line.mine{stroke-width:3.5;opacity:1;filter:drop-shadow(0 0 6px var(--tc))}
+.alt-branch{fill:none;stroke:var(--tc);stroke-width:2;stroke-linecap:round;opacity:.8;transition:opacity .3s}
+.alt-chev{fill:none;stroke:var(--tc);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+.alt-stem{stroke:var(--teal);stroke-width:2;stroke-dasharray:2 4;opacity:.7}
+.alt-stn{fill:var(--bg);stroke:var(--sc);stroke-width:2.5}
+.alt .off{opacity:.14!important}
+.alt-stage.hl [data-tks]:not(.lit){opacity:.16}
+.alt-stage.hl .alt-line.lit{stroke-width:3.5;filter:drop-shadow(0 0 6px var(--tc))}
+.alt-stage.hl .alt-node.lit .nm{color:var(--ink)}
+/* rail */
+.alt-rail{position:absolute;transform:translateY(-50%);display:flex;align-items:center;gap:10px;border:0;background:none;padding:6px 4px;color:var(--ink);cursor:pointer;text-align:start;border-radius:12px;transition:background .2s}
+.alt-rail:hover{background:var(--card)}
+.alt-rail img{width:38px;height:38px;flex:none}
+.alt-rail .r0{width:32px;height:32px;border-radius:50%;border:1.5px dashed var(--ink-3);display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--ink-3);flex:none;margin:3px}
+.alt-rail .rt{display:flex;flex-direction:column;min-width:0}
+.alt-rail small{font-size:11.5px;color:var(--sc);font-weight:700}
+.alt-rail b{font-size:14px;line-height:1.2}
+.alt-rail em{font-style:normal;font-size:11px;color:var(--ink-3);line-height:1.3;margin-top:2px}
+/* track heads */
+.alt-head{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;width:118px;border:0;background:none;color:var(--ink);cursor:pointer;padding:2px;transition:opacity .3s}
+.alt-head svg{width:30px;height:30px;transition:transform .25s}
+.alt-head:hover svg{transform:translateY(-2px) scale(1.08)}
+.alt-head b{font-size:12px;line-height:1.2;color:var(--tc);text-align:center}
+.alt-head small{font-size:10.5px;color:var(--gold);font-weight:700}
+.alt-head .bfit{position:absolute;top:-14px}
+.bfit{font-style:normal;font-size:10px;font-weight:700;color:#071033;background:var(--gold);border-radius:999px;padding:1px 8px}
+/* nodes */
+.alt-node{position:absolute;transform:translate(-50%,-23px);display:flex;flex-direction:column;align-items:center;gap:4px;width:96px;border:0;background:none;padding:0;color:var(--ink-2);cursor:pointer;transition:opacity .3s}
+.alt-node img,.alt-node svg{width:46px;height:46px;border-radius:50%;background:var(--bg);box-shadow:0 0 0 4px var(--bg);transition:transform .25s cubic-bezier(.2,.8,.2,1),filter .25s}
+.alt-node:hover img,.alt-node:hover svg,.alt-node:focus-visible img{transform:scale(1.14);filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+.alt-node .nm{font-size:11.5px;font-weight:600;line-height:1.25;text-align:center;color:var(--ink)}
+.alt-node .ck{position:absolute;top:-4px;left:calc(50% + 12px);width:17px;height:17px;border-radius:50%;background:#2bb3a6;color:#fff;font-style:normal;font-size:10px;font-weight:700;display:grid;place-items:center}
+.alt-node.tbc .tb{width:30px;height:30px;margin:8px;border-radius:50%;border:1.5px dashed var(--ink-3);display:grid;place-items:center;font-size:11px;color:var(--ink-3)}
+.alt-node.summit{transform:translate(-50%,-62px);width:170px;flex-direction:column-reverse}
+.alt-node.summit img,.alt-node.summit svg{width:78px;height:78px;box-shadow:0 0 0 5px var(--bg),0 0 0 7px #e5b94e}
+.alt-node.summit .nm{font-size:13px;color:#e5b94e}
+.alt-halo{position:absolute;width:240px;height:240px;transform:translate(-50%,-55%);border-radius:50%;background:radial-gradient(circle,rgba(229,185,78,.28),rgba(229,185,78,0) 65%);pointer-events:none}
+.alt-soon{position:absolute;width:12px;height:12px;transform:translate(-50%,-50%);border-radius:50%;border:1.5px dashed var(--tc);background:var(--bg);opacity:.6}
+/* Level 1 base */
+.alt-base{position:absolute;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--teal) 14%,transparent) 20%,color-mix(in srgb,var(--teal) 14%,transparent) 80%,transparent);border-top:1px solid color-mix(in srgb,var(--teal) 40%,transparent)}
+.alt-chip{position:relative;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:var(--bg);color:var(--ink);border-radius:999px;padding:3px 12px 3px 4px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.alt-chip img,.alt-chip svg{width:28px;height:28px}
+.alt-chip.cred{border-color:color-mix(in srgb,var(--teal) 60%,transparent)}
+.alt-chip .ck{position:absolute;top:-5px;right:-4px;width:16px;height:16px;border-radius:50%;background:#2bb3a6;color:#fff;font-style:normal;font-size:10px;display:grid;place-items:center}
+.alt-base .plus,.alt-base .eq{color:var(--ink-3);font-weight:700}
+/* single-track cards */
+.alt-card{position:absolute;display:flex;align-items:center;gap:12px;width:min(480px,calc(100% - 80px));min-height:64px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:8px 14px 8px 8px;cursor:pointer;text-align:start;transition:border-color .2s,transform .2s,background .2s}
+.alt-card:hover{border-color:var(--gold);transform:translateX(3px)}
+html[dir="rtl"] .alt-card:hover{transform:translateX(-3px)}
+.alt-card img,.alt-card svg{width:46px;height:46px;flex:none}
+.alt-card .tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.alt-card .tx b{font-size:14px}
+.alt-card .tx span{font-size:12px;color:var(--ink-3)}
+.alt-card .ck{margin-inline-start:auto;width:22px;height:22px;border-radius:50%;background:#2bb3a6;color:#fff;font-style:normal;font-size:12px;display:grid;place-items:center;flex:none}
+.alt-card .nx{margin-inline-start:auto;font-style:normal;font-size:11px;font-weight:700;color:#071033;background:var(--gold);border-radius:999px;padding:3px 10px;flex:none}
+.alt-card.next{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.alt-card.lv5{border-color:#e5b94e}
+.alt-card.empty{font-size:13px;color:var(--ink-3);border-style:dashed;cursor:default;padding:12px 16px;min-height:0}
+.alt-card .tb{width:46px;height:46px;border-radius:50%;border:1.5px dashed var(--ink-3);display:grid;place-items:center;font-size:12px;color:var(--ink-3);flex:none}
+.alt-rhead{position:absolute;display:flex;align-items:center;gap:8px;border:0;background:none;padding:0;color:var(--sc);font:inherit;font-size:13px;cursor:pointer}
+.alt-rhead img{width:24px;height:24px}
+.alt-key{margin:0;font-size:12.5px;color:var(--ink-3);text-align:center}
+.alt-stage.solo .alt-card{width:min(480px,calc(100% - 120px))}
+.alt-stage.mob .alt-card{width:calc(100% - 64px)}
+/* the one orchestrated moment: lines draw upward, then levels appear bottom→top */
+.alt-stage.intro .alt-line{stroke-dasharray:1;stroke-dashoffset:1;animation:altDraw 1.5s cubic-bezier(.45,.05,.2,1) calc(var(--i)*70ms) forwards}
+.alt-stage.intro .alt-node,.alt-stage.intro .alt-card,.alt-stage.intro .alt-soon,.alt-stage.intro .alt-base{animation:altIn .55s cubic-bezier(.2,.8,.2,1) var(--d) both}
+.alt-stage.intro .alt-halo{animation:altHalo 1.2s ease-out 1.7s both}
+@keyframes altDraw{to{stroke-dashoffset:0}}
+@keyframes altIn{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
+@keyframes altHalo{from{opacity:0;scale:.6}to{opacity:1;scale:1}}
+@media (prefers-reduced-motion:reduce){.alt-stage.intro *{animation:none!important}}
+::view-transition-group(*){animation-duration:.45s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}
+html[data-theme="light"] .alt-node img,html[data-theme="light"] .alt-node svg{background:#E8EDF4;box-shadow:0 0 0 4px #D3DCE8}
+html[data-theme="light"] .alt-chip{background:#E8EDF4}
+html[data-theme="light"] .bfit,html[data-theme="light"] .alt-card .nx{color:#fff}
+html[data-theme="light"] .alt-stn{fill:#D3DCE8}
+@media (max-width:760px){.alt-chips .hidemob{display:none}.alt .rolebar .rlbl{white-space:nowrap}.alt-ftitle .racts{margin-inline-start:0;width:100%}.alt-chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px}.alt-chips button{flex:none}.alt-title h2{font-size:21px}}
 /* ============ day mode: soft brand palette (no white) ============ */
 .logo-l{display:none}
 :root[data-theme="light"]{
@@ -1651,6 +1749,95 @@ rtEl.addEventListener("click",function(e){if(e.target.closest(".term"))return;
   var st=e.target.closest("[data-settrack]");if(st){setTrack(st.getAttribute("data-settrack"));buildRoute();return}
   var lv=e.target.closest("[data-lv]");if(lv){select({kind:"level",n:+lv.getAttribute("data-lv")});return}
   var n=e.target.closest("[data-id]");if(n){S.sel=null;select({kind:"item",id:n.getAttribute("data-id")})}});
+
+
+/* =====================================================================
+   ROUTE v3: the ascent chart. Levels rise bottom→top; each track is a line
+   rising from the Level 1 base and converging on the Expert summit.
+   (These declarations override the earlier Route functions.)
+   ===================================================================== */
+function drawRoad(){} function drawAll(){}
+var ALT={key:"",w:0,intro:false};
+function buildRoute(){if(!rtEl||S.view!=="rt")return;
+  var key=[RMODE,RMODE==="all"?"":jtrack(),ROLE,S.lang,S.mode].join("|");
+  var vt=ALT.key&&ALT.key!==key&&document.startViewTransition&&!RM;ALT.key=key;
+  if(vt)document.startViewTransition(renderAlt);else renderAlt()}
+function px(v){return Math.round(v)+"px"}
+function renderAlt(){var W=Math.min(rtEl.clientWidth,1320);if(!W)return;ALT.w=rtEl.clientWidth;
+  var ar=S.lang==="ar",mob=W<700,RL=roleOf(ROLE),focus=mob||RMODE!=="all";
+  var fk=RMODE!=="all"?jtrack():(RL.t[0]||S.track||jtrack());
+  function X(x){return ar?W-x:x}
+  var railW=mob?0:184,x0=railW,h=[];
+  /* ---------- header ---------- */
+  if(!focus){
+    h.push('<div class="alt-top"><div class="alt-title"><h2>'+(ar?"كل مسار يقود إلى الخبير":"Every track rises to Expert")+'</h2><p>'+(ar?"ابدأ من الأسفل، اختر مسارك، واصعد مستوى بعد مستوى. اختر مسارًا لتتبعه وحده.":"Start at the bottom, choose your track, and climb level by level. Select a track to follow it on its own.")+'</p></div>'+roleBar()+'</div>');
+  }else{var x=tr(fk);
+    h.push('<div class="alt-top"><div class="jchips alt-chips" role="tablist">'+'<button type="button" data-jt="all" aria-pressed="false" class="'+(mob?'hidemob':'')+'">'+(ar?"كل المسارات":"All tracks")+'</button>'+TRACKS.map(function(z){var fit=RL.k==="all"||RL.t.indexOf(z.k)>=0;return '<button type="button" data-jt="'+z.k+'" aria-pressed="'+(z.k===fk)+'" style="--c:'+z.color+'" class="'+(fit?'':'unfit')+'"><i style="background:'+z.color+'"></i>'+esc(nm(z))+(RL.k!=="all"&&RL.t[0]===z.k?' <em class="bfit">'+(ar?"الأنسب":"Best fit")+'</em>':'')+'</button>'}).join("")+'</div>'+
+      '<div class="alt-ftitle" style="--c:'+x.color+'">'+embThumb(fk,44)+'<div><h2>'+esc(nm(x))+'</h2><p>'+esc(ar?x.dar:x.den)+'</p></div><div class="racts">'+regBtn(fk)+(S.track!==fk?'<button class="btn ghost" data-settrack="'+fk+'">'+(ar?"اجعله مساري":"Set as mine")+'</button>':'')+'</div></div>'+(mob?roleBar():'')+'</div>')}
+  /* ---------- vertical rhythm (top→bottom: 5,4,3,2,1,0) ---------- */
+  function rowItems(n){if(n===0)return [item("orient")];if(n===1)return [item("core1"),item("core2")];if(n===5)return [item("expert")];
+    return ITEMS.filter(function(z){return z.level===n&&visible(z)&&z.tracks.length&&(!focus||z.tracks.indexOf(fk)>=0)})}
+  var order=[5,4,3,2,1,0],heads=focus?0:70,RH={},RY={},y=heads;
+  order.forEach(function(n){var c=rowItems(n).length||1;var hh=focus?Math.max(n===5?150:118,(mob?40:22)+c*72):({5:150,4:112,3:112,2:122,1:100,0:86})[n];RH[n]=hh;RY[n]=y+hh/2;y+=hh});
+  var H=y+10;
+  /* ---------- geometry ---------- */
+  var cw=(W-x0)/7;function cx(i){return x0+cw*(i+.5)}
+  var sx=focus?(mob?30:x0+64):x0+(W-x0)/2;
+  var svg=[],el=[],chev=[];
+  /* contour lines + rail */
+  order.forEach(function(n){var yy=RY[n]+RH[n]/2;if(n!==0)svg.push('<line x1="'+X(x0)+'" x2="'+X(W)+'" y1="'+yy+'" y2="'+yy+'" class="alt-contour"/>');
+    if(!mob)el.push('<button type="button" class="alt-rail lv'+n+'" data-lv="'+n+'" style="'+(ar?'right':'left')+':0;top:'+px(RY[n])+';width:'+px(railW-18)+';--sc:'+RCOL[n]+'">'+(n?'<img src="'+bsrc(LVBADGE[n])+'" alt="">':'<span class="r0">0</span>')+'<span class="rt"><small>'+(n?t("level")+" "+n:(ar?"البداية":"Start"))+'</small><b>'+esc(nm(LEVELS[n]))+'</b>'+(n>=1&&n<=4?'<em>'+(ar?"تمنح ":"Earns ")+esc(L2(LEVELS[n].earns))+'</em>':(n===5?'<em>'+esc(L2(LEVELS[5].band))+'</em>':''))+'</span></button>')});
+  var held=function(id){return isHeld(id)};
+  var nx=(S.track&&focus&&S.track===fk)||held("core1")?nextFor(fk):{};
+  function nodeHTML(z,xx,yy,tks,d,cls){var hd=held(z.id),soon=z.type==="tbc";
+    return '<button type="button" class="alt-node lv'+z.level+(hd?' held':'')+(soon?' tbc':'')+(cls||'')+'" data-id="'+z.id+'" data-tks="'+tks.join(" ")+'" style="left:'+px(X(xx))+';top:'+px(yy)+';--d:'+d+'s;view-transition-name:vt-'+z.id+'">'+(soon?'<span class="tb">+'+z.gap+'</span>':thumb(z,z.type==="expert"?78:46))+'<span class="nm">'+esc(soon?(ar?"قيد الإضافة":"More to add"):shortNm(z))+'</span>'+(hd?'<i class="ck">✓</i>':'')+'</button>'}
+  function cardHTML(z,xx,yy,d){var hd=held(z.id),other=z.tracks.length===2?z.tracks.filter(function(k){return k!==fk})[0]:null,isNext=nx.id===z.id&&!hd;
+    var meta=other?(ar?"يُحتسب أيضًا لمسار ":"Also counts for ")+'<b style="color:'+tr(other).color+'">'+esc(nm(tr(other)))+'</b>':esc(typeNm(z.type));
+    return '<button type="button" class="alt-card lv'+z.level+(hd?' held':'')+(isNext?' next':'')+'" data-id="'+z.id+'" data-tks="'+z.tracks.join(" ")+'" style="'+(ar?'right':'left')+':'+px(xx)+';top:'+px(yy)+';--d:'+d+'s;view-transition-name:vt-'+z.id+'">'+(z.type==="tbc"?'<span class="tb">+'+z.gap+'</span>':thumb(z,46))+'<span class="tx"><b>'+esc(itemName(z))+'</b><span>'+meta+'</span></span>'+(hd?'<i class="ck">✓</i>':'')+(isNext?'<i class="nx">'+(ar?"التالي":"Next")+'</i>':'')+'</button>'}
+  var delay=function(n){return ({0:.15,1:.3,2:.65,3:.95,4:1.25,5:1.6})[n]};
+  if(!focus){
+    var yb=RY[1]-30,ys=RY[5];
+    /* track lines: base → summit */
+    TRACKS.forEach(function(z,i){var c=cx(i),y4=RY[4]-36,fit=RL.k==="all"||RL.t.indexOf(z.k)>=0,mine=S.track===z.k;
+      var d="M"+X(c)+" "+yb+" L"+X(c)+" "+y4+" C"+X(c)+" "+(ys+64)+" "+X(sx+(c-sx)*.22)+" "+(ys+44)+" "+X(sx)+" "+(ys+30);
+      svg.push('<path d="'+d+'" pathLength="1" class="alt-line'+(fit?'':' off')+(mine?' mine':'')+'" data-tks="'+z.k+'" style="--tc:'+z.color+';--i:'+i+'"/>');
+      [[RY[1],RY[2]],[RY[2],RY[3]],[RY[3],RY[4]]].forEach(function(pr){var my=(pr[0]+pr[1])/2+(pr===0?0:0);chev.push('<path d="M'+X(c-4)+' '+(my+3)+' L'+X(c)+' '+(my-2)+' L'+X(c+4)+' '+(my+3)+'" class="alt-chev'+(fit?'':' off')+'" data-tks="'+z.k+'" style="--tc:'+z.color+'"/>')});
+      el.push('<button type="button" class="alt-head'+(fit?'':' off')+(RL.k!=="all"&&RL.t[0]===z.k?' best':'')+(mine?' mine':'')+'" data-jt="'+z.k+'" data-tks="'+z.k+'" style="left:'+px(X(c))+';top:0;--tc:'+z.color+'">'+(RL.k!=="all"&&RL.t[0]===z.k?'<em class="bfit">'+(ar?"الأنسب لك":"Best fit")+'</em>':'')+embThumb(z.k,30)+'<b>'+esc(nm(z))+'</b>'+(mine?'<small>'+(ar?"مساري":"Your track")+'</small>':'')+'</button>')});
+    /* level rows 2–4: place nodes, spread collisions */
+    [2,3,4].forEach(function(n){var list=rowItems(n),pts=list.map(function(z){var ix=z.tracks.map(function(k){return tr(k).i});var want=ix.length===2?(cx(ix[0])+cx(ix[1]))/2:cx(ix[0]);return {z:z,x:want,ix:ix}}).sort(function(a,b){return a.x-b.x});
+      var G=Math.min(100,cw*.9);for(var it=0;it<40;it++){for(var j=1;j<pts.length;j++){var gap=pts[j].x-pts[j-1].x;if(gap<G){var push=(G-gap)/2;pts[j-1].x-=push;pts[j].x+=push}}pts.forEach(function(q){q.x=Math.max(x0+46,Math.min(W-46,q.x))})}
+      pts.forEach(function(q){var z=q.z,tks=z.tracks;var fit=RL.k==="all"||tks.some(function(k){return RL.t.indexOf(k)>=0});
+        q.ix.forEach(function(i){var c=cx(i);if(Math.abs(c-q.x)>2)svg.push('<path d="M'+X(c)+' '+RY[n]+' L'+X(q.x)+' '+RY[n]+'" class="alt-branch'+(fit?'':' off')+'" data-tks="'+tks.join(" ")+'" style="--tc:'+TRACKS[i].color+'"/>')});
+        el.push(nodeHTML(z,q.x,RY[n],tks,delay(n),fit?'':' off'))});
+      TRACKS.forEach(function(z,i){if(!list.some(function(q){return q.tracks.indexOf(z.k)>=0})){var fit=RL.k==="all"||RL.t.indexOf(z.k)>=0;el.push('<span class="alt-soon'+(fit?'':' off')+'" data-tks="'+z.k+'" title="'+(ar?"مقررات قادمة قريبًا":"Courses coming soon")+'" style="left:'+px(X(cx(i)))+';top:'+px(RY[n])+';--tc:'+z.color+';--d:'+delay(n)+'s"></span>')}})});
+    /* base: Level 1 platform */
+    el.push('<div class="alt-base" style="left:'+px(ar?W-W+8:x0+8)+';width:'+px(W-x0-16)+';top:'+px(RY[1])+';--d:.3s">'+[item("core1"),item("core2")].map(function(z){return '<button type="button" class="alt-chip'+(held(z.id)?' held':'')+'" data-id="'+z.id+'" style="view-transition-name:vt-'+z.id+'">'+thumb(z,28)+'<span>'+esc(nm(z))+'</span>'+(held(z.id)?'<i class="ck">✓</i>':'')+'</button>'}).join('<span class="plus">+</span>')+'<span class="eq">=</span><button type="button" class="alt-chip cred" data-lv="1"><img src="'+bsrc(LVBADGE[1])+'" alt=""><span>'+esc(L2(LEVELS[1].earns))+'</span></button></div>');
+    svg.push('<line x1="'+X(sx)+'" x2="'+X(sx)+'" y1="'+(RY[0]-18)+'" y2="'+(RY[1]+30)+'" class="alt-stem"/>');
+    el.push(nodeHTML(item("orient"),sx,RY[0],[],.15,''));
+    el.push('<div class="alt-halo" style="left:'+px(X(sx))+';top:'+px(ys)+'"></div>');
+    el.push(nodeHTML(item("expert"),sx,ys-6,TRACKS.map(function(z){return z.k}),1.6,' summit'));
+  }else{
+    /* single track: one rising line with detailed cards */
+    var z=tr(fk),lx=sx,cardX=lx+(mob?26:34),yb2=RY[0],ys2=RY[5];
+    svg.push('<path d="M'+X(lx)+' '+yb2+' L'+X(lx)+' '+ys2+'" pathLength="1" class="alt-line solo" style="--tc:'+z.color+';--i:0"/>');
+    order.forEach(function(n){var list=rowItems(n),c=list.length,top=RY[n]-RH[n]/2+(mob?34:0),blockH=c*72-8,start=(mob?top+((RH[n]-34)-blockH)/2:RY[n]-blockH/2);
+      if(mob)el.push('<button type="button" class="alt-rhead" data-lv="'+n+'" style="'+(ar?'right':'left')+':'+px(cardX)+';top:'+px(RY[n]-RH[n]/2+8)+';--sc:'+RCOL[n]+'">'+(n?'<img src="'+bsrc(LVBADGE[n])+'" alt="">':'')+'<b>'+(n?t("level")+" "+n+" · ":"")+esc(nm(LEVELS[n]))+'</b></button>');
+      svg.push('<circle cx="'+X(lx)+'" cy="'+RY[n]+'" r="7" class="alt-stn" style="--sc:'+RCOL[n]+'"/>');
+      if(n<5)chev.push('<path d="M'+X(lx-5)+' '+(RY[n]-RH[n]/2+4)+' L'+X(lx)+' '+(RY[n]-RH[n]/2-2)+' L'+X(lx+5)+' '+(RY[n]-RH[n]/2+4)+'" class="alt-chev" style="--tc:'+z.color+'"/>');
+      if(!c){el.push('<span class="alt-card empty" style="'+(ar?'right':'left')+':'+px(cardX)+';top:'+px(start)+'">'+t("emptyLevel")+'</span>');return}
+      list.forEach(function(q,j){var yy=start+j*72;svg.push('<path d="M'+X(lx)+' '+RY[n]+' C'+X(lx+16)+' '+RY[n]+' '+X(lx+10)+' '+(yy+32)+' '+X(cardX)+' '+(yy+32)+'" class="alt-branch" style="--tc:'+z.color+'"/>');el.push(cardHTML(q,cardX,yy,delay(n)))})});
+  }
+  var stage='<div class="alt-stage'+(focus?' solo':'')+(mob?' mob':'')+(ALT.intro?'':' intro')+'" style="height:'+px(H)+'"><svg class="alt-svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+svg.join("")+chev.join("")+'</svg>'+el.join("")+'</div>';
+  h.push(stage);
+  h.push('<p class="alt-key">'+(ar?"شكل الشارة يدل على المستوى. المقررات بين خطّين تُحتسب للمسارين. كل المسارات تصعد إلى الخبير.":"Badge shape shows the level. A course between two lines counts for both tracks. Every track climbs to Expert.")+'</p>');
+  rtEl.innerHTML='<div class="alt'+(RL.k!=="all"?' roled':'')+'">'+h.join("")+'</div>';
+  if(!ALT.intro){ALT.intro=true;setTimeout(function(){var st=rtEl.querySelector(".alt-stage");if(st)st.classList.remove("intro")},2600)}
+}
+if(window.ResizeObserver&&rtEl){new ResizeObserver(function(){if(S.view==="rt"&&Math.abs(rtEl.clientWidth-ALT.w)>2)renderAlt()}).observe(rtEl)}
+rtEl.addEventListener("mouseover",function(e){var n=e.target.closest("[data-tks]");var st=rtEl.querySelector(".alt-stage");if(!st||st.classList.contains("solo"))return;
+  st.querySelectorAll(".lit").forEach(function(q){q.classList.remove("lit")});if(!n||!n.getAttribute("data-tks")){st.classList.remove("hl");return}
+  var ks=n.getAttribute("data-tks").split(" ");st.classList.add("hl");st.querySelectorAll("[data-tks]").forEach(function(q){var qk=q.getAttribute("data-tks").split(" ");if(qk.some(function(k){return ks.indexOf(k)>=0}))q.classList.add("lit")})});
+rtEl.addEventListener("mouseleave",function(){var st=rtEl.querySelector(".alt-stage");if(st){st.classList.remove("hl");st.querySelectorAll(".lit").forEach(function(q){q.classList.remove("lit")})}});
 
 /* ===================================================================== phone step bar: steps show over the map, guide steps aside */
 var stepbar=document.getElementById("stepbar");
