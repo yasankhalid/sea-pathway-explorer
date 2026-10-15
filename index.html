@@ -536,6 +536,30 @@ html[data-theme="light"] .amed{background:#E8EDF4}
   html[lang="ar"] .alc .mlv{letter-spacing:0;font-family:inherit;font-size:11px}
 }
 
+
+/* role filter */
+.rolebar{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.rolebar .rlbl{font-size:12.5px;font-weight:700;color:var(--ink-2);margin-inline-end:4px}
+.rolechip{border:1px solid var(--line-2);background:var(--card);color:var(--ink-2);border-radius:999px;padding:5px 11px;font:inherit;font-size:12px;cursor:pointer;transition:background .2s,border-color .2s}
+.rolechip:hover{border-color:var(--gold);color:var(--ink)}
+.rolechip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#071033;font-weight:700}
+html[data-theme="light"] .rolechip[aria-pressed="true"]{color:#fff}
+.rolemsg{font-size:13px;color:var(--ink-2)}
+.rall.roled .rlane.off .acell{opacity:.22;filter:grayscale(.7);transition:opacity .3s}
+.rall.roled .rlane.off .acell:hover{opacity:.7;filter:none}
+.aroad .alane.off .afan,.aroad .alane.off .atrk,.aroad .alane.off .aflow{opacity:.06!important}
+.rall.roled .rlane.best .alab{border-color:var(--tc);box-shadow:0 0 0 3px color-mix(in srgb,var(--tc) 40%,transparent),0 8px 24px rgba(0,0,0,.25)}
+.aroad .alane.best .afan{opacity:1;stroke-width:6}
+.bfit{display:inline-block;font-style:normal;font-size:10px;font-weight:700;color:#071033;background:var(--gold);border-radius:999px;padding:1px 8px;margin-bottom:3px}
+html[data-theme="light"] .bfit{color:#fff}
+.showoff{display:none}
+@media (max-width:760px){
+  .rall.roled:not(.showall) .rlane.off{display:none}
+  .showoff{display:block;border:1px dashed var(--line-2);background:transparent;color:var(--ink-2);border-radius:14px;padding:10px;font:inherit;font-size:13px;cursor:pointer}
+  .rall.roled .rlane.off .acell{opacity:.55}
+  .rolebar{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px}
+  .rolechip{flex:none}
+}
 /* route polish */
 #view-rt,#view-jr{-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 52px,#000 76px);mask-image:linear-gradient(to bottom,transparent 0,transparent 52px,#000 76px)}
 @media (max-width:760px){#view-rt,#view-jr{-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 50px,#000 68px);mask-image:linear-gradient(to bottom,transparent 0,transparent 50px,#000 68px)}}
@@ -1282,7 +1306,7 @@ function drawQuiz(){var Q=QZ[S.lang];var pr='<div class="qprog">'+Q.map(function
   var r=Object.keys(qz.score).sort(function(a,b){return qz.score[b]-qz.score[a]});var best=r[0]||"tl",second=r[1];
   var sx={core:t("startCore"),l2:t("startL2"),prior:t("startPrior")}[qz.start];
   qb.innerHTML='<div class="eyebrow">'+t("quizTitle")+'</div>'+pr+'<h2 id="quiz-title">'+t("quizResult")+'</h2><div class="result">'+embThumb(best,60)+'<div><b style="color:'+tr(best).color+'">'+esc(nm(tr(best)))+'</b><span class="note">'+esc(S.lang==="ar"?tr(best).dar:tr(best).den)+'</span></div></div><p>'+esc(sx)+'</p>'+(second?'<p class="note">'+t("quizAlso")+': <b>'+esc(nm(tr(second)))+'</b></p>':'')+'<div class="g-actions" style="flex-wrap:wrap">'+regBtn(best)+'</div><div class="g-actions"><button class="btn ghost" data-settrack="'+best+'">'+t("setTrack")+'</button><button class="btn ghost" data-qretake="1">'+t("retake")+'</button></div>'}
-qb.addEventListener("click",function(e){var o=e.target.closest("[data-o]");if(o){var opt=QZ[S.lang][qz.i].o[+o.getAttribute("data-o")][1];Object.keys(opt).forEach(function(k){if(k==="_s")qz.start=opt[k];else qz.score[k]=(qz.score[k]||0)+opt[k]});qz.i++;drawQuiz();return}
+qb.addEventListener("click",function(e){var o=e.target.closest("[data-o]");if(o){var opt=QZ[S.lang][qz.i].o[+o.getAttribute("data-o")][1];Object.keys(opt).forEach(function(k){if(k==="_s")qz.start=opt[k];else qz.score[k]=(qz.score[k]||0)+opt[k]});if(qz.i===0){var RK=["ey","ct","sl","sen","rs","ad","dl"][+o.getAttribute("data-o")];if(RK){ROLE=RK;store("sea-role",RK)}}qz.i++;drawQuiz();return}
   if(e.target.closest("[data-qback]")){qz.i=Math.max(0,qz.i-1);drawQuiz();return}
   if(e.target.closest("[data-qretake]")){openQuiz();return}
   var st=e.target.closest("[data-settrack]");if(st){setTrack(st.getAttribute("data-settrack"));quiz.hidden=true;setView("rt");S.sel=null;select({kind:"me"})}});
@@ -1452,22 +1476,41 @@ function drawRoad(){var tk=rtEl.querySelector(".rtrack"),svg=rtEl.querySelector(
   svg.innerHTML='<defs><linearGradient id="rgrad" x1="'+(S.lang==="ar"?1:0)+'" x2="'+(S.lang==="ar"?0:1)+'" y1="0" y2="0">'+stops+'</linearGradient></defs><path d="'+d+'" class="rbase"/><path d="'+d+'" class="rline" stroke="url(#rgrad)"/>'+(RM?'':'<path d="'+d+'" class="rflow"/>')}
 
 /* ---------- Route: all tracks ---------- */
+
+/* ---------- roles: "I am a…" ---------- */
+var ROLES=[
+ {k:"all",en:"Everyone",ar:"الجميع",t:[]},
+ {k:"ey",en:"Early years / KG teacher",ar:"معلم/ة طفولة مبكرة",t:["ec","tl","incl"]},
+ {k:"ct",en:"Classroom teacher",ar:"معلم/ة صف",t:["tl","digital","assess","incl"]},
+ {k:"sl",en:"School leader / head of department",ar:"قائد/ة مدرسة أو رئيس/ة قسم",t:["lead","research","assess"]},
+ {k:"sen",en:"Learner support / SEN / counselling",ar:"دعم المتعلمين أو التربية الخاصة",t:["incl","assess","tl"]},
+ {k:"rs",en:"Researcher / academic",ar:"باحث/ة أو أكاديمي/ة",t:["research","assess","lead"]},
+ {k:"ad",en:"Assessment or data coordinator",ar:"منسق/ة تقييم أو بيانات",t:["assess","research","incl"]},
+ {k:"dl",en:"Digital learning specialist",ar:"أخصائي/ة تعلم رقمي",t:["digital","tl"]}];
+var ROLE=store("sea-role")||"all",SHOWALL=false;
+function roleOf(k){return ROLES.filter(function(r){return r.k===k})[0]||ROLES[0]}
+function setRole(k){ROLE=k;store("sea-role",k);SHOWALL=false;if(typeof buildRoute==="function")buildRoute()}
+function roleBar(){var ar=S.lang==="ar",r=roleOf(ROLE),h='<div class="rolebar"><span class="rlbl">'+(ar?"أنا:":"I am a:")+'</span>'+ROLES.map(function(x){return '<button type="button" class="rolechip" data-role="'+x.k+'" aria-pressed="'+(x.k===ROLE)+'">'+esc(ar?x.ar:x.en)+'</button>'}).join("")+'</div>';
+  if(r.k!=="all"){var best=tr(r.t[0]);h+='<div class="rolemsg"><b>'+(ar?r.t.length+" مسارات تناسبك":r.t.length+" tracks fit you")+'</b> · '+(ar?"الأنسب: ":"best fit: ")+'<span style="color:'+best.color+';font-weight:700">'+esc(nm(best))+'</span>. '+(ar?"المسارات الأخرى متاحة لك أيضًا.":"The others are still open to you.")+'</div>'}
+  return h}
+
 function aChip(z,k){var hd=isHeld(z.id),sh=z.tracks.length===2;return '<button class="achip'+(hd?" held":"")+'" data-id="'+z.id+'" title="'+esc(itemName(z))+'">'+thumb(z,30)+'<span>'+esc(shortNm(z))+'</span>'+(sh?'<em title="'+esc(t("counts2"))+'">⇄</em>':'')+(hd?'<i class="ck">✓</i>':'')+'</button>'}
 function aMed(n,size){return '<button class="amed s'+n+'" data-lv="'+n+'" style="--sc:'+RCOL[n]+';--sz:'+size+'px" aria-label="'+esc(nm(LEVELS[n]))+'">'+(n?'<img src="'+bsrc(LVBADGE[n])+'" alt="">':'<span class="lv0">0</span>')+'</button>'}
 function aLab(n){var ar=S.lang==="ar";return '<div class="rlab" style="--sc:'+RCOL[n]+'"><span class="k">'+(n?t("level")+" "+n:(ar?"البداية":"Start"))+'</span><b>'+esc(nm(LEVELS[n]))+'</b><span class="tg">'+esc(L2(LEVELS[n].tag))+'</span></div>'}
 function buildRouteAll(){var ar=S.lang==="ar",h=[];
   h.push('<div class="rhead"><div class="jchips" role="tablist">'+allChip(true)+TRACKS.map(function(z){return '<button type="button" data-jt="'+z.k+'" aria-pressed="false" style="--c:'+z.color+'"><i style="background:'+z.color+'"></i>'+esc(nm(z))+(S.track===z.k?'<span class="mine">✓</span>':'')+'</button>'}).join("")+'</div>');
-  h.push('<div class="rtitle compact" style="--c:var(--gold)"><div><div class="eyebrow">'+(ar?"المسار الكامل":"The full pathway")+'</div><h2>'+(ar?"مسار واحد، سبعة مسارات، وجهة واحدة":"One start, seven tracks, one destination")+'</h2><p>'+(ar?"يبدأ الجميع بالتهيئة والجوهر، ثم يختارون مسارًا من المستوى 2، وكل مسار يقود إلى الخبير. اضغط على اسم مسار لعرض طريقه وحده.":"Everyone starts with Orientation and the Core, chooses a track at Level 2, and every track leads to Expert. Select a track name to follow its route on its own.")+'</p></div></div></div>');
+  h.push('<div class="rtitle compact" style="--c:var(--gold)"><div><div class="eyebrow">'+(ar?"المسار الكامل":"The full pathway")+'</div><h2>'+(ar?"مسار واحد، سبعة مسارات، وجهة واحدة":"One start, seven tracks, one destination")+'</h2><p>'+(ar?"يبدأ الجميع بالتهيئة والجوهر، ثم يختارون مسارًا من المستوى 2، وكل مسار يقود إلى الخبير. اضغط على اسم مسار لعرض طريقه وحده.":"Everyone starts with Orientation and the Core, chooses a track at Level 2, and every track leads to Expert. Select a track name to follow its route on its own.")+'</p></div></div>'+roleBar()+'</div>');
   var g=[];
   g.push('<div class="acell astart" style="grid-column:1;grid-row:1/span 8">'+aMed(0,84)+aLab(0)+'<div class="acards">'+aChip(item("orient"))+'</div></div>');
   g.push('<div class="acell al1" style="grid-column:2;grid-row:1/span 8">'+aMed(1,92)+aLab(1)+'<div class="acards">'+aChip(item("core1"))+aChip(item("core2"))+'</div><div class="rearn"><img src="'+bsrc(LVBADGE[1])+'" alt=""><span><b>'+esc(L2(LEVELS[1].earns))+'</b></span></div></div>');
   [2,3,4].forEach(function(n,i){g.push('<div class="acell ahdr" style="grid-column:'+(5+i)+';grid-row:1">'+aMed(n,58)+aLab(n)+'</div>')});
   TRACKS.forEach(function(x,r){var row=r+2,cells=[2,3,4].map(function(n,i){var list=ITEMS.filter(function(z){return z.level===n&&z.tracks.indexOf(x.k)>=0&&visible(z)});
       return '<div class="acell alc" style="grid-column:'+(5+i)+';grid-row:'+row+'"><span class="mlv">'+t("level")+' '+n+'</span>'+(list.length?list.map(function(z){return aChip(z,x.k)}).join(""):'<span class="asoon">'+(ar?"قريبًا":"Coming soon")+'</span>')+'</div>'}).join("");
-    var cnt=ITEMS.filter(function(z){return z.tracks.indexOf(x.k)>=0&&z.type!=="tbc"}).length,mine=S.track===x.k;
-    g.push('<div class="rlane'+(mine?' mine':'')+'" data-lane="'+x.k+'" style="--tc:'+x.color+'"><button class="acell alab" style="grid-column:4;grid-row:'+row+'" data-lanepick="'+x.k+'">'+embThumb(x.k,34)+'<span><b>'+esc(nm(x))+'</b><small>'+(mine?'<i class="ymine">'+(ar?"مساري":"Your track")+'</i> · ':'')+(ar?cnt+" مقررات":cnt+(cnt===1?" course":" courses"))+'</small></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="'+(ar?"M15 6l-6 6 6 6":"M9 6l6 6-6 6")+'"/></svg></button>'+cells+'</div>')});
+    var cnt=ITEMS.filter(function(z){return z.tracks.indexOf(x.k)>=0&&z.type!=="tbc"}).length,mine=S.track===x.k,RL=roleOf(ROLE),fit=RL.k==="all"||RL.t.indexOf(x.k)>=0,bestfit=RL.k!=="all"&&RL.t[0]===x.k;
+    g.push('<div class="rlane'+(mine?' mine':'')+(fit?'':' off')+(bestfit?' best':'')+'" data-lane="'+x.k+'" style="--tc:'+x.color+'"><button class="acell alab" style="grid-column:4;grid-row:'+row+'" data-lanepick="'+x.k+'">'+embThumb(x.k,34)+'<span>'+(bestfit?'<i class="bfit">'+(ar?"الأنسب لك":"Best fit")+'</i>':'')+'<b>'+esc(nm(x))+'</b><small>'+(mine?'<i class="ymine">'+(ar?"مساري":"Your track")+'</i> · ':'')+(ar?cnt+" مقررات":cnt+(cnt===1?" course":" courses"))+'</small></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="'+(ar?"M15 6l-6 6 6 6":"M9 6l6 6-6 6")+'"/></svg></button>'+cells+'</div>')});
+  var offN=ROLE==="all"?0:TRACKS.length-roleOf(ROLE).t.length;if(offN)g.push('<button type="button" class="showoff" data-showoff="1">'+(SHOWALL?(S.lang==="ar"?"إخفاء المسارات الأخرى":"Hide the other tracks"):(S.lang==="ar"?"اعرض "+offN+" مسارات أخرى":"Show the other "+offN+" tracks"))+'</button>');
   g.push('<div class="acell aexp" style="grid-column:9;grid-row:1/span 8">'+aMed(5,108)+aLab(5)+'<div class="acards">'+aChip(item("expert"))+'</div></div>');
-  h.push('<div class="rscroll"><div class="rall"><svg class="aroad" aria-hidden="true"></svg>'+g.join("")+'</div></div>');
+  h.push('<div class="rscroll"><div class="rall'+(ROLE!=="all"?' roled':'')+(SHOWALL?' showall':'')+'"><svg class="aroad" aria-hidden="true"></svg>'+g.join("")+'</div></div>');
   h.push('<p class="rhint">'+(ar?"اضغط على أي مقرر أو مستوى لعرض التفاصيل. ⇄ = يُحتسب لمسارين، ويظهر في كليهما.":"Select any course or level for details. ⇄ = counts for 2 tracks, so it appears in both lanes.")+'</p>');
   var sl=(rtEl.querySelector(".rscroll")||{}).scrollLeft||0;rtEl.innerHTML=h.join("");var sc=rtEl.querySelector(".rscroll");if(sc)sc.scrollLeft=sl;
   requestAnimationFrame(drawAll)}
@@ -1480,10 +1523,10 @@ function drawAll(){var box=rtEl&&rtEl.querySelector(".rall"),svg=box&&box.queryS
   p.push('<path d="'+cv(out(m0),m0.cy,inn(m1),m1.cy)+'" class="abase"/><path d="'+cv(out(m0),m0.cy,inn(m1),m1.cy)+'" class="aline" stroke="url(#ag01)"/>');
   box.querySelectorAll(".rlane").forEach(function(ln){var c=getComputedStyle(ln).getPropertyValue("--tc").trim(),lab=R(ln.querySelector(".alab")),cells=ln.querySelectorAll(".alc"),last=R(cells[cells.length-1]),y=lab.cy;
     var f=cv(out(m1),m1.cy,inn(lab),y),lane="M"+out(lab)+" "+y+" L"+out(last)+" "+y,mg=cv(out(last),y,inn(m5),m5.cy);
-    p.push('<g class="alane'+(ln.classList.contains("mine")?" mine":"")+'" data-lane="'+ln.getAttribute("data-lane")+'" style="--tc:'+c+'"><path d="'+f+'" class="afan"/><path d="'+lane+'" class="atrk"/><path d="'+mg+'" class="afan"/>'+(RM?'':'<path d="'+f+'" class="aflow"/><path d="'+mg+'" class="aflow"/>')+'</g>')});
+    p.push('<g class="alane'+(ln.classList.contains("mine")?" mine":"")+(ln.classList.contains("off")?" off":"")+(ln.classList.contains("best")?" best":"")+'" data-lane="'+ln.getAttribute("data-lane")+'" style="--tc:'+c+'"><path d="'+f+'" class="afan"/><path d="'+lane+'" class="atrk"/><path d="'+mg+'" class="afan"/>'+(RM?'':'<path d="'+f+'" class="aflow"/><path d="'+mg+'" class="aflow"/>')+'</g>')});
   if(!drawAll._anim&&!RM){drawAll._anim=1;box.classList.add("intro");setTimeout(function(){box.classList.remove("intro")},1600)}
   svg.innerHTML='<defs><linearGradient id="ag01" x1="'+(rtl?1:0)+'" x2="'+(rtl?0:1)+'"><stop offset="0" stop-color="'+RCOL[0]+'"/><stop offset="1" stop-color="'+RCOL[1]+'"/></linearGradient></defs>'+p.join("")}
-rtEl.addEventListener("click",function(e){var lp=e.target.closest("[data-lanepick]");if(lp){e.stopPropagation();RMODE="one";store("sea-rmode","one");JT=lp.getAttribute("data-lanepick");store("sea-jtrack",JT);buildRoute();if(typeof buildJourney==="function")buildJourney();rtEl.scrollIntoView({block:"start"})}},true);
+rtEl.addEventListener("click",function(e){var rc=e.target.closest("[data-role]");if(rc){e.stopPropagation();setRole(rc.getAttribute("data-role"));return}var so=e.target.closest("[data-showoff]");if(so){e.stopPropagation();SHOWALL=!SHOWALL;buildRoute();return}var lp=e.target.closest("[data-lanepick]");if(lp){e.stopPropagation();RMODE="one";store("sea-rmode","one");JT=lp.getAttribute("data-lanepick");store("sea-jtrack",JT);buildRoute();if(typeof buildJourney==="function")buildJourney();rtEl.scrollIntoView({block:"start"})}},true);
 rtEl.addEventListener("mouseover",function(e){var c=e.target.closest(".achip,.alab");if(!c)return;var box=rtEl.querySelector(".rall");if(!box)return;box.classList.add("focus");
   var lanes=[];if(c.classList.contains("alab"))lanes=[c.getAttribute("data-lanepick")];else{var it=item(c.getAttribute("data-id"));lanes=it.tracks.slice();box.querySelectorAll('.achip[data-id="'+it.id+'"]').forEach(function(x){x.classList.add("lit")})}
   lanes.forEach(function(k){box.querySelectorAll('[data-lane="'+k+'"]').forEach(function(x){x.classList.add("lit")})})});
