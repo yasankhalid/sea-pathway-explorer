@@ -411,6 +411,22 @@ body.staff-off .draft{display:none}
 @media (max-width:640px){.wallet{grid-template-columns:1fr}.search{flex:1 1 100%}.search input{width:100%}}
 html,body{margin:0;overflow:hidden}
 
+
+/* map layout switch */
+.mapswitch{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:9;display:none;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line-2);background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+body.v-map .mapswitch{display:inline-flex}
+.mapswitch button{display:inline-flex;align-items:center;gap:7px;border:0;background:none;color:var(--ink-2);padding:7px 14px;border-radius:999px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
+.mapswitch button svg{width:16px;height:16px}
+.mapswitch button[aria-pressed="true"]{background:var(--gold);color:#071033;font-weight:600}
+body:not(.guide-off) .mapswitch{left:calc(50% + 170px)}
+body.panel-open .mapswitch{left:calc(50% - 200px)}
+body.panel-open:not(.guide-off) .mapswitch{left:calc(50% - 30px)}
+body.mm-jr .mapswitch{left:50%!important}
+@media (min-width:901px){body.panel-open.mm-jr .mapswitch{left:calc(50% - 210px)!important}}
+#view-jr{padding-top:68px}
+@media (max-width:1100px){body:not(.guide-off) .mapswitch{left:50%}}
+@media (max-width:900px){body.panel-open .mapswitch,body.panel-open:not(.guide-off) .mapswitch{left:50%}}
+@media (max-width:760px){.mapswitch{top:10px}.mapswitch button{padding:7px 12px}#view-jr{padding-top:60px}#view-net .guide-tab{top:62px}body.stepping .zoomctl{top:62px}}
 /* v12: phone journey view */
 #view-jr .inner{max-width:880px}
 @media (min-width:761px){#view-jr .jchips{flex-wrap:wrap;overflow:visible;margin:0;padding:0}}
@@ -508,7 +524,6 @@ html[lang="ar"] .stepbar .k{letter-spacing:0;font-family:inherit}
     <div class="t"><b data-t="title">SEA Learning Pathway</b><span data-t="subtitle">Sharjah Education Academy · Credential explorer</span></div>
     <div class="tabs" role="tablist" aria-label="Views">
       <button class="tab" role="tab" id="tab-net" aria-selected="true" data-t="tabMap">Map</button>
-      <button class="tab" role="tab" id="tab-jr" aria-selected="false" data-t="tabJourney">Journey</button>
       <button class="tab" role="tab" id="tab-list" aria-selected="false"><span data-t="tabList">Tracks</span><span class="tcount" id="tabcount" aria-live="polite"></span></button>
       <button class="tab" role="tab" id="tab-lv" aria-selected="false" data-t="tabLevels">Levels</button>
       <button class="tab" role="tab" id="tab-cr" aria-selected="false" data-t="tabBadges">Badges</button>
@@ -570,6 +585,7 @@ html[lang="ar"] .stepbar .k{letter-spacing:0;font-family:inherit}
       </div>
     </section>
 
+    <div class="mapswitch" id="mapswitch" role="group" aria-label="Map layout"><button type="button" data-mm="net"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M10 10.5L6.5 7.3M14 10.5l3.5-3.2M10 13.5l-3.5 3.2M14 13.5l3.5 3.2"/></svg><span data-t="mmOverview">Overview</span></button><button type="button" data-mm="jr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v16"/><circle cx="6" cy="5" r="1.8"/><circle cx="6" cy="12" r="1.8"/><circle cx="6" cy="19" r="1.8"/><path d="M11 5h8M11 12h8M11 19h6"/></svg><span data-t="mmStep">Step by step</span></button></div>
     <aside class="panel" id="panel" aria-live="polite">
       <button class="iconbtn close" id="close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div class="scroll" id="panel-body"></div>
@@ -610,7 +626,7 @@ var LINKCFG={priorLearning:"",wallet:"",catalogue:""}; /* EDIT HERE: prior-learn
 
 /* ===================================================================== text (EN + draft AR) */
 var T={en:{
- title:"SEA Learning Pathway",subtitle:"Sharjah Education Academy · Credential explorer",tabMap:"Map",tabJourney:"Journey",tabList:"Tracks",tabLevels:"Levels",tabBadges:"Badges",
+ title:"SEA Learning Pathway",subtitle:"Sharjah Education Academy · Credential explorer",tabMap:"Map",mmOverview:"Overview",mmStep:"Step by step",tabList:"Tracks",tabLevels:"Levels",tabBadges:"Badges",
  myPath:"My pathway",modeLearner:"Learner",modeStaff:"Staff",draft:"FRAMEWORK V0 · PROPOSED",startHere:"Start here",guideTitle:"How the pathway works",
  guideLead:"Every learner starts in the centre and moves outward. Select a step to see it on the map.",shapeKey:"Shape and colour show the level",
  findTrack:"Find my track",playTour:"Play the tour",stopTour:"Stop the tour",hide:"Hide",howItWorks:"How it works",hint:"Point at a badge for a summary · select it to see where it leads",
@@ -639,7 +655,7 @@ var T={en:{
  illus:"Illustration of how a shared badge looks.",verified:"Verified by Sharjah Education Academy",shareLI:"Add to LinkedIn",shareQR:"QR code",shareLink:"Copy link",
  legendL:"Shape = level",typesH:["Type","What it recognises","How it is earned","Awarded","Stacks into","Expiry","Shareable"]
 },ar:{
- title:"مسار التعلّم في أكاديمية الشارقة للتعليم",subtitle:"أكاديمية الشارقة للتعليم · مستكشف الشهادات",tabMap:"الخريطة",tabJourney:"الرحلة",tabList:"المسارات",tabLevels:"المستويات",tabBadges:"الشارات",
+ title:"مسار التعلّم في أكاديمية الشارقة للتعليم",subtitle:"أكاديمية الشارقة للتعليم · مستكشف الشهادات",tabMap:"الخريطة",mmOverview:"نظرة عامة",mmStep:"خطوة بخطوة",tabList:"المسارات",tabLevels:"المستويات",tabBadges:"الشارات",
  myPath:"مساري",modeLearner:"المتعلم",modeStaff:"الموظفون",draft:"الإطار · مسودة",startHere:"ابدأ من هنا",guideTitle:"كيف يعمل المسار",
  guideLead:"يبدأ كل متعلم من المركز ويتقدّم نحو الخارج. اختر خطوة لتراها على الخريطة.",shapeKey:"الشكل واللون يدلّان على المستوى",
  findTrack:"اعثر على مساري",playTour:"شغّل الجولة",stopTour:"أوقف الجولة",hide:"إخفاء",howItWorks:"كيف يعمل",hint:"مرّر المؤشر على شارة لملخص · اخترها لترى إلى أين تقود",
@@ -1039,9 +1055,10 @@ body.addEventListener("click",function(e){
 function setTrack(k){S.track=k;store("sea-track",k);if(k){JT=k;store("sea-jtrack",k)}paintMe();if(typeof buildJourney==="function")buildJourney()}
 function paintMe(){document.getElementById("mepct").textContent=S.track?overall(S.track)+"%":""}
 document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!=="list"&&S.view!=="jr")setView(narrow()?"jr":"net");if(S.sel&&S.sel.kind==="me")select(null);else{S.sel=null;select({kind:"me"})}};
-function setView(v){S.view=v;["net","jr","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v);document.getElementById("view-"+x).hidden=x!==v});
+function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v||(x==="net"&&v==="jr"))});["net","jr","list","lv","cr"].forEach(function(x){document.getElementById("view-"+x).hidden=x!==v});var isMap=v==="net"||v==="jr";document.body.classList.toggle("v-map",isMap);document.body.classList.toggle("mm-jr",v==="jr");if(isMap){MM=v;store("sea-mapmode",v);document.querySelectorAll("[data-mm]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-mm")===v)})}
   if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"&&v!=="jr"){document.body.classList.remove("panel-open")}else showPanel();if(v==="jr")buildJourney();if(arguments[1]!==false)store("sea-view",v)}
-["net","jr","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x)}});
+var MM=store("sea-mapmode");["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x==="net"?(MM||(innerWidth<760?"jr":"net")):x)}});
+document.getElementById("mapswitch").addEventListener("click",function(e){var b=e.target.closest("[data-mm]");if(b)setView(b.getAttribute("data-mm"))});
 function listCount(){var q=S.q.trim().toLowerCase();if(!q)return 0;var tks=TRACKS.filter(function(x){return (x.en+" "+x.ar).toLowerCase().indexOf(q)>=0}).map(function(x){return x.k});
   return ITEMS.filter(function(it){if(it.type==="tbc"||it.type==="nucleus")return false;if((it.en+" "+(it.ar||"")+" "+(it.sen||"")).toLowerCase().indexOf(q)>=0)return true;return it.tracks.some(function(k){return tks.indexOf(k)>=0})}).length}
 var qi=document.getElementById("q");qi.addEventListener("input",function(){S.q=qi.value;var n=listCount();document.getElementById("qcount").textContent=S.q.trim()?t("results",{n:n}):"";document.getElementById("tabcount").textContent=S.q.trim()?n:"";if(S.view==="list")buildList();else{if(S.view!=="net")setView("list");applyHL()}});
