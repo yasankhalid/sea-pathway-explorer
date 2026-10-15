@@ -1071,8 +1071,9 @@ function nm(o){return S.lang==="ar"?(o.ar||o.en):o.en}
 function shortNm(o){return S.lang==="ar"?(o.sar||o.ar||o.en):(o.sen||o.en)}
 function itemName(it){if(it.type==="tbc")return S.lang==="ar"?(it.gap+" "+t("tbaShort")):(it.gap+" more to add at Level "+it.level);return nm(it)}
 function note(it){if(it.type==="tbc")return S.lang==="ar"?("مقررات قيد الإضافة لمسار "+nm(tr(it.tracks[0]))+" في المستوى "+it.level+"."):(it.gap+" more course"+(it.gap>1?"s":"")+" still to be added for "+tr(it.tracks[0]).en+" at Level "+it.level+".");return S.lang==="ar"?it.nar:it.nen}
-var TYPE={mc:["Micro-credential","شهادة مصغّرة"],prog:["Programme · 3 micro-credentials","برنامج · 3 شهادات مصغّرة"],ext:["Recognised external programme","برنامج خارجي معترف به"],core:["Core course","مقرر أساسي"],nucleus:["Level 1 · Core","المستوى 1 · الجوهر"],orient:["Getting started · not credentialed","بداية · غير معتمد"],expert:["Level 5 recognition","تقدير المستوى 5"],tbc:["Still to be added","قيد الإضافة"]};
+var TYPE={mc:["Micro-credential","شهادة مصغّرة"],prog:["Programme · 3 micro-credentials","برنامج · 3 شهادات مصغّرة"],ext:["Recognised external programme","برنامج خارجي معترف به"],core:["Core course","مقرر أساسي"],nucleus:["Level 1 · Core","المستوى 1 · الجوهر"],orient:["Getting started · not credentialed","بداية · غير معتمد"],expert:["Level 5 recognition","تقدير المستوى 5"],open:["Open short course","مقرر قصير مفتوح"],tbc:["Still to be added","قيد الإضافة"]};
 function typeNm(x){return L2(TYPE[x])}
+function lv0(k){return ITEMS.filter(function(x){return x.level===0&&x.type!=="tbc"&&(x.id==="orient"||(k&&x.tracks.indexOf(k)>=0)||(!k&&x.id!=="orient"))}).sort(function(a,b){return (a.id==="orient"?0:1)-(b.id==="orient"?0:1)})}
 function isHeld(id){return held.indexOf(id)>=0}
 function saveHeld(){store("sea-held",JSON.stringify(held));paintMe()}
 function visible(it){return S.mode==="staff"||it.type!=="tbc"}
@@ -1124,10 +1125,17 @@ function rad(d){return d*Math.PI/180}
 function layout(){W=360/Math.max(1,TRACKS.length);
   POS={};POS.core={x:0,y:4,r:50};POS.core1={x:-112,y:4,r:19};POS.core2={x:112,y:4,r:19};POS.orient={x:0,y:128,r:15};POS.expert={x:0,y:-404,r:38};
   TRACKS.forEach(function(tk){var a=-90+(tk.i+.5)*W;CL[tk.k]={x:RX*Math.cos(rad(a)),y:RY*Math.sin(rad(a)),r:90}});
-  ITEMS.filter(function(x){return x.tracks.length===2}).forEach(function(it){var A=CL[it.tracks[0]],B=CL[it.tracks[1]];POS[it.id]={x:(A.x+B.x)/2*1.42,y:(A.y+B.y)/2*1.42,r:27}});
-  TRACKS.forEach(function(tk){var C=CL[tk.k];var own=ITEMS.filter(function(x){return x.tracks.length===1&&x.tracks[0]===tk.k&&visible(x)}).sort(function(a,b){return a.level-b.level||(a.type==="tbc")-(b.type==="tbc")});
+  var grp={};ITEMS.filter(function(x){return x.tracks.length===2&&x.level>0&&visible(x)}).forEach(function(it){var key=it.tracks.slice().sort().join("|");(grp[key]=grp[key]||[]).push(it)});
+  Object.keys(grp).forEach(function(key){var L=grp[key],ka=L[0].tracks.slice(),a1=-90+(tr(ka[0]).i+.5)*W,a2=-90+(tr(ka[1]).i+.5)*W,d=a2-a1;if(d>180)d-=360;if(d<-180)d+=360;var far=Math.abs(d)>W*1.5,am=far?a1+(d>0?1:-1)*W*.3:a1+d/2,gap=far?1.55:1.42;
+    L.forEach(function(it,j){var a=am+(j-(L.length-1)/2)*8.5;POS[it.id]={x:RX*gap*Math.cos(rad(a)),y:RY*gap*Math.sin(rad(a)),r:27}})});
+  TRACKS.forEach(function(tk){var C=CL[tk.k];var own=ITEMS.filter(function(x){return x.tracks.length===1&&x.tracks[0]===tk.k&&visible(x)&&x.level>0}).sort(function(a,b){return a.level-b.level||(a.type==="tbc")-(b.type==="tbc")});
     var n=own.length,span=Math.min(150,50*(n-1)),base=Math.atan2(C.y/RY,C.x/RX)*180/Math.PI;
     own.forEach(function(it,j){var a=base-span/2+(n>1?j*span/(n-1):0);POS[it.id]={x:C.x+C.r*Math.cos(rad(a)),y:C.y+C.r*Math.sin(rad(a)),r:it.type==="tbc"?17:27}})});
+
+  var FIX={core:1,expert:1,orient:1,core1:1,core2:1},ids=Object.keys(POS);
+  for(var it=0;it<120;it++){var moved=false;for(var a=0;a<ids.length;a++)for(var b=a+1;b<ids.length;b++){var fa=FIX[ids[a]],fb=FIX[ids[b]];if(fa&&fb)continue;var P=POS[ids[a]],Q=POS[ids[b]],dx=Q.x-P.x,dy=Q.y-P.y,dd=Math.hypot(dx,dy),min=(P.r+Q.r)*1.55+14;
+    if(dd<min){var ux,uy;if(dd<.5){var an=(a*2.399+b)%6.283;ux=Math.cos(an);uy=Math.sin(an);dd=0}else{ux=dx/dd;uy=dy/dd}var push=(min-dd)/(fa||fb?1:2);
+      if(!fa){P.x-=ux*push;P.y-=uy*push}if(!fb){Q.x+=ux*push;Q.y+=uy*push}moved=true}}if(!moved)break}
 }
 function curve(a,b,ra,rb,bend){var dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,sx=a.x+ux*ra,sy=a.y+uy*ra,ex=b.x-ux*rb,ey=b.y-uy*rb,mx=(sx+ex)/2-uy*L*bend,my=(sy+ey)/2+ux*L*bend;return "M"+sx.toFixed(1)+" "+sy.toFixed(1)+" Q"+mx.toFixed(1)+" "+my.toFixed(1)+" "+ex.toFixed(1)+" "+ey.toFixed(1)}
 function wrapW(s,max){var w=s.split(" "),L=[],c="";w.forEach(function(x){if((c+" "+x).trim().length>max&&c){L.push(c);c=x}else c=(c+" "+x).trim()});if(c)L.push(c);return L}
@@ -1203,7 +1211,7 @@ function priorHTML(){return '<div class="callout"><b>'+t("prior")+'</b><span>'+t
 function detailsHTML(it){var c=COURSE[it.id];if(!c)return "";function v(x){return x?'<dd>'+esc(x)+'</dd>':'<dd class="tba">'+t("tba")+'</dd>'}
   var out=S.lang==="ar"?c.outcome_ar:c.outcome_en;
   return '<div class="sec"><h3>'+t("details")+'</h3><dl class="detail"><dt>'+t("duration")+'</dt>'+v(c.hours)+'<dt>'+t("format")+'</dt>'+v(c.format)+'<dt>'+t("nextStart")+'</dt>'+v(c.start)+'<dt>'+t("outcome")+'</dt>'+v(out)+'</dl></div>'+
-   (c.url?'<a class="btn primary" href="'+esc(c.url)+'" target="_blank" rel="noopener">'+t("enrol")+'</a>':'<button class="btn primary" disabled>'+t("enrolSoon")+'</button>')}
+   ((S.lang==="ar"&&c.url_ar)||c.url?'<a class="btn primary" href="'+esc((S.lang==="ar"&&c.url_ar)||c.url)+'" target="_blank" rel="noopener">'+t("enrol")+'</a>':'<button class="btn primary" disabled>'+t("enrolSoon")+'</button>')}
 function chainHTML(it){var lv=it.level,steps=[{b:S.lang==="ar"?"هذه الشهادة المصغّرة":"This micro-credential",s:"",on:true},{b:L2(LEVELS[lv].earns),s:it.tracks.map(function(k){return nm(tr(k))}).join(S.lang==="ar"?" أو ":" or "),on:true}];
   if(lv<4)steps.push({b:(S.lang==="ar"?"يفتح المستوى ":"Unlocks Level ")+(lv+1)+" · "+nm(LEVELS[lv+1]),s:L2(LEVELS[lv+1].band),on:false});steps.push({b:L2(LEVELS[5].earns),s:t("level")+" 5",on:false});
   return '<div class="chain">'+steps.map(function(x,i){return '<div class="c'+(x.on?"":" dim")+'"><span class="dotc">'+(i+1)+'</span><span class="tx"><b>'+esc(x.b)+'</b><span>'+esc(x.s)+'</span></span></div>'}).join("")+'</div>'}
@@ -1214,7 +1222,7 @@ function panelItem(it){var lv=LEVELS[it.level],h=[];
   h.push('<div class="chips">'+chips+'</div><p>'+esc(note(it))+'</p>');
   var learnable=["mc","prog","core"].indexOf(it.type)>=0;
   if(learnable||it.type==="ext")h.push(haveBtn(it.id));
-  if(learnable)h.push(detailsHTML(it));
+  if(learnable||it.type==="open"||it.type==="ext")h.push(detailsHTML(it));
   if(it.tracks.length)h.push('<div class="sec"><h3>'+(it.tracks.length===2?t("countsBoth"):t("track"))+'</h3><div class="chips">'+it.tracks.map(chipT).join("")+'</div></div>');
   if(learnable){h.push('<div class="sec"><h3>'+t("earnedThrough")+'</h3>'+earnedHTML()+'<p class="note" style="margin-top:8px">'+term("kbadge",S.lang==="ar"?"ما هذه الشارات؟":"What are these badges?")+'</p></div>');
     if(it.level>=2)h.push('<div class="sec"><h3>'+t("whereLeads")+'</h3>'+chainHTML(it)+'</div>');
@@ -1247,7 +1255,7 @@ function panelLevel(n){var l=LEVELS[n],ar=S.lang==="ar",h=[];
   h.push('<div class="chips"><span class="chip gold">'+esc(L2(l.tag))+'</span><span class="chip">'+esc(L2(l.band))+'</span></div>');
   h.push('<div class="sec"><h3>'+t("requirement",{n:n})+'</h3><p>'+esc(L2(l.req))+'</p></div>');
   h.push('<div class="sec"><h3>'+t("unlocks")+'</h3><ul class="unlock"><li>'+esc(L2(l.earns))+'</li><li>'+esc(L2(l.unl))+'</li><li>'+t("validFor")+': '+esc(L2(l.exp))+'</li></ul></div>');
-  var list;if(n===0)list=[item("orient")];else if(n===1)list=[item("core1"),item("core2")];else if(n===5)list=[item("expert")];
+  var list;if(n===0)list=lv0(typeof k==="string"?k:null);else if(n===1)list=[item("core1"),item("core2")];else if(n===5)list=[item("expert")];
   else{list=ITEMS.filter(function(z){return z.level===n&&z.tracks.length&&visible(z)}).sort(function(a,b){return tr(a.tracks[0]).i-tr(b.tracks[0]).i})}
   h.push('<div class="sec"><h3>'+(ar?"مقررات هذا المستوى":"Courses at this level")+' · '+list.filter(function(z){return z.type!=="tbc"}).length+'</h3><div class="rows">'+(list.length?list.map(function(z){var r=rowHTML(z);if(z.tracks.length)r=r.replace(/<span class="sm">[^<]*<\/span>/,'<span class="sm">'+esc(z.type==="tbc"?t("stillAdd"):z.tracks.map(function(k){return nm(tr(k))}).join(" · "))+'</span>');return r}).join(""):'<p class="note">'+t("emptyLevel")+'</p>')+'</div>'+(n>=1&&n<=4?earnRowGeneric(n):"")+'</div>');
   if(n>=2&&n<=4){var empty=TRACKS.filter(function(x){return !ITEMS.some(function(z){return z.level===n&&z.type!=="tbc"&&z.tracks.indexOf(x.k)>=0})});
@@ -1299,7 +1307,7 @@ function buildList(){var q=S.q.trim().toLowerCase(),h=[],ar=S.lang==="ar";
   var start=["orient","core1","core2"].map(item).filter(match);
   if(start.length||!q)h.push('<div class="lgroup"><h3><i style="background:var(--teal)"></i>'+t("listStart")+'</h3><div class="rows">'+start.map(function(x){return rowHTML(x)}).join("")+'</div>'+earnRowGeneric(1)+'</div>');
   var grid=[];TRACKS.forEach(function(x){var tm=!q||(x.en+" "+x.ar).toLowerCase().indexOf(q)>=0;var parts=[];
-    [2,3,4].forEach(function(lv){var list=ITEMS.filter(function(z){return z.level===lv&&z.tracks.indexOf(x.k)>=0&&visible(z)&&(tm||match(z))});if(!list.length&&q)return;
+    [0,2,3,4].forEach(function(lv){var list=ITEMS.filter(function(z){return z.level===lv&&z.tracks.indexOf(x.k)>=0&&visible(z)&&(tm||match(z))});if(lv===0&&!list.length)return;if(!list.length&&q)return;
       parts.push('<p class="lvl">'+t("level")+' '+lv+' · '+esc(nm(LEVELS[lv]))+'</p><div class="rows">'+(list.length?list.map(function(z){return rowHTML(z,x.k)}).join(""):'<p class="empty">'+t("emptyLevel")+'</p>')+'</div>')});
     if(parts.length)grid.push('<div class="lgroup"><h3><button class="chip" data-track="'+x.k+'" style="border:0;padding:0;font-size:16px;font-weight:700;color:var(--ink)"><i style="background:'+x.color+';width:10px;height:10px"></i>'+esc(nm(x))+'</button></h3>'+parts.join("")+'</div>')});
   if(grid.length)h.push('<div class="lgrid">'+grid.join("")+'</div>');
@@ -1457,7 +1465,7 @@ function buildJourney(){if(!jEl)return;var ar=S.lang==="ar",k=jtrack(),x=tr(k);
   function rows(list,ctx){return '<div class="rows">'+list.map(function(z){var r=rowHTML(z,ctx);if(z.id===nid&&!isHeld(z.id))r=r.replace('<button class="row','<button class="row next').replace('</button>','<span class="nx">'+(ar?"التالي":"Next")+'</span></button>');if(S.sel&&S.sel.kind==="item"&&S.sel.id===z.id)r=r.replace('<button class="row','<button class="row on');return r}).join("")+'</div>'}
   function st(dot,lab,title,rq,body){return '<div class="jst"><span class="dot">'+dot+'</span><div class="k">'+lab+'</div><h4>'+esc(title)+'</h4>'+(rq?'<p class="rq">'+esc(rq)+'</p>':'')+body+'</div>'}
   var L=[];
-  L.push(st('<b>0</b>',ar?"البداية":"Start",nm(LEVELS[0]),L2(LEVELS[0].tag),rows([item("orient")])));
+  L.push(st('<b>0</b>',ar?"البداية":"Start",nm(LEVELS[0]),L2(LEVELS[0].tag),rows(lv0(k))));
   L.push(st('<img src="'+bsrc(LVBADGE[1])+'" alt="">',t("level")+" 1",nm(LEVELS[1]),L2(LEVELS[1].req),rows([item("core1"),item("core2")])+earnRowGeneric(1)));
   [2,3,4].forEach(function(lv){var list=ITEMS.filter(function(z){return z.level===lv&&z.tracks.indexOf(k)>=0&&visible(z)});
     L.push(st('<img src="'+bsrc(LVBADGE[lv])+'" alt="">',t("level")+" "+lv,nm(LEVELS[lv]),L2(LEVELS[lv].req),(list.length?rows(list,k):'<div class="soon">'+t("emptyLevel")+'</div>')+earnRow(lv,k)))});
@@ -1494,7 +1502,7 @@ function buildRoute(){if(!rtEl||S.view!=="rt")return;if(RMODE==="all"){buildRout
   h.push('<div class="rtitle" style="--c:'+x.color+'">'+embThumb(k,52)+'<div><div class="eyebrow">'+(ar?"مسارك من البداية إلى الخبير":"Your route from first step to Expert")+'</div><h2>'+esc(nm(x))+'</h2><p>'+esc(ar?x.dar:x.den)+'</p></div><div class="racts">'+regBtn(k)+(S.track!==k?'<button class="btn ghost" data-settrack="'+k+'">'+(ar?"اجعله مساري":"Set as mine")+'</button>':'')+'</div></div></div>');
   var stops=[];
   for(var n=0;n<=5;n++){var list;
-    if(n===0)list=[item("orient")];else if(n===1)list=[item("core1"),item("core2")];else if(n===5)list=[item("expert")];
+    if(n===0)list=lv0(typeof k==="string"?k:null);else if(n===1)list=[item("core1"),item("core2")];else if(n===5)list=[item("expert")];
     else list=ITEMS.filter(function(z){return z.level===n&&z.tracks.indexOf(k)>=0&&visible(z)});
     var hereLv=nid?item(nid).level:-1;
     var med=n?'<img src="'+bsrc(LVBADGE[n])+'" alt="">':'<span class="lv0">0</span>';
@@ -1612,9 +1620,9 @@ var XL_FILE="pathway-data.xlsx",DATA_SRC="built-in",XL_MSG="";
 var XL_LIB="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
 var TH=["Key","Name (English)","Name (Arabic)","Description (English)","Description (Arabic)","Icon","Colour","Registration link (Catalog)"];
 var LH=["Level","Name (English)","Name (Arabic)","Theme (English)","Theme (Arabic)","QFEmirates band (English)","QFEmirates band (Arabic)","Requirement (English)","Requirement (Arabic)","Credential earned (English)","Credential earned (Arabic)","Courses needed","Valid for (English)","Valid for (Arabic)","Unlocks (English)","Unlocks (Arabic)","Badge image"];
-var CH=["ID","Name (English)","Name (Arabic)","Short name (English)","Short name (Arabic)","Type","Level","Track 1","Track 2","Description (English)","Description (Arabic)","Badge image","Time needed","Format","Next start","Outcome (English)","Outcome (Arabic)","Catalog link"];
+var CH=["ID","Name (English)","Name (Arabic)","Short name (English)","Short name (Arabic)","Type","Level","Track 1","Track 2","Description (English)","Description (Arabic)","Badge image","Time needed","Format","Next start","Outcome (English)","Outcome (Arabic)","Catalog link","Catalog link (Arabic)"];
 var KH=["Setting","Link"];
-var TYPEN={orient:"Orientation",nucleus:"SEA Core (Level 1 hub)",core:"Core course",mc:"Micro-credential",prog:"Programme",ext:"External programme",expert:"Expert recognition"};
+var TYPEN={orient:"Orientation",open:"Open short course",nucleus:"SEA Core (Level 1 hub)",core:"Core course",mc:"Micro-credential",prog:"Programme",ext:"External programme",expert:"Expert recognition"};
 var LINKN={priorLearning:"Prior learning application",wallet:"Parchment wallet help",progress:"Official progress (Parchment)",catalogue:"Course catalogue"};
 var BUILTIN_COL={digital:1,tl:1,ec:1,lead:1,research:1,assess:1,incl:1};
 var FALLBACK_COL=["#E07A5F","#81B29A","#F2CC8F","#B388EB","#5FB3B3","#E8A0BF"];
@@ -1623,7 +1631,7 @@ function exportData(){
   return {
     Tracks:TRACKS.map(function(t){return [t.k,t.en,t.ar,t.den,t.dar,t.icon||t.k,BUILTIN_COL[t.k]&&!t.hex?"":(t.hex||""),TRACKREG[t.k]||""]}),
     Levels:LEVELS.map(function(l){return [l.n,l.en,l.ar,l.tag[0],l.tag[1],l.band[0],l.band[1],l.req[0],l.req[1],l.earns[0],l.earns[1],l.need==null?"":l.need,l.exp[0],l.exp[1],l.unl[0],l.unl[1],LVBADGE[l.n]||""]}),
-    Courses:ITEMS.filter(function(x){return x.type!=="tbc"}).map(function(x){var c=COURSE[x.id]||{};return [x.id,x.en,x.ar,x.sen||"",x.sar||"",TYPEN[x.type]||x.type,x.level,x.tracks[0]||"",x.tracks[1]||"",x.nen||"",x.nar||"",BADGE[x.id]||"",c.hours||"",c.format||"",c.start||"",c.outcome_en||"",c.outcome_ar||"",c.url||""]}),
+    Courses:ITEMS.filter(function(x){return x.type!=="tbc"}).map(function(x){var c=COURSE[x.id]||{};return [x.id,x.en,x.ar,x.sen||"",x.sar||"",TYPEN[x.type]||x.type,x.level,x.tracks[0]||"",x.tracks[1]||"",x.nen||"",x.nar||"",BADGE[x.id]||"",c.hours||"",c.format||"",c.start||"",c.outcome_en||"",c.outcome_ar||"",c.url||"",c.url_ar||""]}),
     Links:Object.keys(LINKN).map(function(k){return [LINKN[k],LINKCFG[k]||""]})}}
 window.__seaExport=exportData;
 function sheetRows(wb,name){var key=wb.SheetNames.filter(function(n){return n.trim().toLowerCase()===name.toLowerCase()})[0];if(!key)return null;
@@ -1648,7 +1656,7 @@ function validateData(d){var E=[],Wn=[];
     var t1=trk(r["Track 1"]),t2=trk(r["Track 2"]);if(t1===null)E.push(row+'Track 1 "'+r["Track 1"]+'" is not a track key or name.');if(t2===null)E.push(row+'Track 2 "'+r["Track 2"]+'" is not a track key or name.');
     if(n>=2&&n<=4&&!t1)E.push(row+"Courses at Levels 2 to 4 need at least one track.");
     if(!r["Name (Arabic)"])Wn.push(row+'no Arabic name for "'+r["Name (English)"]+'"; the English name will show in Arabic.');
-    if(r["Catalog link"]&&!/^https?:\/\//i.test(r["Catalog link"]))E.push(row+"Catalog link must start with https://");});
+    if(r["Catalog link"]&&!/^https?:\/\//i.test(r["Catalog link"]))E.push(row+"Catalog link must start with https://");if(r["Catalog link (Arabic)"]&&!/^https?:\/\//i.test(r["Catalog link (Arabic)"]))E.push(row+"Catalog link (Arabic) must start with https://");});
   ["orient","core","core1","core2","expert"].forEach(function(k){if(!ids[k])E.push('Courses: the row with ID "'+k+'" is needed and is missing.')});
   return {errors:E,warnings:Wn,trk:trk,tmap:tmap}}
 function applyData(d){var v=validateData(d);if(v.errors.length)return v;
@@ -1661,7 +1669,7 @@ function applyData(d){var v=validateData(d);if(v.errors.length)return v;
   Object.keys(BADGE).forEach(function(k){delete BADGE[k]});Object.keys(COURSE).forEach(function(k){delete COURSE[k]});
   ITEMS=d.Courses.map(function(r){var id=r["ID"].toLowerCase().replace(/[^a-z0-9-]/g,""),ty=v.tmap[r["Type"].toLowerCase()],tk=[v.trk(r["Track 1"]),v.trk(r["Track 2"])].filter(Boolean);
     if(r["Badge image"])BADGE[id]=r["Badge image"];
-    if(["mc","prog","core","ext"].indexOf(ty)>=0)COURSE[id]={hours:r["Time needed"],format:r["Format"],start:r["Next start"],url:r["Catalog link"],outcome_en:r["Outcome (English)"],outcome_ar:r["Outcome (Arabic)"]};
+    if(["mc","prog","core","ext","open"].indexOf(ty)>=0)COURSE[id]={hours:r["Time needed"],format:r["Format"],start:r["Next start"],url:r["Catalog link"],url_ar:r["Catalog link (Arabic)"],outcome_en:r["Outcome (English)"],outcome_ar:r["Outcome (Arabic)"]};
     var o={id:id,en:r["Name (English)"],ar:r["Name (Arabic)"]||r["Name (English)"],type:ty,level:parseInt(r["Level"],10),tracks:tk.filter(function(x,i){return tk.indexOf(x)===i}),nen:r["Description (English)"],nar:r["Description (Arabic)"]||r["Description (English)"]};
     if(r["Short name (English)"])o.sen=r["Short name (English)"];if(r["Short name (Arabic)"])o.sar=r["Short name (Arabic)"];return o});
   [2,3,4].forEach(function(lv){TRACKS.forEach(function(t){var have=0;ITEMS.forEach(function(it){if(it.level===lv&&it.tracks.indexOf(t.k)>=0)have+=credits(it)});var gap=Math.max(0,(LEVELS[lv].need||0)-have);if(gap>0)ITEMS.push({id:"tbc-"+t.k+"-"+lv,type:"tbc",level:lv,tracks:[t.k],gap:gap})})});
@@ -1687,14 +1695,14 @@ document.getElementById("databar").addEventListener("change",function(e){if(e.ta
 (function bootData(){var pv=null;try{pv=JSON.parse(store("sea-xl")||"null")}catch(e){}
   if(pv){var v=applyData(pv);if(!v.errors.length){DATA_SRC="preview";paintDataBar();return}store("sea-xl",null)}
   if(location.protocol==="file:"){paintDataBar();return}
-  fetch(XL_FILE,{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer()}).then(function(buf){return loadXL().then(function(){var v=applyData(wbToData(XLSX.read(buf,{type:"array"})));if(!v.errors.length)DATA_SRC="file";else if(window.console)console.warn("pathway-data.xlsx not used:",v.errors);paintDataBar()})}).catch(function(){paintDataBar()})})();
+  fetch(XL_FILE,{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer()}).then(function(buf){return loadXL().then(function(){var v=applyData(wbToData(XLSX.read(buf,{type:"array"})));if(!v.errors.length)DATA_SRC="file";if(!v.errors.length&&/[?&](course|badge|track|level)=/.test(location.search))runDeepLink();else if(window.console)console.warn("pathway-data.xlsx not used:",v.errors);paintDataBar()})}).catch(function(){paintDataBar()})})();
 
 /* ===================================================================== boot */
 if(store("sea-guide")==="off"||innerWidth<700)document.body.classList.add("guide-off");
 layout();setMode(S.mode);setLang(S.lang);paintTheme();
 var v0=store("sea-view2");setView(v0&&["net","jr","rt","list","lv","cr"].indexOf(v0)>=0?v0:("rt"),false);
 /* ===================================================================== direct links: ?course=research-ethics  ?track=research  ?level=2  ?lang=ar */
-(function(){var P;try{P=new URLSearchParams(location.search)}catch(e){return}
+function runDeepLink(){var P;try{P=new URLSearchParams(location.search)}catch(e){return}
   var lg=P.get("lang");if(lg==="ar"||lg==="en")setLang(lg);
   var c=(P.get("course")||P.get("badge")||"").toLowerCase(),tk=(P.get("track")||"").toLowerCase(),lv=P.get("level");
   if(c){var lvl=null;Object.keys(LVBADGE).forEach(function(n){if(LVBADGE[n]===c&&c!=="expert-recognition")lvl=+n});
@@ -1703,7 +1711,8 @@ var v0=store("sea-view2");setView(v0&&["net","jr","rt","list","lv","cr"].indexOf
     if(id){id=id.id;var it=item(id);if(it.tracks.length){JT=it.tracks[0]}setView("rt",false);S.sel=null;select({kind:"item",id:id});return}}
   if(tk&&tr(tk)){JT=tk;setView("rt",false);S.sel=null;select({kind:"track",k:tk});return}
   if(lv!==null&&lv!==""&&LEVELS[+lv]){setView("lv",false);S.sel=null;select({kind:"level",n:+lv})}
-})();
+}
+runDeepLink();
 setTimeout(function(){net.classList.remove("enter")},60);
 requestAnimationFrame(resetZ);
 addEventListener("resize",paintStepbar);
