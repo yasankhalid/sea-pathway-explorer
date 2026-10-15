@@ -1270,6 +1270,17 @@ var _select=select;select=function(sel){_select(sel);
 if(store("sea-guide")==="off"||innerWidth<700)document.body.classList.add("guide-off");
 layout();setMode(S.mode);setLang(S.lang);paintTheme();
 var v0=store("sea-view");setView(v0&&["net","jr","list","lv","cr"].indexOf(v0)>=0?v0:(innerWidth<760?"jr":"net"),false);
+/* ===================================================================== direct links: ?course=research-ethics  ?track=research  ?level=2  ?lang=ar */
+(function(){var P;try{P=new URLSearchParams(location.search)}catch(e){return}
+  var lg=P.get("lang");if(lg==="ar"||lg==="en")setLang(lg);
+  var c=(P.get("course")||P.get("badge")||"").toLowerCase(),tk=(P.get("track")||"").toLowerCase(),lv=P.get("level");
+  if(c){var lvl=null;Object.keys(LVBADGE).forEach(function(n){if(LVBADGE[n]===c&&c!=="expert-recognition")lvl=+n});
+    if(lvl!==null){setView("lv",false);S.sel=null;select({kind:"level",n:lvl});return}
+    var id=ITEMS.filter(function(x){return x.id===c||BADGE[x.id]===c})[0];
+    if(id){id=id.id;var it=item(id);if(it.tracks.length){JT=it.tracks[0]}setView(innerWidth<760?"jr":"net",false);S.sel=null;select({kind:"item",id:id});return}}
+  if(tk&&tr(tk)){JT=tk;setView(innerWidth<760?"jr":"net",false);S.sel=null;select({kind:"track",k:tk});return}
+  if(lv!==null&&lv!==""&&LEVELS[+lv]){setView("lv",false);S.sel=null;select({kind:"level",n:+lv})}
+})();
 setTimeout(function(){net.classList.remove("enter")},60);
 requestAnimationFrame(resetZ);
 addEventListener("resize",paintStepbar);

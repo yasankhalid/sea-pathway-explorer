@@ -45,3 +45,13 @@ Open `index.html` and find `var COURSE=` (marked `EDIT HERE`). Fill in `hours`, 
 ## Device preview (for testing)
 
 Open `preview.html` (on GitHub Pages: `/sea-pathway-explorer/preview.html`) to see the explorer live inside iPhone, Android, iPad, MacBook, laptop and desktop frames. Pick one device, shift-click to compare several, or choose **All devices**. Every frame is fully clickable.
+
+## Direct links
+
+Open the explorer at a specific place (useful for Parchment badge criteria links and Catalog listings):
+
+- `?course=research-ethics` (badge file name or course id) opens that course
+- `?course=practitioner-level-credential` opens that level on the Levels tab
+- `?track=research` opens a track
+- `?level=3` opens a level
+- add `&lang=ar` for Arabic
