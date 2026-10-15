@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEA Explorer · Device preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#0d1438;--panel:#151d4a;--line:rgba(255,255,255,.12);--ink:#eef2ff;--ink-2:#b6c0e6;--ink-3:#8590bd;--gold:#5BC0EB;--frame:#05081c}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Sora",system-ui,sans-serif;font-size:14px;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+header b{font-size:15px;margin-inline-end:8px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:transparent;color:var(--ink-2);border-radius:999px;padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.chip:hover{border-color:var(--gold);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#071033;font-weight:600}
+.chip.all[aria-pressed="true"]{background:var(--ink);border-color:var(--ink)}
+.sp{flex:1}
+.ctl{display:flex;gap:6px;align-items:center}
+.ctl label{font-size:12px;color:var(--ink-3)}
+.ctl select{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font:inherit;font-size:12.5px}
+main{flex:1;min-height:0;overflow:auto;padding:22px}
+.stage{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start}
+.dev{display:flex;flex-direction:column;align-items:center;gap:10px}
+.dev .cap{font-size:12.5px;color:var(--ink-2);text-align:center}
+.dev .cap b{color:var(--ink);font-weight:600}
+.box{position:relative;overflow:hidden}
+.bezel{position:absolute;left:0;top:0;transform-origin:0 0;background:var(--frame);box-shadow:0 20px 50px rgba(0,0,0,.45),inset 0 0 0 2px #2a3266}
+.bezel iframe{position:absolute;border:0;background:#111944;display:block}
+.bezel.phone{border-radius:46px}.bezel.phone iframe{border-radius:30px}
+.bezel.tablet{border-radius:34px}.bezel.tablet iframe{border-radius:14px}
+.bezel.laptop{border-radius:18px 18px 4px 4px}
+.bezel.laptop iframe{border-radius:4px}
+.bezel.desktop{border-radius:14px}
+.base{position:absolute;left:0;transform-origin:0 0;background:linear-gradient(#c9cede,#8e95ad);border-radius:0 0 22px 22px;height:26px}
+.notch{position:absolute;background:#000;border-radius:0 0 16px 16px;z-index:2}
+.empty{color:var(--ink-3);text-align:center;margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <b>Device preview</b>
+  <div class="chips" id="chips"></div>
+  <span class="sp"></span>
+  <div class="ctl"><label for="rot">Orientation</label><select id="rot"><option value="p">Portrait</option><option value="l">Landscape</option></select></div>
+  <div class="ctl"><label for="fit">Size</label><select id="fit"><option value="fit">Fit to screen</option><option value="1">Actual size</option></select></div>
+  <button class="chip" id="reload" type="button">Reload all</button>
+</header>
+<main><div class="stage" id="stage"></div></main>
+<script>
+(function(){
+var SRC="./";  /* the explorer, same folder */
+var D=[
+ {id:"se",  name:"iPhone SE",          kind:"phone", w:375, h:667},
+ {id:"ip",  name:"iPhone 15",          kind:"phone", w:393, h:852, notch:true},
+ {id:"and", name:"Android (Pixel)",    kind:"phone", w:412, h:915},
+ {id:"ipm", name:"iPad mini",          kind:"tablet",w:744, h:1133},
+ {id:"ipp", name:"iPad Pro 12.9\"",    kind:"tablet",w:1024,h:1366},
+ {id:"mba", name:"MacBook Air 13\"",   kind:"laptop",w:1280,h:832},
+ {id:"lap", name:"Laptop (HD)",        kind:"laptop",w:1366,h:768},
+ {id:"dsk", name:"Desktop (Full HD)",  kind:"desktop",w:1920,h:1080}
+];
+var PAD={phone:[14,14],tablet:[20,20],laptop:[16,16],desktop:[12,12]};
+var sel=["ip"],rot="p",fit="fit";
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+try{var s=JSON.parse(store("prev-sel")||"null");if(Array.isArray(s)&&s.length)sel=s}catch(e){}
+rot=store("prev-rot")||"p";fit=store("prev-fit")||"fit";
+var chips=document.getElementById("chips"),stage=document.getElementById("stage");
+function drawChips(){
+  var all=sel.length===D.length;
+  chips.innerHTML='<button class="chip all" data-all="1" aria-pressed="'+all+'">All devices</button>'+D.map(function(d){return '<button class="chip" data-id="'+d.id+'" aria-pressed="'+(sel.indexOf(d.id)>=0)+'">'+d.name+'</button>'}).join("");
+}
+chips.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.all){sel=sel.length===D.length?["ip"]:D.map(function(d){return d.id})}
+  else{var id=b.dataset.id,i=sel.indexOf(id);if(e.shiftKey||e.metaKey||e.ctrlKey){if(i>=0&&sel.length>1)sel.splice(i,1);else if(i<0)sel.push(id)}else sel=[id]}
+  store("prev-sel",JSON.stringify(sel));drawChips();build()});
+document.getElementById("rot").value=rot;document.getElementById("fit").value=fit;
+document.getElementById("rot").onchange=function(){rot=this.value;store("prev-rot",rot);build()};
+document.getElementById("fit").onchange=function(){fit=this.value;store("prev-fit",fit);layout()};
+document.getElementById("reload").onclick=function(){stage.querySelectorAll("iframe").forEach(function(f){f.src=f.src})};
+function dims(d){var w=d.w,h=d.h;if(rot==="l"&&(d.kind==="phone"||d.kind==="tablet")){w=d.h;h=d.w}return {w:w,h:h}}
+function build(){
+  stage.innerHTML="";
+  D.filter(function(d){return sel.indexOf(d.id)>=0}).forEach(function(d){
+    var m=dims(d),p=PAD[d.kind],W=m.w+p[0]*2,H=m.h+p[1]*2;
+    var dev=document.createElement("div");dev.className="dev";dev.dataset.w=W;dev.dataset.h=H;dev.dataset.kind=d.kind;
+    var box=document.createElement("div");box.className="box";
+    var bz=document.createElement("div");bz.className="bezel "+d.kind;bz.style.width=W+"px";bz.style.height=H+"px";
+    var f=document.createElement("iframe");f.title=d.name;f.src=SRC;f.style.left=p[0]+"px";f.style.top=p[1]+"px";f.style.width=m.w+"px";f.style.height=m.h+"px";
+    bz.appendChild(f);
+    if(d.notch&&rot==="p"){var n=document.createElement("div");n.className="notch";n.style.width="120px";n.style.height="26px";n.style.left=(W/2-60)+"px";n.style.top=p[1]+"px";bz.appendChild(n)}
+    box.appendChild(bz);
+    if(d.kind==="laptop"){var b=document.createElement("div");b.className="base";b.style.width=(W*1.12)+"px";b.style.marginLeft="0";box.appendChild(b)}
+    dev.appendChild(box);
+    var cap=document.createElement("div");cap.className="cap";cap.innerHTML="<b>"+d.name+"</b> · "+m.w+" × "+m.h;dev.appendChild(cap);
+    stage.appendChild(dev);
+  });
+  if(!sel.length)stage.innerHTML='<p class="empty">Pick a device above.</p>';
+  layout();
+}
+function layout(){
+  var devs=[].slice.call(stage.querySelectorAll(".dev"));if(!devs.length)return;
+  var mw=document.querySelector("main").clientWidth-44,mh=document.querySelector("main").clientHeight-44-30;
+  var n=devs.length,gap=28;
+  devs.forEach(function(dev){
+    var W=+dev.dataset.w,H=+dev.dataset.h,k=1;
+    if(fit==="fit"){
+      var cols=n===1?1:Math.min(n,Math.max(1,Math.floor(mw/ (n>3?360:460))));
+      var availW=(mw-gap*(cols-1))/cols,availH=n===1?mh:Math.max(mh*.9,420);
+      k=Math.min(1,availW/(W*(dev.dataset.kind==="laptop"?1.12:1)),availH/(H+(dev.dataset.kind==="laptop"?26:0)));
+    }
+    var box=dev.querySelector(".box"),bz=dev.querySelector(".bezel"),base=dev.querySelector(".base");
+    bz.style.transform="scale("+k+")";
+    var extra=dev.dataset.kind==="laptop"?26:0,bw=W*(dev.dataset.kind==="laptop"?1.12:1);
+    box.style.width=(bw*k)+"px";box.style.height=((H+extra)*k)+"px";
+    if(base){base.style.top=(H*k)+"px";base.style.left=(-(bw-W)/2*k+((bw-W)/2*k))+"px";bz.style.left=((bw-W)/2*k)+"px";base.style.transform="scale("+k+")";}
+  });
+}
+addEventListener("resize",layout);
+drawChips();build();
+})();
+</script>
+</body>
+</html>

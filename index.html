@@ -440,6 +440,7 @@ html[lang="ar"] .stepbar .k{letter-spacing:0;font-family:inherit}
 
 .tab .tcount{margin-inline-start:6px;display:inline-block;min-width:18px;padding:1px 6px;border-radius:999px;background:var(--gold);color:#fff;font-size:11px;font-weight:700;line-height:16px;text-align:center;font-variant-numeric:tabular-nums}
 .tab .tcount:empty{display:none}
+@media (max-width:1440px){.hint{display:none}}
 .lhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
 .lstats{display:flex;gap:10px;flex-wrap:wrap}
 .lstat{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:10px 14px;min-width:92px}
@@ -991,7 +992,7 @@ function setTrack(k){S.track=k;store("sea-track",k);paintMe()}
 function paintMe(){document.getElementById("mepct").textContent=S.track?overall(S.track)+"%":""}
 document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!=="list")setView("net");if(S.sel&&S.sel.kind==="me")select(null);else{S.sel=null;select({kind:"me"})}};
 function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v);document.getElementById("view-"+x).hidden=x!==v});
-  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"){document.body.classList.remove("panel-open")}else showPanel();store("sea-v",v)}
+  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"){document.body.classList.remove("panel-open")}else showPanel();if(arguments[1]!==false)store("sea-v",v)}
 ["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x)}});
 function listCount(){var q=S.q.trim().toLowerCase();if(!q)return 0;var tks=TRACKS.filter(function(x){return (x.en+" "+x.ar).toLowerCase().indexOf(q)>=0}).map(function(x){return x.k});
   return ITEMS.filter(function(it){if(it.type==="tbc"||it.type==="nucleus")return false;if((it.en+" "+(it.ar||"")+" "+(it.sen||"")).toLowerCase().indexOf(q)>=0)return true;return it.tracks.some(function(k){return tks.indexOf(k)>=0})}).length}
@@ -1055,7 +1056,7 @@ var _select=select;select=function(sel){_select(sel);
 /* ===================================================================== boot */
 if(store("sea-guide")==="off"||innerWidth<700)document.body.classList.add("guide-off");
 layout();setMode(S.mode);setLang(S.lang);paintTheme();
-var v0=store("sea-v");setView(v0&&["net","list","lv","cr"].indexOf(v0)>=0?v0:(innerWidth<760?"list":"net"));
+var v0=store("sea-v");setView(v0&&["net","list","lv","cr"].indexOf(v0)>=0?v0:(innerWidth<760?"list":"net"),false);
 setTimeout(function(){net.classList.remove("enter")},60);
 requestAnimationFrame(resetZ);
 addEventListener("resize",paintStepbar);

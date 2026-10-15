@@ -41,3 +41,7 @@ Arabic badge titles are draft translations and should be approved before officia
 ### Editing course details
 
 Open `index.html` and find `var COURSE=` (marked `EDIT HERE`). Fill in `hours`, `format`, `start`, `url`, `outcome_en`, `outcome_ar` for each course. Links for the prior-learning form and wallet help page go in `var LINKCFG=` just below.
+
+## Device preview (for testing)
+
+Open `preview.html` (on GitHub Pages: `/sea-pathway-explorer/preview.html`) to see the explorer live inside iPhone, Android, iPad, MacBook, laptop and desktop frames. Pick one device, shift-click to compare several, or choose **All devices**. Every frame is fully clickable.
