@@ -422,7 +422,7 @@ html,body{margin:0;overflow:hidden}
     <div class="t"><b data-t="title">SEA Learning Pathway</b><span data-t="subtitle">Sharjah Education Academy · Credential explorer</span></div>
     <div class="tabs" role="tablist" aria-label="Views">
       <button class="tab" role="tab" id="tab-net" aria-selected="true" data-t="tabMap">Map</button>
-      <button class="tab" role="tab" id="tab-list" aria-selected="false" data-t="tabList">List</button>
+      <button class="tab" role="tab" id="tab-list" aria-selected="false" data-t="tabList">Tracks</button>
       <button class="tab" role="tab" id="tab-lv" aria-selected="false" data-t="tabLevels">Levels</button>
       <button class="tab" role="tab" id="tab-cr" aria-selected="false" data-t="tabBadges">Badges</button>
     </div>
@@ -519,7 +519,7 @@ var LINKCFG={priorLearning:"",wallet:"",catalogue:""}; /* EDIT HERE: prior-learn
 
 /* ===================================================================== text (EN + draft AR) */
 var T={en:{
- title:"SEA Learning Pathway",subtitle:"Sharjah Education Academy · Credential explorer",tabMap:"Map",tabList:"List",tabLevels:"Levels",tabBadges:"Badges",
+ title:"SEA Learning Pathway",subtitle:"Sharjah Education Academy · Credential explorer",tabMap:"Map",tabList:"Tracks",tabLevels:"Levels",tabBadges:"Badges",
  myPath:"My pathway",modeLearner:"Learner",modeStaff:"Staff",draft:"FRAMEWORK V0 · PROPOSED",startHere:"Start here",guideTitle:"How the pathway works",
  guideLead:"Every learner starts in the centre and moves outward. Select a step to see it on the map.",shapeKey:"Shape and colour show the level",
  findTrack:"Find my track",playTour:"Play the tour",stopTour:"Stop the tour",hide:"Hide",howItWorks:"How it works",hint:"Point at a badge for a summary · select it to see where it leads",
@@ -532,7 +532,7 @@ var T={en:{
  enrol:"Enrol or view course",enrolSoon:"Enrolment opens soon",iHave:"I have this badge",iHaveOn:"Added to my pathway",afterEarn:"After you earn it",
  afterEarnTx:"Your badge goes into your digital wallet, where you can share it on LinkedIn or with a QR code.",seeWallet:"How the wallet works",
  requirement:"Level {n} requirement",unlocks:"What this level unlocks",validFor:"Valid for",inside:"Inside the Core",notCred:"Not credentialed",
- me:"My pathway",meLead:"Pick your track and tick the badges you already have. Your progress is saved in this browser only.",chooseTrack:"Your track",
+ me:"My pathway",meLead:"Plan your route: pick a track and tick the badges you already have. This is a planner saved in this browser only. Your official, verified badges are in your Parchment wallet.",chooseTrack:"Your track",
  noTrack:"Choose a track, or take the quick quiz to find one.",progress:"Your progress",nextStep:"Your next step",allDone:"You have completed every named course in this track. Next: Expert Recognition.",
  comingSoon:"More courses for this level are coming soon.",heldN:"{n} badges held",reset:"Clear my progress",tryExample:"Try an example",
  earnsIn:"Earns the {c} in {t}",levelOf:"{d} of {n}",prior:"Already experienced?",priorTx:"Prior learning can replace up to a third of a level.",
@@ -548,7 +548,7 @@ var T={en:{
  illus:"Illustration of how a shared badge looks.",verified:"Verified by Sharjah Education Academy",shareLI:"Add to LinkedIn",shareQR:"QR code",shareLink:"Copy link",
  legendL:"Shape = level",typesH:["Type","What it recognises","How it is earned","Awarded","Stacks into","Expiry","Shareable"]
 },ar:{
- title:"مسار التعلّم في أكاديمية الشارقة للتعليم",subtitle:"أكاديمية الشارقة للتعليم · مستكشف الشهادات",tabMap:"الخريطة",tabList:"القائمة",tabLevels:"المستويات",tabBadges:"الشارات",
+ title:"مسار التعلّم في أكاديمية الشارقة للتعليم",subtitle:"أكاديمية الشارقة للتعليم · مستكشف الشهادات",tabMap:"الخريطة",tabList:"المسارات",tabLevels:"المستويات",tabBadges:"الشارات",
  myPath:"مساري",modeLearner:"المتعلم",modeStaff:"الموظفون",draft:"الإطار · مسودة",startHere:"ابدأ من هنا",guideTitle:"كيف يعمل المسار",
  guideLead:"يبدأ كل متعلم من المركز ويتقدّم نحو الخارج. اختر خطوة لتراها على الخريطة.",shapeKey:"الشكل واللون يدلّان على المستوى",
  findTrack:"اعثر على مساري",playTour:"شغّل الجولة",stopTour:"أوقف الجولة",hide:"إخفاء",howItWorks:"كيف يعمل",hint:"مرّر المؤشر على شارة لملخص · اخترها لترى إلى أين تقود",
@@ -561,7 +561,7 @@ var T={en:{
  enrol:"سجّل أو اعرض المقرر",enrolSoon:"يفتح التسجيل قريبًا",iHave:"لديّ هذه الشارة",iHaveOn:"أُضيفت إلى مساري",afterEarn:"بعد حصولك عليها",
  afterEarnTx:"تُحفظ شارتك في محفظتك الرقمية، ويمكنك مشاركتها على لينكدإن أو برمز QR.",seeWallet:"كيف تعمل المحفظة",
  requirement:"متطلبات المستوى {n}",unlocks:"ما يتيحه هذا المستوى",validFor:"الصلاحية",inside:"داخل الجوهر",notCred:"غير معتمد",
- me:"مساري",meLead:"اختر مسارك وحدّد الشارات التي لديك. يُحفظ تقدّمك في هذا المتصفح فقط.",chooseTrack:"مسارك",
+ me:"مساري",meLead:"خطّط لمسارك: اختر مسارك وحدّد الشارات التي لديك. هذه أداة تخطيط تُحفظ في هذا المتصفح فقط، أما شاراتك الرسمية الموثّقة ففي محفظتك على Parchment.",chooseTrack:"مسارك",
  noTrack:"اختر مسارًا، أو أجب عن الاختبار القصير لتجد المسار المناسب.",progress:"تقدّمك",nextStep:"خطوتك التالية",allDone:"أكملت كل المقررات المسمّاة في هذا المسار. التالي: تقدير الخبير.",
  comingSoon:"مقررات هذا المستوى قادمة قريبًا.",heldN:"{n} شارات لديك",reset:"امسح تقدّمي",tryExample:"جرّب مثالًا",
  earnsIn:"تمنح {c} في {t}",levelOf:"{d} من {n}",prior:"لديك خبرة سابقة؟",priorTx:"يمكن أن يحلّ التعلّم السابق محل ثلث المستوى كحد أقصى.",

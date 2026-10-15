@@ -36,7 +36,7 @@ Arabic badge titles are draft translations and should be approved before officia
 - **Find my track**: a 3-question quiz that suggests a track.
 - **English / Arabic** with right-to-left layout (Arabic text is a draft for approval).
 - **Learner / Staff mode**: learner mode hides draft labels and "still to be added" placeholders.
-- **List view** (default on phones), **search**, plain-language term tooltips, course details with an Enrol button, prior-learning note and a digital wallet explainer.
+- **Tracks view** (a list of courses by track, default on phones), **search**, plain-language term tooltips, course details with an Enrol button, prior-learning note and a digital wallet explainer.
 
 ### Editing course details
 
