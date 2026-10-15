@@ -501,6 +501,8 @@ html[dir="rtl"] .ladder .ln::after{animation-name:railflowr}
 }
 #ways{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (max-width:640px){#ways{grid-template-columns:1fr}}
+#ascent .lv.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-soft),var(--shadow)}
+.ladder .nd.on{transform:scale(1.15)}
 /* keep the map clear of the legend */
 #view-net #net-wrap{top:62px}
 @media (min-width:641px){#view-net #net-wrap{bottom:96px}#view-net .legend{z-index:6}}
@@ -1015,12 +1017,26 @@ function panelMe(){var h=[];
     h.push(priorHTML())}
   h.push('<div class="g-actions"><button class="btn ghost" data-example="1">'+t("tryExample")+'</button><button class="btn ghost" data-reset="1">'+t("reset")+'</button></div>');
   body.innerHTML=h.join("")}
+
+function panelLevel(n){var l=LEVELS[n],ar=S.lang==="ar",h=[];
+  h.push('<div class="hero"><div class="art">'+(n?'<img src="'+bsrc(LVBADGE[n])+'" alt="" style="position:relative;width:100%;height:100%">':'<span class="lvb lv0" style="width:96px;height:96px">0</span>')+'</div><div><div class="eyebrow">'+(n?t("level")+" "+n:(ar?"البداية":"Start"))+'</div><h2>'+esc(nm(l))+'</h2></div></div>');
+  h.push('<div class="chips"><span class="chip gold">'+esc(L2(l.tag))+'</span><span class="chip">'+esc(L2(l.band))+'</span></div>');
+  h.push('<div class="sec"><h3>'+t("requirement",{n:n})+'</h3><p>'+esc(L2(l.req))+'</p></div>');
+  h.push('<div class="sec"><h3>'+t("unlocks")+'</h3><ul class="unlock"><li>'+esc(L2(l.earns))+'</li><li>'+esc(L2(l.unl))+'</li><li>'+t("validFor")+': '+esc(L2(l.exp))+'</li></ul></div>');
+  var list;if(n===0)list=[item("orient")];else if(n===1)list=[item("core1"),item("core2")];else if(n===5)list=[item("expert")];
+  else{list=ITEMS.filter(function(z){return z.level===n&&z.tracks.length&&visible(z)}).sort(function(a,b){return tr(a.tracks[0]).i-tr(b.tracks[0]).i})}
+  h.push('<div class="sec"><h3>'+(ar?"مقررات هذا المستوى":"Courses at this level")+' · '+list.filter(function(z){return z.type!=="tbc"}).length+'</h3><div class="rows">'+(list.length?list.map(function(z){var r=rowHTML(z);if(z.tracks.length)r=r.replace(/<span class="sm">[^<]*<\/span>/,'<span class="sm">'+esc(z.type==="tbc"?t("stillAdd"):z.tracks.map(function(k){return nm(tr(k))}).join(" · "))+'</span>');return r}).join(""):'<p class="note">'+t("emptyLevel")+'</p>')+'</div>'+(n>=1&&n<=4?earnRowGeneric(n):"")+'</div>');
+  if(n>=2&&n<=4){var empty=TRACKS.filter(function(x){return !ITEMS.some(function(z){return z.level===n&&z.type!=="tbc"&&z.tracks.indexOf(x.k)>=0})});
+    if(empty.length)h.push('<p class="note">'+(ar?"مقررات قادمة قريبًا في: ":"Courses coming soon for: ")+empty.map(function(x){return esc(nm(x))}).join(", ")+'.</p>')}
+  if(n===0||n===1||n===5)h.push('<button class="btn ghost" data-mapgo="'+(n===0?"orient":n===1?"core":"expert")+'">'+(ar?"اعرض على الخريطة":"See on the map")+'</button>');
+  if(n>=2)h.push(priorHTML());
+  body.innerHTML=h.join("")}
 function panelStep(n){var x=STEPS[n],h=[];h.push('<div class="eyebrow">'+t("stepOf",{n:n+1,m:STEPS.length})+'</div><h2>'+esc(x.t)+'</h2><p>'+x.body+'</p>');body.innerHTML=h.join("")}
-function showPanel(){var on=!!S.sel&&S.sel.kind!=="step";document.body.classList.toggle("panel-open",on);if(!on)return;
-  if(S.sel.kind==="item")panelItem(item(S.sel.id));else if(S.sel.kind==="track")panelTrack(S.sel.k);else if(S.sel.kind==="me")panelMe();
+function showPanel(){var on=!!S.sel&&S.sel.kind!=="step";document.body.classList.toggle("panel-open",on);document.querySelectorAll("#ascent .lv,#ladder .nd").forEach(function(c){c.classList.toggle("on",!!S.sel&&S.sel.kind==="level"&&+c.getAttribute("data-lv")===S.sel.n)});if(!on)return;
+  if(S.sel.kind==="item")panelItem(item(S.sel.id));else if(S.sel.kind==="track")panelTrack(S.sel.k);else if(S.sel.kind==="me")panelMe();else if(S.sel.kind==="level")panelLevel(S.sel.n);
   body.scrollTop=0}
 function keyOf(n){if(n.hasAttribute("data-id"))return {kind:"item",id:n.getAttribute("data-id")};return {kind:"track",k:n.getAttribute("data-track")}}
-function select(sel){var same=S.sel&&sel&&S.sel.kind===sel.kind&&sel.kind!=="step"&&sel.kind!=="me"&&(S.sel.id||S.sel.k)===(sel.id||sel.k);S.sel=same?null:sel;S.hover=null;render();showPanel();paintSteps()}
+function select(sel){var same=S.sel&&sel&&S.sel.kind===sel.kind&&sel.kind!=="step"&&sel.kind!=="me"&&[S.sel.id,S.sel.k,S.sel.n].join("|")===[sel.id,sel.k,sel.n].join("|");S.sel=same?null:sel;S.hover=null;render();showPanel();paintSteps()}
 
 /* ===================================================================== guide steps */
 function buildSteps(){var ar=S.lang==="ar",named=ITEMS.filter(function(x){return ["mc","prog","ext"].indexOf(x.type)>=0}),shared=ITEMS.filter(function(x){return x.tracks.length===2});
@@ -1088,7 +1104,7 @@ function buildPages(){var arS=S.lang==="ar",designs={};Object.keys(BADGE).forEac
   document.getElementById("tax").innerHTML='<thead><tr>'+t("typesH").map(function(x){return '<th>'+esc(x)+'</th>'}).join("")+'</tr></thead><tbody>'+TAX.map(function(r){return r.length===1?'<tr class="grp"><td colspan="7">'+esc(r[0])+'</td></tr>':'<tr><td class="nm">'+r.map(esc).join('</td><td>')+'</td></tr>'}).join("")+'</tbody>';
 }
 document.getElementById("ladder").addEventListener("click",function(e){var b=e.target.closest("[data-lv]");if(b){var c=document.querySelector('#ascent [data-lv="'+b.getAttribute("data-lv")+'"]');if(c)c.click()}});
-document.getElementById("ascent").addEventListener("click",function(e){var b=e.target.closest("[data-lv]");if(!b)return;var n=+b.getAttribute("data-lv");setView("net");S.sel=null;if(n>=2&&n<=4)select({kind:"track",k:S.track||"tl"});else select({kind:"item",id:n===0?"orient":n===1?"core":"expert"})});
+document.getElementById("ascent").addEventListener("click",function(e){var b=e.target.closest("[data-lv]");if(!b)return;select({kind:"level",n:+b.getAttribute("data-lv")})});
 
 /* ===================================================================== quiz */
 var QZ={en:[
@@ -1146,12 +1162,13 @@ body.addEventListener("click",function(e){
   if(e.target.closest("[data-example]")){held=EXAMPLE.held.slice();setTrack(EXAMPLE.track);saveHeld();render();showPanel();return}
   if(e.target.closest("[data-reset]")){held=[];setTrack(null);saveHeld();render();showPanel();return}
   var go=e.target.closest("[data-go]");if(go&&go.getAttribute("data-go")==="wallet"){select(null);setView("cr");return}
+  var mg=e.target.closest("[data-mapgo]");if(mg){var mid=mg.getAttribute("data-mapgo");S.sel=null;setView("net");select({kind:"item",id:mid});return}
   var n=e.target.closest("[data-id],[data-track]");if(n&&!n.hasAttribute("data-have")){stopTour();S.sel=null;select(keyOf(n))}});
 function setTrack(k){S.track=k;store("sea-track",k);if(k){JT=k;store("sea-jtrack",k)}paintMe();if(typeof buildJourney==="function")buildJourney()}
 function paintMe(){document.getElementById("mepct").textContent=S.track?overall(S.track)+"%":""}
 document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!=="list"&&S.view!=="jr")setView(narrow()?"jr":"net");if(S.sel&&S.sel.kind==="me")select(null);else{S.sel=null;select({kind:"me"})}};
 function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v||(x==="net"&&v==="jr"))});["net","jr","list","lv","cr"].forEach(function(x){document.getElementById("view-"+x).hidden=x!==v});var isMap=v==="net"||v==="jr";document.body.classList.toggle("v-map",isMap);document.body.classList.toggle("mm-jr",v==="jr");if(isMap){MM=v;if(arguments[1]!==false)store("sea-mapmode",v);document.querySelectorAll("[data-mm]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-mm")===v)})}
-  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"&&v!=="jr"){document.body.classList.remove("panel-open")}else showPanel();if(v==="jr")buildJourney();if(arguments[1]!==false)store("sea-view",v)}
+  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"&&v!=="jr"&&v!=="lv"){document.body.classList.remove("panel-open")}else showPanel();if(v==="jr")buildJourney();if(arguments[1]!==false)store("sea-view",v)}
 var MM=store("sea-mapmode");["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x==="net"?(MM||(innerWidth<760?"jr":"net")):x)}});
 document.getElementById("mapswitch").addEventListener("click",function(e){var b=e.target.closest("[data-mm]");if(b)setView(b.getAttribute("data-mm"))});
 function listCount(){var q=S.q.trim().toLowerCase();if(!q)return 0;var tks=TRACKS.filter(function(x){return (x.en+" "+x.ar).toLowerCase().indexOf(q)>=0}).map(function(x){return x.k});
