@@ -537,6 +537,30 @@ html[data-theme="light"] .amed{background:#E8EDF4}
 }
 
 
+
+/* lane roads v2 */
+.aroad .aband{fill:var(--tc);fill-opacity:.07;stroke:var(--tc);stroke-opacity:.22;stroke-width:1;transition:fill-opacity .3s,stroke-opacity .3s}
+.aroad .aglow{fill:none;stroke-width:12;stroke-linecap:round;opacity:.14;transition:opacity .3s}
+.aroad .afan{fill:none;stroke-width:4.5;stroke-linecap:round;opacity:.95;transition:opacity .3s,stroke-width .3s}
+.aroad .aspine{fill:none;stroke:var(--tc);stroke-width:3;stroke-linecap:round;opacity:.55;transition:opacity .3s}
+.aroad .astn{fill:var(--bg);stroke:var(--tc);stroke-width:2.5}
+.aroad .ajn{fill:var(--tc);stroke:var(--bg);stroke-width:2.5}
+.aroad .aflow{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-dasharray:1 26;opacity:.85;animation:rflow2 2.6s linear infinite}
+.aroad .aflow.sp{stroke:var(--tc);opacity:.9;stroke-width:3.5}
+@keyframes rflow2{to{stroke-dashoffset:-54}}
+.rall.focus .alane:not(.lit) .aband{fill-opacity:.02;stroke-opacity:.06}
+.rall.focus .alane:not(.lit) .afan,.rall.focus .alane:not(.lit) .aspine,.rall.focus .alane:not(.lit) .aglow,.rall.focus .alane:not(.lit) .aflow,.rall.focus .alane:not(.lit) .astn,.rall.focus .alane:not(.lit) .ajn{opacity:.1}
+.rall.focus .alane.lit .aband{fill-opacity:.16;stroke-opacity:.5}
+.rall.focus .alane.lit .aglow{opacity:.35}
+.aroad .alane.off .aband,.aroad .alane.off .aglow,.aroad .alane.off .afan,.aroad .alane.off .aspine,.aroad .alane.off .aflow,.aroad .alane.off .astn,.aroad .alane.off .ajn{opacity:.07!important}
+.aroad .alane.best .aband,.aroad .alane.mine .aband{fill-opacity:.14;stroke-opacity:.55}
+.aroad .alane.best .aglow,.aroad .alane.mine .aglow{opacity:.3}
+.aroad .alane.best .afan,.aroad .alane.mine .afan{stroke-width:6}
+html[data-theme="light"] .aroad .aflow{stroke:#fff;opacity:1}
+html[data-theme="light"] .aroad .aband{fill-opacity:.1}
+html[data-theme="light"] .aroad .astn{fill:#E8EDF4}
+.rall.intro .afan,.rall.intro .aglow,.rall.intro .aspine{stroke-dasharray:1400;stroke-dashoffset:1400;animation:adraw 1.3s ease-out forwards}
+.rall.intro .aband{animation:afade .8s ease-out .3s both}
 /* role filter */
 .rolebar{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .rolebar .rlbl{font-size:12.5px;font-weight:700;color:var(--ink-2);margin-inline-end:4px}
@@ -1521,11 +1545,23 @@ function drawAll(){var box=rtEl&&rtEl.querySelector(".rall"),svg=box&&box.queryS
   svg.setAttribute("width",b.width);svg.setAttribute("height",b.height);svg.setAttribute("viewBox","0 0 "+b.width+" "+b.height);
   var m0=R(box.querySelector(".astart .amed")),m1=R(box.querySelector(".al1 .amed")),m5=R(box.querySelector(".aexp .amed")),p=[];
   p.push('<path d="'+cv(out(m0),m0.cy,inn(m1),m1.cy)+'" class="abase"/><path d="'+cv(out(m0),m0.cy,inn(m1),m1.cy)+'" class="aline" stroke="url(#ag01)"/>');
-  box.querySelectorAll(".rlane").forEach(function(ln){var c=getComputedStyle(ln).getPropertyValue("--tc").trim(),lab=R(ln.querySelector(".alab")),cells=ln.querySelectorAll(".alc"),last=R(cells[cells.length-1]),y=lab.cy;
-    var f=cv(out(m1),m1.cy,inn(lab),y),lane="M"+out(lab)+" "+y+" L"+out(last)+" "+y,mg=cv(out(last),y,inn(m5),m5.cy);
-    p.push('<g class="alane'+(ln.classList.contains("mine")?" mine":"")+(ln.classList.contains("off")?" off":"")+(ln.classList.contains("best")?" best":"")+'" data-lane="'+ln.getAttribute("data-lane")+'" style="--tc:'+c+'"><path d="'+f+'" class="afan"/><path d="'+lane+'" class="atrk"/><path d="'+mg+'" class="afan"/>'+(RM?'':'<path d="'+f+'" class="aflow"/><path d="'+mg+'" class="aflow"/>')+'</g>')});
-  if(!drawAll._anim&&!RM){drawAll._anim=1;box.classList.add("intro");setTimeout(function(){box.classList.remove("intro")},1600)}
-  svg.innerHTML='<defs><linearGradient id="ag01" x1="'+(rtl?1:0)+'" x2="'+(rtl?0:1)+'"><stop offset="0" stop-color="'+RCOL[0]+'"/><stop offset="1" stop-color="'+RCOL[1]+'"/></linearGradient></defs>'+p.join("")}
+  var defs=[],bands=[];
+  box.querySelectorAll(".rlane").forEach(function(ln,li){var c=getComputedStyle(ln).getPropertyValue("--tc").trim(),lab=R(ln.querySelector(".alab")),cells=[].slice.call(ln.querySelectorAll(".alc")).map(R),last=cells[cells.length-1],y=lab.cy;
+    var x0=out(m1),x1=inn(lab),x2=out(lab),x3=out(last),x4=inn(m5);
+    var f=cv(x0,m1.cy,x1,y),mg=cv(x3,y,x4,m5.cy),sp="M"+x2+" "+y+" L"+x3+" "+y;
+    defs.push('<linearGradient id="gf'+li+'" gradientUnits="userSpaceOnUse" x1="'+x0+'" y1="0" x2="'+x1+'" y2="0"><stop offset="0" stop-color="'+RCOL[1]+'"/><stop offset="1" stop-color="'+c+'"/></linearGradient><linearGradient id="gm'+li+'" gradientUnits="userSpaceOnUse" x1="'+x3+'" y1="0" x2="'+x4+'" y2="0"><stop offset="0" stop-color="'+c+'"/><stop offset="1" stop-color="'+RCOL[5]+'"/></linearGradient>');
+    var bl=Math.min(lab.l,last.l,last.r)-6,br=Math.max(lab.r,last.r,last.l)+6,bt=Math.min.apply(null,[lab.t].concat(cells.map(function(q){return q.t})))-5,bb=Math.max.apply(null,[lab.b].concat(cells.map(function(q){return q.b})))+5,bh=bb-bt;
+    var st=cells.map(function(cl){var cx=rtl?cl.r+5:cl.l-5;return '<circle cx="'+cx+'" cy="'+y+'" r="4.5" class="astn"/>'}).join("");
+    p.push('<g class="alane'+(ln.classList.contains("mine")?" mine":"")+(ln.classList.contains("off")?" off":"")+(ln.classList.contains("best")?" best":"")+'" data-lane="'+ln.getAttribute("data-lane")+'" style="--tc:'+c+'">'+
+      '<rect x="'+bl+'" y="'+bt+'" width="'+(br-bl)+'" height="'+bh+'" rx="'+(Math.min(bh/2,22))+'" class="aband"/>'+
+      '<path d="'+f+'" class="aglow" stroke="url(#gf'+li+')"/><path d="'+mg+'" class="aglow" stroke="url(#gm'+li+')"/>'+
+      '<path d="'+f+'" class="afan" stroke="url(#gf'+li+')"/><path d="'+mg+'" class="afan" stroke="url(#gm'+li+')"/>'+
+      '<path d="'+sp+'" class="aspine"/>'+st+
+      '<circle cx="'+x1+'" cy="'+y+'" r="5" class="ajn"/><circle cx="'+x3+'" cy="'+y+'" r="5" class="ajn"/>'+
+      (RM?'':'<path d="'+f+'" class="aflow" style="animation-delay:-'+(li*.3)+'s"/><path d="'+sp+'" class="aflow sp" style="animation-delay:-'+(li*.3)+'s"/><path d="'+mg+'" class="aflow" style="animation-delay:-'+(li*.3+.6)+'s"/>')+'</g>')});
+  defs.push('<radialGradient id="ghalo"><stop offset="0" stop-color="'+RCOL[5]+'" stop-opacity=".35"/><stop offset="1" stop-color="'+RCOL[5]+'" stop-opacity="0"/></radialGradient>');
+  p.unshift('<circle cx="'+m5.cx+'" cy="'+m5.cy+'" r="'+((m5.r-m5.l)*1.1)+'" fill="url(#ghalo)"/>');
+  svg.innerHTML='<defs>'+defs.join("")+'<linearGradient id="ag01" x1="'+(rtl?1:0)+'" x2="'+(rtl?0:1)+'"><stop offset="0" stop-color="'+RCOL[0]+'"/><stop offset="1" stop-color="'+RCOL[1]+'"/></linearGradient></defs>'+p.join("")}
 rtEl.addEventListener("click",function(e){var rc=e.target.closest("[data-role]");if(rc){e.stopPropagation();setRole(rc.getAttribute("data-role"));return}var so=e.target.closest("[data-showoff]");if(so){e.stopPropagation();SHOWALL=!SHOWALL;buildRoute();return}var lp=e.target.closest("[data-lanepick]");if(lp){e.stopPropagation();RMODE="one";store("sea-rmode","one");JT=lp.getAttribute("data-lanepick");store("sea-jtrack",JT);buildRoute();if(typeof buildJourney==="function")buildJourney();rtEl.scrollIntoView({block:"start"})}},true);
 rtEl.addEventListener("mouseover",function(e){var c=e.target.closest(".achip,.alab");if(!c)return;var box=rtEl.querySelector(".rall");if(!box)return;box.classList.add("focus");
   var lanes=[];if(c.classList.contains("alab"))lanes=[c.getAttribute("data-lanepick")];else{var it=item(c.getAttribute("data-id"));lanes=it.tracks.slice();box.querySelectorAll('.achip[data-id="'+it.id+'"]').forEach(function(x){x.classList.add("lit")})}
