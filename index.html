@@ -412,6 +412,17 @@ body.staff-off .draft{display:none}
 html,body{margin:0;overflow:hidden}
 
 
+
+/* levels page: equal cards + level meter */
+#ascent{align-items:stretch}
+#ascent .lv{min-height:0!important}
+@media (min-width:641px){#ascent .lv h3{min-height:2.4em;display:flex;align-items:flex-end}}
+.lv .lv0{width:84px;height:84px;border-radius:50%;border:2px dashed var(--ink-3);display:grid;place-items:center;font-size:24px;font-weight:600;color:var(--ink-3);align-self:center;margin:2px 0 4px;box-sizing:border-box}
+.lv .meter{position:absolute;top:14px;inset-inline-end:14px;display:flex;gap:3px;align-items:flex-end}
+.lv .meter i{width:5px;border-radius:2px;background:var(--line-2)}
+.lv .meter i.on{background:var(--gold)}
+#ways{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:640px){#ways{grid-template-columns:1fr}}
 /* map layout switch */
 .mapswitch{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:9;display:none;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line-2);background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:var(--shadow)}
 body.v-map .mapswitch{display:inline-flex}
@@ -981,8 +992,8 @@ function statTile(n,l){return '<div class="lstat"><b>'+n+'</b><span>'+esc(l)+'</
 function buildPages(){var arS=S.lang==="ar",designs={};Object.keys(BADGE).forEach(function(k){designs[BADGE[k]]=1});Object.keys(LVBADGE).forEach(function(k){designs[LVBADGE[k]]=1});
   document.getElementById("lvstats").innerHTML=statTile(5,arS?"مستويات":"levels")+statTile(5,arS?"شهادات مستوى":"Level Credentials")+statTile("4–8",arS?"نطاقات الإطار الوطني":"QFEmirates bands")+statTile("⅓",arS?"حد التعلّم السابق":"max. via prior learning");
   document.getElementById("crstats").innerHTML=statTile(4,arS?"أنواع شارات موثّقة":"verified badge types")+statTile(3,arS?"أنواع شهادات":"credential types")+statTile(Object.keys(designs).length,arS?"تصاميم شارات":"badge designs")+statTile(1,arS?"محفظة رقمية (Parchment)":"digital wallet (Parchment)");
-  document.getElementById("ascent").innerHTML=LEVELS.map(function(l,i){return '<button class="lv" data-lv="'+l.n+'" style="--o:'+(.25+i*.15)+';min-height:'+(210+i*18)+'px">'+(l.n?'<img class="lvb" src="'+bsrc(LVBADGE[l.n])+'" alt="">':'')+'<span class="k">'+(l.n?t("level")+" "+l.n:(S.lang==="ar"?"البداية":"Start"))+'</span><h3>'+esc(nm(l))+'</h3><p class="tg">'+esc(L2(l.tag))+' · '+esc(L2(l.band))+'</p><p class="rq">'+esc(L2(l.req))+'</p><div class="er"><small>'+t("unlocks")+'</small>'+esc(L2(l.unl))+'</div></button>'}).join("");
-  document.getElementById("ways").innerHTML='<div class="way"><b>'+t("goDeeper")+'</b><span>'+t("goDeeperTx")+'</span></div><div class="way"><b>'+t("goWider")+'</b><span>'+t("goWiderTx")+'</span></div><div class="way"><b>'+t("prior")+'</b><span>'+t("priorTx")+'</span></div>';
+  document.getElementById("ascent").innerHTML=LEVELS.map(function(l,i){return '<button class="lv" data-lv="'+l.n+'" style="--o:'+(.25+i*.15)+'"><span class="meter" aria-hidden="true">'+[1,2,3,4,5].map(function(m){return '<i class="'+(m<=l.n?'on':'')+'" style="height:'+(4+m*3)+'px"></i>'}).join("")+'</span>'+(l.n?'<img class="lvb" src="'+bsrc(LVBADGE[l.n])+'" alt="">':'<span class="lvb lv0">0</span>')+'<span class="k">'+(l.n?t("level")+" "+l.n:(S.lang==="ar"?"البداية":"Start"))+'</span><h3>'+esc(nm(l))+'</h3><p class="tg">'+esc(L2(l.tag))+' · '+esc(L2(l.band))+'</p><p class="rq">'+esc(L2(l.req))+'</p><div class="er"><small>'+t("unlocks")+'</small>'+esc(L2(l.unl))+'</div></button>'}).join("");
+  document.getElementById("ways").innerHTML='<div class="way"><b>'+t("goDeeper")+'</b><span>'+t("goDeeperTx")+'</span></div><div class="way"><b>'+t("goWider")+'</b><span>'+t("goWiderTx")+'</span></div>';
   document.getElementById("prior").outerHTML='<div id="prior">'+priorHTML()+'</div>';
   function hb(l){return '<svg viewBox="-24 -24 48 48"><path d="'+hexP(21)+'" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2"/><text text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="600" fill="var(--gold)">'+l+'</text></svg>'}
   var ar=S.lang==="ar";
