@@ -59,3 +59,14 @@ Open the explorer at a specific place (useful for Parchment badge criteria links
 ### Track registration and official progress
 
 In `index.html`, `var TRACKREG=` holds the Catalog registration link for each track's pathway hub course (empty shows "Track registration opens soon"). `LINKCFG.progress` is the Parchment link used by "See my official progress".
+
+## Editing the pathway in Excel
+
+All tracks, levels, courses, badges and Catalog links live in **`pathway-data.xlsx`** next to `index.html`. The explorer reads it automatically when it loads.
+
+1. Open `pathway-data.xlsx` (read the **How to use** sheet first).
+2. Edit the **Tracks**, **Levels**, **Courses** and **Links** sheets. Paste each course's Canvas Catalog listing into **Catalog link** (this powers the Enrol button), and each track hub's listing into **Registration link (Catalog)**.
+3. To preview: in the explorer switch to **Staff**, open **Tracks** and choose **Import Excel**. Errors are listed by sheet and row; nothing changes until the file is valid. The preview is only in your browser (**Stop preview** to undo).
+4. To publish for everyone: replace `pathway-data.xlsx` in this folder with your file (same name).
+
+**Download Excel** in the same bar exports what the explorer is currently showing. The **Courses still needed** sheet calculates how many courses each track still needs per level. New badge images go in the `badges` folder and are referenced by file name.

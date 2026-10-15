@@ -561,6 +561,20 @@ html[data-theme="light"] .aroad .aband{fill-opacity:.1}
 html[data-theme="light"] .aroad .astn{fill:#E8EDF4}
 .rall.intro .afan,.rall.intro .aglow,.rall.intro .aspine{stroke-dasharray:1400;stroke-dashoffset:1400;animation:adraw 1.3s ease-out forwards}
 .rall.intro .aband{animation:afade .8s ease-out .3s both}
+
+/* staff data bar */
+body.staff-off .staffonly{display:none!important}
+.databar{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;border:1px dashed var(--gold);background:var(--gold-soft);border-radius:16px;padding:14px 16px}
+.databar .dtx{display:flex;flex-direction:column;gap:3px;flex:1 1 380px;min-width:0}
+.databar .dtx b{font-size:15px}
+.databar .dtx span{font-size:12.5px;color:var(--ink-2)}
+.databar .dnote{color:var(--ink-3)!important}
+.databar .dact{display:flex;gap:8px;flex-wrap:wrap}
+.databar label.btn{cursor:pointer}
+.databar .dmsg{flex:1 1 100%;font-size:13px;border-top:1px solid var(--line);padding-top:10px}
+.databar .dmsg ul{margin:6px 0 0;padding-inline-start:20px;color:var(--ink-2)}
+.databar .dmsg .bad{color:#ff8a80;margin:0}.databar .dmsg .good{color:#7CD3C0;margin:0}
+html[data-theme="light"] .databar .dmsg .bad{color:#b3261e}html[data-theme="light"] .databar .dmsg .good{color:#0e6b5a}
 /* role filter */
 .rolebar{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .rolebar .rlbl{font-size:12.5px;font-weight:700;color:var(--ink-2);margin-inline-end:4px}
@@ -859,7 +873,7 @@ html[lang="ar"] .stepbar .k{letter-spacing:0;font-family:inherit}
 
     <section class="view page" id="view-jr" role="tabpanel" hidden><div class="inner jwrap"><div class="journey" id="journey"></div></div></section>
 
-    <section class="view page listv" id="view-list" role="tabpanel" hidden><div class="inner" id="listbody"></div></section>
+    <section class="view page listv" id="view-list" role="tabpanel" hidden><div class="inner"><div class="databar staffonly" id="databar"></div><div id="listbody" style="display:flex;flex-direction:column;gap:18px"></div></div></section>
 
     <section class="view page" id="view-lv" role="tabpanel" hidden>
       <div class="inner">
@@ -1037,7 +1051,7 @@ var ITEMS=[
 var BADGE={ddl:"designing-digital-learning",ltp:"learning-through-play",ecect:"ecec-for-teachers",rd:"research-design",re:"research-ethics",eip:"evidence-informed-practice",ia:"inclusive-assessment",ececl:"ecec-for-leaders",pi:"practitioner-inquiry",core:"explorer-level-credential",expert:"expert-recognition"};
 var LVBADGE={1:"explorer-level-credential",2:"practitioner-level-credential",3:"advanced-practitioner-level-credential",4:"leader-level-credential",5:"expert-recognition"};
 var EXAMPLE={track:"research",held:["orient","core1","core2","rd"]};
-function bsrc(id){return "badges/"+id+".svg"}
+function bsrc(id){id=String(id||"");if(/^https?:|\//.test(id))return id;if(/\.(svg|png|jpe?g|webp|gif)$/i.test(id))return "badges/"+id;return "badges/"+id+".svg"}
 TRACKS.forEach(function(t,i){t.i=i;t.color="var(--t-"+t.k+")"});
 function tr(k){return TRACKS.filter(function(t){return t.k===k})[0]}
 function item(id){return ITEMS.filter(function(x){return x.id===id})[0]}
@@ -1097,15 +1111,17 @@ function medal(g,it,R){
   if(it.type==="core"){sv("circle",{r:R,fill:"var(--bg)",stroke:"var(--teal)","stroke-width":2.5},g);var tc=sv("text",{y:1,"text-anchor":"middle","dominant-baseline":"central","font-size":R*.7,"font-weight":600,fill:"var(--teal)"},g);tc.textContent=it.id==="core1"?"1":"2";return}
   if(it.type==="ext"){var R2=R,sh="M0 "+(-R2)+" L"+(R2*.86)+" "+(-R2*.6)+" V"+(R2*.15)+" C"+(R2*.86)+" "+(R2*.65)+" "+(R2*.35)+" "+(R2*.9)+" 0 "+R2+" C"+(-R2*.35)+" "+(R2*.9)+" "+(-R2*.86)+" "+(R2*.65)+" "+(-R2*.86)+" "+(R2*.15)+" V"+(-R2*.6)+" Z";
     sv("path",{d:sh,fill:c1},g);sv("path",{d:sh,transform:"scale(.76)",fill:"var(--bg)",opacity:.92},g);sv("path",{d:ICON.cam,transform:"scale("+(R/28)+")",fill:"none",stroke:c1,"stroke-width":1.8,"stroke-linecap":"round","stroke-linejoin":"round"},g);return}
+  var lc=["#8590bd","#2bb3a6","#4a90e2","#6c6fe6","#a9b4d0","#e5b94e"][it.level]||c1,hp=[];for(var q=0;q<6;q++){var a=(-90+60*q)*Math.PI/180;hp.push((R*Math.cos(a)).toFixed(1)+" "+(R*Math.sin(a)).toFixed(1))}
+  sv("path",{d:"M"+hp.join("L")+"Z",fill:"var(--bg)",stroke:lc,"stroke-width":3},g);var tx=sv("text",{y:1,"text-anchor":"middle","dominant-baseline":"central","font-size":R*.62,"font-weight":700,fill:lc},g);tx.textContent=(it.en||"?").split(/\s+/).map(function(w){return w[0]}).join("").slice(0,2).toUpperCase()
 }
-function emblem(g,tk,R){var tt=tr(tk);sv("circle",{r:R,fill:tt.color},g);sv("circle",{r:R*.8,fill:"var(--bg)",opacity:.92},g);sv("circle",{r:R*.8,fill:"none",stroke:tt.color,"stroke-width":1.4},g);sv("path",{d:ICON[tk],transform:"scale("+(R/20)+")",fill:"none",stroke:tt.color,"stroke-width":1.8,"stroke-linecap":"round","stroke-linejoin":"round"},g)}
+function emblem(g,tk,R){var tt=tr(tk);sv("circle",{r:R,fill:tt.color},g);sv("circle",{r:R*.8,fill:"var(--bg)",opacity:.92},g);sv("circle",{r:R*.8,fill:"none",stroke:tt.color,"stroke-width":1.4},g);sv("path",{d:ICON[tt.icon||tk]||ICON.doc,transform:"scale("+(R/20)+")",fill:"none",stroke:tt.color,"stroke-width":1.8,"stroke-linecap":"round","stroke-linejoin":"round"},g)}
 function thumb(it,size){if(BADGE[it.id])return '<img src="'+bsrc(BADGE[it.id])+'" alt="" width="'+size+'" height="'+size+'" style="width:'+size+'px;height:'+size+'px;flex:none">';var s=sv("svg",{viewBox:"-30 -30 60 60",width:size,height:size});medal(sv("g",{},s),it,24);return s.outerHTML}
 function embThumb(k,size){var s=sv("svg",{viewBox:"-32 -32 64 64",width:size,height:size});emblem(sv("g",{},s),k,28);return s.outerHTML}
 
 /* ===================================================================== map layout + render */
 var W=360/7,RX=455,RY=292,POS={},CL={},LINKS=[];
 function rad(d){return d*Math.PI/180}
-function layout(){
+function layout(){W=360/Math.max(1,TRACKS.length);
   POS={};POS.core={x:0,y:4,r:50};POS.core1={x:-112,y:4,r:19};POS.core2={x:112,y:4,r:19};POS.orient={x:0,y:128,r:15};POS.expert={x:0,y:-404,r:38};
   TRACKS.forEach(function(tk){var a=-90+(tk.i+.5)*W;CL[tk.k]={x:RX*Math.cos(rad(a)),y:RY*Math.sin(rad(a)),r:90}});
   ITEMS.filter(function(x){return x.tracks.length===2}).forEach(function(it){var A=CL[it.tracks[0]],B=CL[it.tracks[1]];POS[it.id]={x:(A.x+B.x)/2*1.42,y:(A.y+B.y)/2*1.42,r:27}});
@@ -1251,8 +1267,8 @@ function buildSteps(){var ar=S.lang==="ar",named=ITEMS.filter(function(x){return
   STEPS=[
    {t:ar?"ابدأ من جوهر الأكاديمية":"Start at the SEA Core",d:ar?"التهيئة ثم مقرران أساسيان.":"Orientation, then 2 Core courses.",ids:["core","core1","core2","orient"],tks:[],
     body:ar?"يبدأ كل متعلم من المركز. التهيئة متاحة للجميع. إكمال "+term("core","مقرري الجوهر")+" يمنحك شهادة مستوى المستكشف (المستوى 1) التي لا تنتهي صلاحيتها.":"Every learner begins in the centre. Orientation is open to all. Completing the two "+term("core","Core courses")+" earns the Explorer Level Credential (Level 1), which never expires.",cap:ar?"1 · يبدأ الجميع من جوهر الأكاديمية في المركز.":"1 · Everyone starts at the SEA Core in the centre."},
-   {t:ar?"اختر مسارًا":"Choose a track",d:ar?"7 مسارات تخصصية من المستوى 2.":"7 specialist tracks from Level 2.",ids:["core"],tks:TRACKS.map(function(x){return x.k}),
-    body:ar?"من المستوى 2 تختار "+term("track","مسارًا")+" من الدوائر الملوّنة السبع. لست متأكدًا؟ استخدم «اعثر على مساري».":"From Level 2 you pick one "+term("track","track")+": the seven coloured circles. Not sure which? Use “Find my track”.",cap:ar?"2 · اختر أحد المسارات السبعة الملوّنة.":"2 · Pick one of the seven coloured tracks around the Core."},
+   {t:ar?"اختر مسارًا":"Choose a track",d:ar?TRACKS.length+" مسارات تخصصية من المستوى 2.":TRACKS.length+" specialist tracks from Level 2.",ids:["core"],tks:TRACKS.map(function(x){return x.k}),
+    body:ar?"من المستوى 2 تختار "+term("track","مسارًا")+" من الدوائر الملوّنة. لست متأكدًا؟ استخدم «اعثر على مساري».":"From Level 2 you pick one "+term("track","track")+": the coloured circles. Not sure which? Use “Find my track”.",cap:ar?"2 · اختر أحد المسارات الملوّنة.":"2 · Pick one of the coloured tracks around the Core."},
    {t:ar?"احصل على شهادات مصغّرة":"Earn micro-credentials",d:ar?"الشكل واللون يدلّان على المستوى.":"Shape and colour show the level.",ids:named.map(function(x){return x.id}),tks:[],
     body:ar?"كل شارة هي "+term("micro","شهادة مصغّرة")+": تتعلّم، وتطبّق في عملك، ثم تُقيَّم. الشكل واللون يدلّان على المستوى.":"Each badge is a "+term("micro")+": you learn, apply it in your job, then are assessed. Its shape and colour show the level.",cap:ar?"3 · كل شارة شهادة مصغّرة، وشكلها يدل على مستواها.":"3 · Each badge is a micro-credential; its shape shows the level."},
    {t:ar?"مقرر واحد لمسارين":"One course, two tracks",d:ar?"بعض الشارات تُحتسب لمسارين.":"Some badges count for 2 tracks.",ids:shared.map(function(x){return x.id}),tks:[].concat.apply([],shared.map(function(x){return x.tracks})),
@@ -1384,14 +1400,14 @@ function listCount(){var q=S.q.trim().toLowerCase();if(!q)return 0;var tks=TRACK
 var qi=document.getElementById("q");qi.addEventListener("input",function(){S.q=qi.value;var n=listCount();document.getElementById("qcount").textContent=S.q.trim()?t("results",{n:n}):"";document.getElementById("tabcount").textContent=S.q.trim()?n:"";if(S.view==="list")buildList();else{if(S.view!=="net")setView("list");applyHL()}});
 function setMode(m){S.mode=m;store("sea-mode",m);document.getElementById("m-learner").setAttribute("aria-pressed",m==="learner");document.getElementById("m-staff").setAttribute("aria-pressed",m==="staff");document.body.classList.toggle("staff-off",m!=="staff");layout();buildSteps();render();if(S.view==="list")buildList();showPanel();buildLegend()}
 document.getElementById("m-learner").onclick=function(){setMode("learner")};document.getElementById("m-staff").onclick=function(){setMode("staff")};
-function setLang(l){S.lang=l;store("sea-lang",l);document.documentElement.lang=l;document.documentElement.dir=l==="ar"?"rtl":"ltr";
+function setLang(l){S.lang=l;setTimeout(function(){if(typeof paintDataBar==='function')paintDataBar()},0);store("sea-lang",l);document.documentElement.lang=l;document.documentElement.dir=l==="ar"?"rtl":"ltr";
   document.getElementById("l-en").setAttribute("aria-pressed",l==="en");document.getElementById("l-ar").setAttribute("aria-pressed",l==="ar");
   document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=t(e.getAttribute("data-t"))});qi.placeholder=t("search");
   document.title=l==="ar"?"مستكشف مسار الأكاديمية":"SEA Pathway Explorer";
   buildSteps();buildPages();buildLegend();render();if(S.view==="list")buildList();showPanel();paintMe()}
 document.getElementById("l-en").onclick=function(){setLang("en")};document.getElementById("l-ar").onclick=function(){setLang("ar")};
 function buildLegend(){var named=ITEMS.filter(function(x){return ["mc","prog","ext"].indexOf(x.type)>=0});
-  document.getElementById("legend").innerHTML='<div class="stats"><b>5</b>'+(S.lang==="ar"?"مستويات":"levels")+' · <b>7</b>'+(S.lang==="ar"?"مسارات":"tracks")+' · <b>'+named.length+'</b>'+t("named")+' · <b>'+named.filter(function(x){return x.tracks.length===2}).length+'</b>'+t("shared")+'</div><div class="keys">'+[1,2,3,4,5].map(function(n){return '<span class="k"><img src="'+bsrc(LVBADGE[n])+'" alt="">L'+n+' '+esc(nm(LEVELS[n]))+'</span>'}).join("")+'</div>'}
+  document.getElementById("legend").innerHTML='<div class="stats"><b>5</b>'+(S.lang==="ar"?"مستويات":"levels")+' · <b>'+TRACKS.length+'</b>'+(S.lang==="ar"?"مسارات":"tracks")+' · <b>'+named.length+'</b>'+t("named")+' · <b>'+named.filter(function(x){return x.tracks.length===2}).length+'</b>'+t("shared")+'</div><div class="keys">'+[1,2,3,4,5].map(function(n){return '<span class="k"><img src="'+bsrc(LVBADGE[n])+'" alt="">L'+n+' '+esc(nm(LEVELS[n]))+'</span>'}).join("")+'</div>'}
 var themeBtn=document.getElementById("theme");
 var SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
 var MOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
@@ -1523,17 +1539,17 @@ function aMed(n,size){return '<button class="amed s'+n+'" data-lv="'+n+'" style=
 function aLab(n){var ar=S.lang==="ar";return '<div class="rlab" style="--sc:'+RCOL[n]+'"><span class="k">'+(n?t("level")+" "+n:(ar?"البداية":"Start"))+'</span><b>'+esc(nm(LEVELS[n]))+'</b><span class="tg">'+esc(L2(LEVELS[n].tag))+'</span></div>'}
 function buildRouteAll(){var ar=S.lang==="ar",h=[];
   h.push('<div class="rhead"><div class="jchips" role="tablist">'+allChip(true)+TRACKS.map(function(z){return '<button type="button" data-jt="'+z.k+'" aria-pressed="false" style="--c:'+z.color+'"><i style="background:'+z.color+'"></i>'+esc(nm(z))+(S.track===z.k?'<span class="mine">✓</span>':'')+'</button>'}).join("")+'</div>');
-  h.push('<div class="rtitle compact" style="--c:var(--gold)"><div><div class="eyebrow">'+(ar?"المسار الكامل":"The full pathway")+'</div><h2>'+(ar?"مسار واحد، سبعة مسارات، وجهة واحدة":"One start, seven tracks, one destination")+'</h2><p>'+(ar?"يبدأ الجميع بالتهيئة والجوهر، ثم يختارون مسارًا من المستوى 2، وكل مسار يقود إلى الخبير. اضغط على اسم مسار لعرض طريقه وحده.":"Everyone starts with Orientation and the Core, chooses a track at Level 2, and every track leads to Expert. Select a track name to follow its route on its own.")+'</p></div></div>'+roleBar()+'</div>');
+  h.push('<div class="rtitle compact" style="--c:var(--gold)"><div><div class="eyebrow">'+(ar?"المسار الكامل":"The full pathway")+'</div><h2>'+(ar?"بداية واحدة، مسارات متعددة، وجهة واحدة":"One start, every track, one destination")+'</h2><p>'+(ar?"يبدأ الجميع بالتهيئة والجوهر، ثم يختارون مسارًا من المستوى 2، وكل مسار يقود إلى الخبير. اضغط على اسم مسار لعرض طريقه وحده.":"Everyone starts with Orientation and the Core, chooses a track at Level 2, and every track leads to Expert. Select a track name to follow its route on its own.")+'</p></div></div>'+roleBar()+'</div>');
   var g=[];
-  g.push('<div class="acell astart" style="grid-column:1;grid-row:1/span 8">'+aMed(0,84)+aLab(0)+'<div class="acards">'+aChip(item("orient"))+'</div></div>');
-  g.push('<div class="acell al1" style="grid-column:2;grid-row:1/span 8">'+aMed(1,92)+aLab(1)+'<div class="acards">'+aChip(item("core1"))+aChip(item("core2"))+'</div><div class="rearn"><img src="'+bsrc(LVBADGE[1])+'" alt=""><span><b>'+esc(L2(LEVELS[1].earns))+'</b></span></div></div>');
+  g.push('<div class="acell astart" style="grid-column:1;grid-row:1/span '+(TRACKS.length+1)+'">'+aMed(0,84)+aLab(0)+'<div class="acards">'+aChip(item("orient"))+'</div></div>');
+  g.push('<div class="acell al1" style="grid-column:2;grid-row:1/span '+(TRACKS.length+1)+'">'+aMed(1,92)+aLab(1)+'<div class="acards">'+aChip(item("core1"))+aChip(item("core2"))+'</div><div class="rearn"><img src="'+bsrc(LVBADGE[1])+'" alt=""><span><b>'+esc(L2(LEVELS[1].earns))+'</b></span></div></div>');
   [2,3,4].forEach(function(n,i){g.push('<div class="acell ahdr" style="grid-column:'+(5+i)+';grid-row:1">'+aMed(n,58)+aLab(n)+'</div>')});
   TRACKS.forEach(function(x,r){var row=r+2,cells=[2,3,4].map(function(n,i){var list=ITEMS.filter(function(z){return z.level===n&&z.tracks.indexOf(x.k)>=0&&visible(z)});
       return '<div class="acell alc" style="grid-column:'+(5+i)+';grid-row:'+row+'"><span class="mlv">'+t("level")+' '+n+'</span>'+(list.length?list.map(function(z){return aChip(z,x.k)}).join(""):'<span class="asoon">'+(ar?"قريبًا":"Coming soon")+'</span>')+'</div>'}).join("");
     var cnt=ITEMS.filter(function(z){return z.tracks.indexOf(x.k)>=0&&z.type!=="tbc"}).length,mine=S.track===x.k,RL=roleOf(ROLE),fit=RL.k==="all"||RL.t.indexOf(x.k)>=0,bestfit=RL.k!=="all"&&RL.t[0]===x.k;
     g.push('<div class="rlane'+(mine?' mine':'')+(fit?'':' off')+(bestfit?' best':'')+'" data-lane="'+x.k+'" style="--tc:'+x.color+'"><button class="acell alab" style="grid-column:4;grid-row:'+row+'" data-lanepick="'+x.k+'">'+embThumb(x.k,34)+'<span>'+(bestfit?'<i class="bfit">'+(ar?"الأنسب لك":"Best fit")+'</i>':'')+'<b>'+esc(nm(x))+'</b><small>'+(mine?'<i class="ymine">'+(ar?"مساري":"Your track")+'</i> · ':'')+(ar?cnt+" مقررات":cnt+(cnt===1?" course":" courses"))+'</small></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="'+(ar?"M15 6l-6 6 6 6":"M9 6l6 6-6 6")+'"/></svg></button>'+cells+'</div>')});
   var offN=ROLE==="all"?0:TRACKS.length-roleOf(ROLE).t.length;if(offN)g.push('<button type="button" class="showoff" data-showoff="1">'+(SHOWALL?(S.lang==="ar"?"إخفاء المسارات الأخرى":"Hide the other tracks"):(S.lang==="ar"?"اعرض "+offN+" مسارات أخرى":"Show the other "+offN+" tracks"))+'</button>');
-  g.push('<div class="acell aexp" style="grid-column:9;grid-row:1/span 8">'+aMed(5,108)+aLab(5)+'<div class="acards">'+aChip(item("expert"))+'</div></div>');
+  g.push('<div class="acell aexp" style="grid-column:9;grid-row:1/span '+(TRACKS.length+1)+'">'+aMed(5,108)+aLab(5)+'<div class="acards">'+aChip(item("expert"))+'</div></div>');
   h.push('<div class="rscroll"><div class="rall'+(ROLE!=="all"?' roled':'')+(SHOWALL?' showall':'')+'"><svg class="aroad" aria-hidden="true"></svg>'+g.join("")+'</div></div>');
   h.push('<p class="rhint">'+(ar?"اضغط على أي مقرر أو مستوى لعرض التفاصيل. ⇄ = يُحتسب لمسارين، ويظهر في كليهما.":"Select any course or level for details. ⇄ = counts for 2 tracks, so it appears in both lanes.")+'</p>');
   var sl=(rtEl.querySelector(".rscroll")||{}).scrollLeft||0;rtEl.innerHTML=h.join("");var sc=rtEl.querySelector(".rscroll");if(sc)sc.scrollLeft=sl;
@@ -1584,6 +1600,94 @@ var _select=select;select=function(sel){_select(sel);
   if(narrow()&&sel&&sel.kind==="step"){document.body.classList.add("guide-off");Z={cx:0,cy:-40,z:1.15};applyZ()}
   else if(narrow()&&S.view==="net"&&S.sel&&(S.sel.kind==="item"||S.sel.kind==="track")){var P=S.sel.kind==="item"?POS[S.sel.id]:CL[S.sel.k];if(P)focusPoint(P.x,P.y,2.2)}
   paintStepbar()};
+
+
+/* =====================================================================
+   PATHWAY DATA IN EXCEL
+   The explorer reads pathway-data.xlsx from its own folder when it is there.
+   Staff can download the current data, import an edited file to preview it,
+   and then publish that file next to index.html.
+   ===================================================================== */
+var XL_FILE="pathway-data.xlsx",DATA_SRC="built-in",XL_MSG="";
+var XL_LIB="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+var TH=["Key","Name (English)","Name (Arabic)","Description (English)","Description (Arabic)","Icon","Colour","Registration link (Catalog)"];
+var LH=["Level","Name (English)","Name (Arabic)","Theme (English)","Theme (Arabic)","QFEmirates band (English)","QFEmirates band (Arabic)","Requirement (English)","Requirement (Arabic)","Credential earned (English)","Credential earned (Arabic)","Courses needed","Valid for (English)","Valid for (Arabic)","Unlocks (English)","Unlocks (Arabic)","Badge image"];
+var CH=["ID","Name (English)","Name (Arabic)","Short name (English)","Short name (Arabic)","Type","Level","Track 1","Track 2","Description (English)","Description (Arabic)","Badge image","Time needed","Format","Next start","Outcome (English)","Outcome (Arabic)","Catalog link"];
+var KH=["Setting","Link"];
+var TYPEN={orient:"Orientation",nucleus:"SEA Core (Level 1 hub)",core:"Core course",mc:"Micro-credential",prog:"Programme",ext:"External programme",expert:"Expert recognition"};
+var LINKN={priorLearning:"Prior learning application",wallet:"Parchment wallet help",progress:"Official progress (Parchment)",catalogue:"Course catalogue"};
+var BUILTIN_COL={digital:1,tl:1,ec:1,lead:1,research:1,assess:1,incl:1};
+var FALLBACK_COL=["#E07A5F","#81B29A","#F2CC8F","#B388EB","#5FB3B3","#E8A0BF"];
+function loadXL(){return window.XLSX?Promise.resolve(window.XLSX):new Promise(function(res,rej){var sc=document.createElement("script");sc.src=XL_LIB;sc.onload=function(){res(window.XLSX)};sc.onerror=function(){rej(new Error("The Excel reader could not be loaded. Check the internet connection."))};document.head.appendChild(sc)})}
+function exportData(){
+  return {
+    Tracks:TRACKS.map(function(t){return [t.k,t.en,t.ar,t.den,t.dar,t.icon||t.k,BUILTIN_COL[t.k]&&!t.hex?"":(t.hex||""),TRACKREG[t.k]||""]}),
+    Levels:LEVELS.map(function(l){return [l.n,l.en,l.ar,l.tag[0],l.tag[1],l.band[0],l.band[1],l.req[0],l.req[1],l.earns[0],l.earns[1],l.need==null?"":l.need,l.exp[0],l.exp[1],l.unl[0],l.unl[1],LVBADGE[l.n]||""]}),
+    Courses:ITEMS.filter(function(x){return x.type!=="tbc"}).map(function(x){var c=COURSE[x.id]||{};return [x.id,x.en,x.ar,x.sen||"",x.sar||"",TYPEN[x.type]||x.type,x.level,x.tracks[0]||"",x.tracks[1]||"",x.nen||"",x.nar||"",BADGE[x.id]||"",c.hours||"",c.format||"",c.start||"",c.outcome_en||"",c.outcome_ar||"",c.url||""]}),
+    Links:Object.keys(LINKN).map(function(k){return [LINKN[k],LINKCFG[k]||""]})}}
+window.__seaExport=exportData;
+function sheetRows(wb,name){var key=wb.SheetNames.filter(function(n){return n.trim().toLowerCase()===name.toLowerCase()})[0];if(!key)return null;
+  return XLSX.utils.sheet_to_json(wb.Sheets[key],{header:1,defval:"",raw:false,blankrows:false})}
+function rowsToObj(rows,H){if(!rows||!rows.length)return [];var head=rows[0].map(function(h){return String(h).trim().toLowerCase()});
+  var ix=H.map(function(h){return head.indexOf(h.toLowerCase())});
+  return rows.slice(1).map(function(r){var o={};H.forEach(function(h,j){o[h]=ix[j]<0?"":String(r[ix[j]]==null?"":r[ix[j]]).trim()});return o}).filter(function(o){return Object.keys(o).some(function(k){return o[k]!==""})})}
+function wbToData(wb){var out={},miss=[];[["Tracks",TH],["Levels",LH],["Courses",CH],["Links",KH]].forEach(function(p){var r=sheetRows(wb,p[0]);if(!r)miss.push(p[0]);out[p[0]]=rowsToObj(r,p[1])});out._missing=miss;return out}
+function validateData(d){var E=[],Wn=[];
+  if(d._missing&&d._missing.length)d._missing.forEach(function(m){if(m!=="Links")E.push('The sheet "'+m+'" is missing.')});
+  var keys={},names={};(d.Tracks||[]).forEach(function(r,i){var k=r["Key"].toLowerCase().replace(/[^a-z0-9]/g,"");if(!k){E.push("Tracks row "+(i+2)+": Key is empty.");return}if(keys[k])E.push('Tracks row '+(i+2)+': Key "'+k+'" is used twice.');keys[k]=1;names[r["Name (English)"].toLowerCase()]=k;if(!r["Name (English)"])E.push("Tracks row "+(i+2)+": English name is empty.");if(r["Colour"]&&!/^#[0-9a-f]{6}$/i.test(r["Colour"]))E.push('Tracks row '+(i+2)+': Colour must look like #4FB3E8.')});
+  if(!Object.keys(keys).length)E.push("Add at least one track.");
+  var lv={};(d.Levels||[]).forEach(function(r,i){var n=parseInt(r["Level"],10);if(isNaN(n)||n<0||n>5)E.push("Levels row "+(i+2)+": Level must be 0 to 5.");else lv[n]=1});
+  [0,1,2,3,4,5].forEach(function(n){if(!lv[n])E.push("Levels: level "+n+" is missing (levels 0 to 5 are all needed).")});
+  var ids={},tmap={};Object.keys(TYPEN).forEach(function(k){tmap[k]=k;tmap[TYPEN[k].toLowerCase()]=k});
+  function trk(v){v=String(v||"").trim();if(!v)return "";var k=v.toLowerCase().replace(/[^a-z0-9]/g,"");if(keys[k])return k;if(names[v.toLowerCase()])return names[v.toLowerCase()];return null}
+  (d.Courses||[]).forEach(function(r,i){var row="Courses row "+(i+2)+": ",id=r["ID"].toLowerCase().replace(/[^a-z0-9-]/g,"");
+    if(!id){E.push(row+"ID is empty.");return}if(ids[id])E.push(row+'ID "'+id+'" is used twice.');ids[id]=1;
+    if(!r["Name (English)"])E.push(row+"English name is empty.");
+    var ty=tmap[r["Type"].toLowerCase()];if(!ty)E.push(row+'Type "'+r["Type"]+'" is not one of: '+Object.keys(TYPEN).map(function(k){return TYPEN[k]}).join(", ")+".");
+    var n=parseInt(r["Level"],10);if(isNaN(n)||n<0||n>5)E.push(row+"Level must be 0 to 5.");
+    var t1=trk(r["Track 1"]),t2=trk(r["Track 2"]);if(t1===null)E.push(row+'Track 1 "'+r["Track 1"]+'" is not a track key or name.');if(t2===null)E.push(row+'Track 2 "'+r["Track 2"]+'" is not a track key or name.');
+    if(n>=2&&n<=4&&!t1)E.push(row+"Courses at Levels 2 to 4 need at least one track.");
+    if(!r["Name (Arabic)"])Wn.push(row+'no Arabic name for "'+r["Name (English)"]+'"; the English name will show in Arabic.');
+    if(r["Catalog link"]&&!/^https?:\/\//i.test(r["Catalog link"]))E.push(row+"Catalog link must start with https://");});
+  ["orient","core","core1","core2","expert"].forEach(function(k){if(!ids[k])E.push('Courses: the row with ID "'+k+'" is needed and is missing.')});
+  return {errors:E,warnings:Wn,trk:trk,tmap:tmap}}
+function applyData(d){var v=validateData(d);if(v.errors.length)return v;
+  TRACKS=d.Tracks.map(function(r,i){var k=r["Key"].toLowerCase().replace(/[^a-z0-9]/g,""),hex=r["Colour"]||"";
+    return {k:k,en:r["Name (English)"],ar:r["Name (Arabic)"]||r["Name (English)"],den:r["Description (English)"],dar:r["Description (Arabic)"]||r["Description (English)"],icon:(ICON[r["Icon"]]?r["Icon"]:(ICON[k]?k:"doc")),hex:hex,i:i,color:hex||(BUILTIN_COL[k]?"var(--t-"+k+")":FALLBACK_COL[i%FALLBACK_COL.length])}});
+  Object.keys(TRACKREG).forEach(function(k){delete TRACKREG[k]});d.Tracks.forEach(function(r){var k=r["Key"].toLowerCase().replace(/[^a-z0-9]/g,"");TRACKREG[k]=r["Registration link (Catalog)"]||""});
+  d.Levels.forEach(function(r){var n=parseInt(r["Level"],10),l=LEVELS[n];function pr(a,b){return [r[a]||"",r[b]||r[a]||""]}
+    l.en=r["Name (English)"]||l.en;l.ar=r["Name (Arabic)"]||l.en;l.tag=pr("Theme (English)","Theme (Arabic)");l.band=pr("QFEmirates band (English)","QFEmirates band (Arabic)");l.req=pr("Requirement (English)","Requirement (Arabic)");l.earns=pr("Credential earned (English)","Credential earned (Arabic)");
+    var nd=parseInt(r["Courses needed"],10);if(!isNaN(nd))l.need=nd;l.exp=pr("Valid for (English)","Valid for (Arabic)");l.unl=pr("Unlocks (English)","Unlocks (Arabic)");if(n>=1){if(r["Badge image"])LVBADGE[n]=r["Badge image"];else delete LVBADGE[n]}});
+  Object.keys(BADGE).forEach(function(k){delete BADGE[k]});Object.keys(COURSE).forEach(function(k){delete COURSE[k]});
+  ITEMS=d.Courses.map(function(r){var id=r["ID"].toLowerCase().replace(/[^a-z0-9-]/g,""),ty=v.tmap[r["Type"].toLowerCase()],tk=[v.trk(r["Track 1"]),v.trk(r["Track 2"])].filter(Boolean);
+    if(r["Badge image"])BADGE[id]=r["Badge image"];
+    if(["mc","prog","core","ext"].indexOf(ty)>=0)COURSE[id]={hours:r["Time needed"],format:r["Format"],start:r["Next start"],url:r["Catalog link"],outcome_en:r["Outcome (English)"],outcome_ar:r["Outcome (Arabic)"]};
+    var o={id:id,en:r["Name (English)"],ar:r["Name (Arabic)"]||r["Name (English)"],type:ty,level:parseInt(r["Level"],10),tracks:tk.filter(function(x,i){return tk.indexOf(x)===i}),nen:r["Description (English)"],nar:r["Description (Arabic)"]||r["Description (English)"]};
+    if(r["Short name (English)"])o.sen=r["Short name (English)"];if(r["Short name (Arabic)"])o.sar=r["Short name (Arabic)"];return o});
+  [2,3,4].forEach(function(lv){TRACKS.forEach(function(t){var have=0;ITEMS.forEach(function(it){if(it.level===lv&&it.tracks.indexOf(t.k)>=0)have+=credits(it)});var gap=Math.max(0,(LEVELS[lv].need||0)-have);if(gap>0)ITEMS.push({id:"tbc-"+t.k+"-"+lv,type:"tbc",level:lv,tracks:[t.k],gap:gap})})});
+  (d.Links||[]).forEach(function(r){Object.keys(LINKN).forEach(function(k){if(LINKN[k].toLowerCase()===r["Setting"].toLowerCase())LINKCFG[k]=r["Link"]})});
+  if(S.track&&!tr(S.track))S.track=null;if(typeof JT!=="undefined"&&JT&&!tr(JT))JT=TRACKS[0].k;
+  S.sel=null;layout();buildSteps();buildPages();buildLegend();render();if(S.view==="list")buildList();if(typeof buildRoute==="function")buildRoute();showPanel();paintMe();
+  return v}
+function paintDataBar(){var el=document.getElementById("databar");if(!el)return;var ar=S.lang==="ar";
+  var src={"built-in":ar?"البيانات المضمّنة في الصفحة":"Built into the page","file":ar?"الملف المنشور pathway-data.xlsx":"Published file (pathway-data.xlsx)","preview":ar?"ملف مستورد (معاينة في هذا المتصفح فقط)":"Imported file (preview in this browser only)"}[DATA_SRC];
+  el.innerHTML='<div class="dtx"><b>'+(ar?"بيانات المسار":"Pathway data")+'</b><span>'+(ar?"المصدر: ":"Source: ")+esc(src)+'</span><span class="dnote">'+(ar?"عدّل المسارات والمستويات والمقررات وروابط الكتالوج في Excel، ثم استوردها للمعاينة. لنشرها للجميع، ضع الملف باسم pathway-data.xlsx بجانب index.html.":"Edit tracks, levels, courses and Catalog links in Excel, then import to preview. To publish for everyone, save the file as pathway-data.xlsx next to index.html.")+'</span></div><div class="dact"><button class="btn ghost" type="button" data-xl="down">'+(ar?"تنزيل ملف Excel":"Download Excel")+'</button><label class="btn primary"><input type="file" accept=".xlsx,.xls" data-xl="in" hidden>'+(ar?"استيراد ملف Excel":"Import Excel")+'</label>'+(DATA_SRC==="preview"?'<button class="btn ghost" type="button" data-xl="reset">'+(ar?"إلغاء المعاينة":"Stop preview")+'</button>':'')+'</div>'+(XL_MSG?'<div class="dmsg">'+XL_MSG+'</div>':'')}
+function xlMsg(v,ok){var ar=S.lang==="ar";if(!v){XL_MSG="";return}
+  XL_MSG=(v.errors&&v.errors.length?'<p class="bad"><b>'+(ar?"لم يُستورد الملف. أصلح ما يلي ثم أعد المحاولة:":"The file was not imported. Fix these and import again:")+'</b></p><ul>'+v.errors.slice(0,25).map(function(e){return '<li>'+esc(e)+'</li>'}).join("")+(v.errors.length>25?'<li>…'+(v.errors.length-25)+(ar?" أخرى":" more")+'</li>':'')+'</ul>':'<p class="good"><b>'+esc(ok)+'</b></p>')+(v.warnings&&v.warnings.length?'<details><summary>'+v.warnings.length+(ar?" ملاحظات":" notes")+'</summary><ul>'+v.warnings.slice(0,40).map(function(e){return '<li>'+esc(e)+'</li>'}).join("")+'</ul></details>':'')}
+function downloadXL(){loadXL().then(function(){var d=exportData(),wb=XLSX.utils.book_new();
+  var how=[["SEA Learning Pathway: data file"],[""],["Edit the Tracks, Levels, Courses and Links sheets. Keep the column headings as they are."],["Track 1 and Track 2 use the track Key from the Tracks sheet."],["Type is one of: "+Object.keys(TYPEN).map(function(k){return TYPEN[k]}).join(", ")],["Badge image is a file in the badges folder (for example research-ethics.svg) or a full https:// link."],["Catalog link is the course listing in Canvas Catalog; it powers the Enrol button."],["Keep the rows with IDs orient, core, core1, core2 and expert."],["Save as pathway-data.xlsx next to index.html to publish."]];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(how),"How to use");
+  [["Tracks",TH],["Levels",LH],["Courses",CH],["Links",KH]].forEach(function(p){var ws=XLSX.utils.aoa_to_sheet([p[1]].concat(d[p[0]]));ws["!cols"]=p[1].map(function(h){return {wch:Math.max(12,Math.min(48,h.length+6))}});XLSX.utils.book_append_sheet(wb,ws,p[0])});
+  XLSX.writeFile(wb,"sea-pathway-data.xlsx")}).catch(function(e){XL_MSG='<p class="bad">'+esc(e.message)+'</p>';paintDataBar()})}
+function importXL(file){var ar=S.lang==="ar";loadXL().then(function(){return file.arrayBuffer()}).then(function(buf){var wb=XLSX.read(buf,{type:"array"}),d=wbToData(wb),v=applyData(d);
+    if(!v.errors.length){DATA_SRC="preview";try{store("sea-xl",JSON.stringify(d))}catch(e){}xlMsg(v,(ar?"تم الاستيراد: ":"Imported: ")+d.Tracks.length+(ar?" مسارات، ":" tracks, ")+d.Courses.length+(ar?" مقررات. أنت تعاين الملف في هذا المتصفح.":" courses. You are previewing this file in this browser."))}else xlMsg(v);paintDataBar()})
+  .catch(function(e){XL_MSG='<p class="bad">'+esc(e.message||String(e))+'</p>';paintDataBar()})}
+document.getElementById("databar").addEventListener("click",function(e){var b=e.target.closest("[data-xl]");if(!b)return;var a=b.getAttribute("data-xl");if(a==="down")downloadXL();if(a==="reset"){store("sea-xl",null);location.reload()}});
+document.getElementById("databar").addEventListener("change",function(e){if(e.target.matches('[data-xl="in"]')&&e.target.files[0]){importXL(e.target.files[0]);e.target.value=""}});
+(function bootData(){var pv=null;try{pv=JSON.parse(store("sea-xl")||"null")}catch(e){}
+  if(pv){var v=applyData(pv);if(!v.errors.length){DATA_SRC="preview";paintDataBar();return}store("sea-xl",null)}
+  if(location.protocol==="file:"){paintDataBar();return}
+  fetch(XL_FILE,{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer()}).then(function(buf){return loadXL().then(function(){var v=applyData(wbToData(XLSX.read(buf,{type:"array"})));if(!v.errors.length)DATA_SRC="file";else if(window.console)console.warn("pathway-data.xlsx not used:",v.errors);paintDataBar()})}).catch(function(){paintDataBar()})})();
 
 /* ===================================================================== boot */
 if(store("sea-guide")==="off"||innerWidth<700)document.body.classList.add("guide-off");
