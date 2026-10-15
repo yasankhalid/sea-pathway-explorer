@@ -412,7 +412,14 @@ body.staff-off .draft{display:none}
 html,body{margin:0;overflow:hidden}
 .tab .tcount{margin-inline-start:6px;display:inline-block;min-width:18px;padding:1px 6px;border-radius:999px;background:var(--gold);color:#fff;font-size:11px;font-weight:700;line-height:16px;text-align:center;font-variant-numeric:tabular-nums}
 .tab .tcount:empty{display:none}
-.search input{padding-inline-end:64px}
+.lhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.lstats{display:flex;gap:10px;flex-wrap:wrap}
+.lstat{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:10px 14px;min-width:92px}
+.lstat b{display:block;font-size:24px;line-height:1.1;color:var(--gold);font-variant-numeric:tabular-nums}
+.lstat span{font-size:12px;color:var(--ink-2)}
+.search input{padding-inline-end:64px;width:230px}
+@media (max-width:900px){.search input{width:190px}}
+@media (max-width:640px){.search input{width:100%}}
 .search input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
 .stage{overflow:hidden}
 .guide .g-actions{flex-wrap:wrap}
@@ -855,7 +862,10 @@ document.getElementById("hide-guide").onclick=function(){stopTour();document.bod
 document.getElementById("show-guide").onclick=function(){document.body.classList.remove("guide-off");store("sea-guide","on")};
 
 /* ===================================================================== list view */
-function buildList(){var q=S.q.trim().toLowerCase(),h=[];
+function buildList(){var q=S.q.trim().toLowerCase(),h=[],ar=S.lang==="ar";
+  var namedL=ITEMS.filter(function(x){return ["mc","prog","ext"].indexOf(x.type)>=0});
+  function stat(n,l){return '<div class="lstat"><b>'+n+'</b><span>'+esc(l)+'</span></div>'}
+  h.push('<div class="lhead"><div><div class="eyebrow">'+t("tabList")+'</div><h2 style="margin:6px 0 4px">'+(ar?"اختر مسارك التخصصي":"Choose your specialist track")+'</h2><p class="lead" style="margin:0">'+(ar?"يبدأ الجميع بالجوهر، ثم يختارون مسارًا من المستوى 2.":"Everyone starts with the Core, then picks a track from Level 2.")+'</p></div><div class="lstats">'+(q?stat(listCount(),ar?"نتيجة مطابقة":"courses match"):stat(TRACKS.length,t("tracks"))+stat(namedL.length,t("named"))+stat(namedL.filter(function(x){return x.tracks.length===2}).length,t("shared"))+stat(5,ar?"مستويات":"levels"))+'</div></div>');
   function match(x){if(!q)return true;return (x.en+" "+(x.ar||"")).toLowerCase().indexOf(q)>=0}
   var start=["orient","core1","core2"].map(item).filter(match);
   if(start.length||!q)h.push('<div class="lgroup"><h3><i style="background:var(--teal)"></i>'+t("listStart")+'</h3><div class="rows">'+start.map(function(x){return rowHTML(x)}).join("")+'</div>'+earnRowGeneric(1)+'</div>');
@@ -865,7 +875,7 @@ function buildList(){var q=S.q.trim().toLowerCase(),h=[];
     if(parts.length)grid.push('<div class="lgroup"><h3><button class="chip" data-track="'+x.k+'" style="border:0;padding:0;font-size:16px;font-weight:700;color:var(--ink)"><i style="background:'+x.color+';width:10px;height:10px"></i>'+esc(nm(x))+'</button></h3>'+parts.join("")+'</div>')});
   if(grid.length)h.push('<div class="lgrid">'+grid.join("")+'</div>');
   if(!q||match(item("expert")))h.push('<div class="lgroup"><h3><i style="background:var(--gold)"></i>'+t("listExpert")+'</h3><div class="rows">'+rowHTML(item("expert"))+'</div></div>');
-  if(!h.length)h.push('<p class="lead">'+(S.lang==="ar"?"لا توجد نتائج.":"No courses match your search.")+'</p>');
+  if(h.length===1)h.push('<p class="lead">'+(S.lang==="ar"?"لا توجد نتائج.":"No courses match your search.")+'</p>');
   document.getElementById("listbody").innerHTML=h.join("")}
 function earnRowGeneric(lv){return '<div class="earnrow"><img src="'+bsrc(LVBADGE[lv])+'" alt=""><span><b>'+esc(L2(LEVELS[lv].earns))+'</b> · '+esc(L2(LEVELS[lv].exp))+'</span></div>'}
 document.getElementById("listbody").addEventListener("click",function(e){var n=e.target.closest("[data-id],[data-track]");if(n){S.sel=null;select(keyOf(n))}});
