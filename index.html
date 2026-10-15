@@ -418,9 +418,31 @@ html,body{margin:0;overflow:hidden}
 #ascent .lv{min-height:0!important}
 @media (min-width:641px){#ascent .lv h3{min-height:2.4em;display:flex;align-items:flex-end}}
 .lv .lv0{width:84px;height:84px;border-radius:50%;border:2px dashed var(--ink-3);display:grid;place-items:center;font-size:24px;font-weight:600;color:var(--ink-3);align-self:center;margin:2px 0 4px;box-sizing:border-box}
-.lv .meter{position:absolute;top:14px;inset-inline-end:14px;display:flex;gap:3px;align-items:flex-end}
-.lv .meter i{width:5px;border-radius:2px;background:var(--line-2)}
-.lv .meter i.on{background:var(--gold)}
+.ladder{--c0:#8590bd;--c1:#2bb3a6;--c2:#4a90e2;--c3:#6c6fe6;--c4:#a9b4d0;--c5:#e5b94e;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:-6px}
+.ladder .st{position:relative;height:40px;display:grid;place-items:center}
+.ladder .ln{position:absolute;top:50%;left:50%;width:calc(100% + 10px);height:4px;transform:translateY(-50%);border-radius:4px;overflow:hidden;background:var(--line-2)}
+.ladder .st:last-child .ln{display:none}
+.ladder .ln::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--a),var(--b))}
+.ladder .ln::after{content:"";position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:railflow 2.8s linear infinite}
+.ladder .s0{--a:var(--c0);--b:var(--c1)}.ladder .s1{--a:var(--c1);--b:var(--c2)}.ladder .s2{--a:var(--c2);--b:var(--c3)}.ladder .s3{--a:var(--c3);--b:var(--c4)}.ladder .s4{--a:var(--c4);--b:var(--c5)}
+.ladder .s1 .ln::after{animation-delay:.5s}.ladder .s2 .ln::after{animation-delay:1s}.ladder .s3 .ln::after{animation-delay:1.5s}.ladder .s4 .ln::after{animation-delay:2s}
+.ladder .nd{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;border:3px solid var(--a);background:var(--bg);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 0 0 4px color-mix(in srgb,var(--a) 22%,transparent)}
+.ladder .s5 .nd{--a:var(--c5);width:40px;height:40px;background:var(--c5);color:#1b1503;border-color:var(--c5)}
+.ladder .s0 .nd{border-style:dashed}
+.ladder .nd:hover{transform:scale(1.08)}
+@keyframes railflow{from{left:-40%}to{left:100%}}
+html[dir="rtl"] .ladder .ln{left:auto;right:50%}
+html[dir="rtl"] .ladder .ln::before{background:linear-gradient(270deg,var(--a),var(--b))}
+html[dir="rtl"] .ladder .ln::after{animation-name:railflowr}
+@keyframes railflowr{from{right:-40%;left:auto}to{right:100%;left:auto}}
+@media (prefers-reduced-motion:reduce){.ladder .ln::after{display:none}}
+.lv .lvprog-bar{display:none}
+@media (max-width:1100px){
+  .ladder{display:none}
+  .lv .lvprog-bar{display:block;height:5px;border-radius:5px;background:var(--line-2);overflow:hidden;margin:-2px 0 4px}
+  .lv .lvprog-bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#8590bd,#2bb3a6,#4a90e2,#6c6fe6,#a9b4d0,#e5b94e)}
+  html[dir="rtl"] .lv .lvprog-bar i{margin-inline-start:0}
+}
 #ways{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (max-width:640px){#ways{grid-template-columns:1fr}}
 /* map layout switch */
@@ -577,6 +599,7 @@ html[lang="ar"] .stepbar .k{letter-spacing:0;font-family:inherit}
       <div class="inner">
         <div class="lhead"><div><div class="eyebrow" data-t="lvEyebrow">Orientation and five levels</div><h2 style="margin-top:6px" data-t="lvTitle">From first course to Expert</h2></div><div class="lstats" id="lvstats"></div></div>
         <p class="lead" data-t="lvLead">Each level is aligned to a QFEmirates descriptor band. Each Level Credential unlocks the next level.</p>
+        <div class="ladder" id="ladder" aria-hidden="true"></div>
         <div class="ascent" id="ascent"></div>
         <div class="ways" id="ways"></div>
         <div class="callout" id="prior"></div>
@@ -992,7 +1015,8 @@ function statTile(n,l){return '<div class="lstat"><b>'+n+'</b><span>'+esc(l)+'</
 function buildPages(){var arS=S.lang==="ar",designs={};Object.keys(BADGE).forEach(function(k){designs[BADGE[k]]=1});Object.keys(LVBADGE).forEach(function(k){designs[LVBADGE[k]]=1});
   document.getElementById("lvstats").innerHTML=statTile(5,arS?"مستويات":"levels")+statTile(5,arS?"شهادات مستوى":"Level Credentials")+statTile("4–8",arS?"نطاقات الإطار الوطني":"QFEmirates bands")+statTile("⅓",arS?"حد التعلّم السابق":"max. via prior learning");
   document.getElementById("crstats").innerHTML=statTile(4,arS?"أنواع شارات موثّقة":"verified badge types")+statTile(3,arS?"أنواع شهادات":"credential types")+statTile(Object.keys(designs).length,arS?"تصاميم شارات":"badge designs")+statTile(1,arS?"محفظة رقمية (Parchment)":"digital wallet (Parchment)");
-  document.getElementById("ascent").innerHTML=LEVELS.map(function(l,i){return '<button class="lv" data-lv="'+l.n+'" style="--o:'+(.25+i*.15)+'"><span class="meter" aria-hidden="true">'+[1,2,3,4,5].map(function(m){return '<i class="'+(m<=l.n?'on':'')+'" style="height:'+(4+m*3)+'px"></i>'}).join("")+'</span>'+(l.n?'<img class="lvb" src="'+bsrc(LVBADGE[l.n])+'" alt="">':'<span class="lvb lv0">0</span>')+'<span class="k">'+(l.n?t("level")+" "+l.n:(S.lang==="ar"?"البداية":"Start"))+'</span><h3>'+esc(nm(l))+'</h3><p class="tg">'+esc(L2(l.tag))+' · '+esc(L2(l.band))+'</p><p class="rq">'+esc(L2(l.req))+'</p><div class="er"><small>'+t("unlocks")+'</small>'+esc(L2(l.unl))+'</div></button>'}).join("");
+  document.getElementById("ascent").innerHTML=LEVELS.map(function(l,i){return '<button class="lv" data-lv="'+l.n+'" style="--o:'+(.25+i*.15)+'"><span class="lvprog-bar" aria-hidden="true"><i style="width:'+(l.n*20)+'%;background-size:'+(l.n?500/l.n:100)+'% 100%"></i></span>'+(l.n?'<img class="lvb" src="'+bsrc(LVBADGE[l.n])+'" alt="">':'<span class="lvb lv0">0</span>')+'<span class="k">'+(l.n?t("level")+" "+l.n:(S.lang==="ar"?"البداية":"Start"))+'</span><h3>'+esc(nm(l))+'</h3><p class="tg">'+esc(L2(l.tag))+' · '+esc(L2(l.band))+'</p><p class="rq">'+esc(L2(l.req))+'</p><div class="er"><small>'+t("unlocks")+'</small>'+esc(L2(l.unl))+'</div></button>'}).join("");
+  document.getElementById("ladder").innerHTML=LEVELS.map(function(l){return '<div class="st s'+l.n+'"><span class="ln"></span><button type="button" class="nd" data-lv="'+l.n+'" tabindex="-1">'+l.n+'</button></div>'}).join("");
   document.getElementById("ways").innerHTML='<div class="way"><b>'+t("goDeeper")+'</b><span>'+t("goDeeperTx")+'</span></div><div class="way"><b>'+t("goWider")+'</b><span>'+t("goWiderTx")+'</span></div>';
   document.getElementById("prior").outerHTML='<div id="prior">'+priorHTML()+'</div>';
   function hb(l){return '<svg viewBox="-24 -24 48 48"><path d="'+hexP(21)+'" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2"/><text text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="600" fill="var(--gold)">'+l+'</text></svg>'}
@@ -1004,6 +1028,7 @@ function buildPages(){var arS=S.lang==="ar",designs={};Object.keys(BADGE).forEac
    :[["Engagement rewards · inside the LMS only, never credentials"],["Participation Record","Attending orientation, events and community sessions","Attendance logged","Automatic","Nothing","No","No"],["Points, Streaks, Achievements","Consistent activity and helping peers","Platform activity, daily cap","Automatic","Nothing","No","No"],["Verified badges · held in the digital wallet"],["Knowledge Badge","Understanding of a learning unit","Unit check at 80% or above","Automatic","Micro-credential","No","Yes"],["Skill Badge","Performing a defined skill in a task","Rubric at Secure or above","Assessor or automatic","Micro-credential","No","Yes"],["Practice Badge","Applying learning in own workplace","Validated workplace evidence, or prior learning","Assessor","Micro-credential","With level","Yes"],["Leadership Badge","Developing others","Mentoring cycle or leading a learning community","Assessor","Level 3 credential","3 years","Yes"],["Credentials · certify competence at a level"],["Micro-credential","Assessed competence across one course","Badges + evidence + summative assessment + reflection","Assessor, moderated","Level Credential","5 years*","Yes"],["Level Credential","Working at a level in a track","All required micro-credentials + level assessment","Automatic after quality check","Next level","5 years**","Yes"],["Expert Recognition","Sustained contribution to the profession","Contribution portfolio + panel","Panel","Top of framework","3 years, renewable","Yes, plus register"]];
   document.getElementById("tax").innerHTML='<thead><tr>'+t("typesH").map(function(x){return '<th>'+esc(x)+'</th>'}).join("")+'</tr></thead><tbody>'+TAX.map(function(r){return r.length===1?'<tr class="grp"><td colspan="7">'+esc(r[0])+'</td></tr>':'<tr><td class="nm">'+r.map(esc).join('</td><td>')+'</td></tr>'}).join("")+'</tbody>';
 }
+document.getElementById("ladder").addEventListener("click",function(e){var b=e.target.closest("[data-lv]");if(b){var c=document.querySelector('#ascent [data-lv="'+b.getAttribute("data-lv")+'"]');if(c)c.click()}});
 document.getElementById("ascent").addEventListener("click",function(e){var b=e.target.closest("[data-lv]");if(!b)return;var n=+b.getAttribute("data-lv");setView("net");S.sel=null;if(n>=2&&n<=4)select({kind:"track",k:S.track||"tl"});else select({kind:"item",id:n===0?"orient":n===1?"core":"expert"})});
 
 /* ===================================================================== quiz */
