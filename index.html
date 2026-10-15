@@ -414,6 +414,71 @@ html,body{margin:0;overflow:hidden}
 
 
 
+
+/* ============ Route view ============ */
+#view-rt{padding-top:68px}
+@media (min-width:901px){body.panel-open #view-rt{padding-right:420px}html[dir="rtl"] body.panel-open #view-rt{padding-right:22px;padding-left:420px}}
+.route{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.rhead{display:flex;flex-direction:column;gap:14px}
+.rhead .jchips{flex-wrap:wrap;overflow:visible;margin:0;padding:0}
+.rtitle{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rtitle svg{width:52px;height:52px;flex:none}
+.rtitle h2{margin:2px 0 2px;font-size:24px;color:var(--c)}
+.rtitle p{margin:0;font-size:13px;color:var(--ink-2)}
+.rtitle .racts{margin-inline-start:auto;display:flex;gap:8px;flex-wrap:wrap}
+.rscroll{overflow-x:auto;padding:8px 6px 14px;-webkit-overflow-scrolling:touch}
+.rtrack{position:relative;display:flex;gap:14px;min-width:1100px;align-items:flex-start}
+.rroad{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.rroad .rbase{fill:none;stroke:var(--line-2);stroke-width:14;stroke-linecap:round}
+.rroad .rline{fill:none;stroke-width:6;stroke-linecap:round}
+.rroad .rflow{fill:none;stroke:rgba(255,255,255,.75);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:2 22;animation:rflow 2.2s linear infinite}
+@keyframes rflow{to{stroke-dashoffset:-48}}
+.rstop{position:relative;z-index:1;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:calc((5 - var(--i)) * 34px)}
+.rmed{position:relative;width:96px;height:96px;border-radius:50%;border:0;background:var(--bg);display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 4px var(--bg),0 0 0 7px var(--sc),0 10px 30px rgba(0,0,0,.35);transition:transform .25s}
+.rmed:hover{transform:translateY(-3px) scale(1.04)}
+.rmed img{width:88px;height:88px}
+.rmed .lv0{width:70px;height:70px;border-radius:50%;border:2px dashed var(--ink-3);display:grid;place-items:center;font-size:22px;font-weight:700;color:var(--ink-3)}
+.rstop.s5 .rmed{width:112px;height:112px;box-shadow:0 0 0 4px var(--bg),0 0 0 8px var(--sc),0 0 40px rgba(229,185,78,.45)}
+.rstop.s5 .rmed img{width:104px;height:104px}
+.rmed .you{position:absolute;top:-30px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--gold);color:#071033;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.rmed .you::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-bottom:0;border-top-color:var(--gold)}
+.rlab{text-align:center;display:flex;flex-direction:column;gap:1px}
+.rlab .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sc);font-weight:700}
+html[lang="ar"] .rlab .k{letter-spacing:0;font-family:inherit;font-size:12px}
+.rlab b{font-size:15px}
+.rlab .tg{font-size:11.5px;color:var(--ink-3)}
+.rcards{width:100%;display:flex;flex-direction:column;gap:8px}
+.rcard{position:relative;display:flex;align-items:center;gap:9px;width:100%;text-align:start;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:8px 10px;cursor:pointer;transition:border-color .2s,transform .2s,background .2s;border-top:3px solid var(--sc)}
+.rcard:hover{transform:translateY(-2px);border-color:var(--sc);background:var(--card-h)}
+.rcard img,.rcard svg{width:46px;height:46px;flex:none}
+.rcard .tx{display:flex;flex-direction:column;min-width:0}
+.rcard .tx b{font-size:13px;line-height:1.25}
+.rcard .sh2{font-size:11px;color:var(--ink-3);margin-top:2px}
+.rcard .ck{position:absolute;top:6px;inset-inline-end:8px;width:20px;height:20px;border-radius:50%;background:#2bb3a6;color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+.rcard.held{opacity:.85}
+.rcard.next{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-soft)}
+.rcard .nxt{position:absolute;top:-9px;inset-inline-end:8px;background:var(--gold);color:#071033;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
+.rsoon{width:100%;text-align:center;font-size:12.5px;color:var(--ink-3);border:1px dashed var(--line-2);border-radius:14px;padding:12px 8px}
+.rearn{display:flex;align-items:center;gap:8px;width:100%;font-size:11.5px;color:var(--ink-2);border-top:1px dashed var(--line-2);padding-top:8px}
+.rearn img{width:28px;height:28px;flex:none}
+.rhint{margin:0;font-size:12.5px;color:var(--ink-3);text-align:center}
+html[data-theme="light"] .rroad .rflow{stroke:rgba(255,255,255,.95)}
+html[data-theme="light"] .rmed{background:#E8EDF4}
+html[data-theme="light"] .rmed .you,html[data-theme="light"] .rcard .nxt{color:#fff}
+@media (max-width:760px){
+  #view-rt{padding-top:60px}
+  .rtrack{min-width:0;flex-direction:column!important;gap:0;padding-inline-start:70px;padding-top:6px}
+  .rtrack::before{content:"";position:absolute;inset-inline-start:34px;top:40px;bottom:40px;width:6px;border-radius:6px;background:linear-gradient(#8590bd,#2bb3a6,#4a90e2,#6c6fe6,#a9b4d0,#e5b94e)}
+  .rroad{display:none}
+  .rstop{padding:0 0 26px;align-items:flex-start}
+  .rmed{position:absolute;inset-inline-start:-66px;top:-4px;width:58px;height:58px;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--sc)}
+  .rmed img{width:54px;height:54px}.rmed .lv0{width:44px;height:44px;font-size:16px}
+  .rstop.s5 .rmed{width:58px;height:58px}.rstop.s5 .rmed img{width:54px;height:54px}
+  .rmed .you{top:auto;bottom:-24px}
+  .rlab{text-align:start;min-height:52px;justify-content:center}
+  .rhead .jchips{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px}
+  .rtitle .racts{margin-inline-start:0;width:100%}
+}
 /* ============ day mode: soft brand palette (no white) ============ */
 .logo-l{display:none}
 :root[data-theme="light"]{
@@ -655,6 +720,8 @@ html[lang="ar"] .stepbar .k{letter-spacing:0;font-family:inherit}
       <div class="hint"><i></i><span data-t="hint">Point at a badge for a summary · select it to see where it leads</span></div>
     </section>
 
+    <section class="view page" id="view-rt" role="tabpanel" hidden><div class="route" id="route"></div></section>
+
     <section class="view page" id="view-jr" role="tabpanel" hidden><div class="inner jwrap"><div class="journey" id="journey"></div></div></section>
 
     <section class="view page listv" id="view-list" role="tabpanel" hidden><div class="inner" id="listbody"></div></section>
@@ -683,7 +750,7 @@ html[lang="ar"] .stepbar .k{letter-spacing:0;font-family:inherit}
       </div>
     </section>
 
-    <div class="mapswitch" id="mapswitch" role="group" aria-label="Map layout"><button type="button" data-mm="net"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M10 10.5L6.5 7.3M14 10.5l3.5-3.2M10 13.5l-3.5 3.2M14 13.5l3.5 3.2"/></svg><span data-t="mmOverview">Overview</span></button><button type="button" data-mm="jr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v16"/><circle cx="6" cy="5" r="1.8"/><circle cx="6" cy="12" r="1.8"/><circle cx="6" cy="19" r="1.8"/><path d="M11 5h8M11 12h8M11 19h6"/></svg><span data-t="mmStep">Step by step</span></button></div>
+    <div class="mapswitch" id="mapswitch" role="group" aria-label="Map layout"><button type="button" data-mm="net"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M10 10.5L6.5 7.3M14 10.5l3.5-3.2M10 13.5l-3.5 3.2M14 13.5l3.5 3.2"/></svg><span data-t="mmOverview">Overview</span></button><button type="button" data-mm="jr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v16"/><circle cx="6" cy="5" r="1.8"/><circle cx="6" cy="12" r="1.8"/><circle cx="6" cy="19" r="1.8"/><path d="M11 5h8M11 12h8M11 19h6"/></svg><span data-t="mmStep">Step by step</span></button><button type="button" data-mm="rt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="18" r="2"/><circle cx="20" cy="6" r="2"/><path d="M6 18h4a3 3 0 0 0 3-3V9a3 3 0 0 1 3-3h2"/></svg><span data-t="mmRoute">Route</span></button></div>
     <aside class="panel" id="panel" aria-live="polite">
       <button class="iconbtn close" id="close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div class="scroll" id="panel-body"></div>
@@ -726,7 +793,7 @@ var TRACKREG={digital:"",tl:"",ec:"",lead:"",research:"https://sep.sea.ac.ae/cou
 
 /* ===================================================================== text (EN + draft AR) */
 var T={en:{
- title:"SEA Learning Pathway",subtitle:"Sharjah Education Academy · Credential explorer",tabMap:"Map",mmOverview:"Overview",mmStep:"Step by step",tabList:"Tracks",tabLevels:"Levels",tabBadges:"Badges",
+ title:"SEA Learning Pathway",subtitle:"Sharjah Education Academy · Credential explorer",tabMap:"Map",mmOverview:"Overview",mmStep:"Step by step",mmRoute:"Route",tabList:"Tracks",tabLevels:"Levels",tabBadges:"Badges",
  myPath:"My pathway",modeLearner:"Learner",modeStaff:"Staff",draft:"FRAMEWORK V0 · PROPOSED",startHere:"Start here",guideTitle:"How the pathway works",
  guideLead:"Every learner starts in the centre and moves outward. Select a step to see it on the map.",shapeKey:"Shape and colour show the level",
  findTrack:"Find my track",playTour:"Play the tour",stopTour:"Stop the tour",hide:"Hide",howItWorks:"How it works",hint:"Point at a badge for a summary · select it to see where it leads",
@@ -755,7 +822,7 @@ var T={en:{
  illus:"Illustration of how a shared badge looks.",verified:"Verified by Sharjah Education Academy",shareLI:"Add to LinkedIn",shareQR:"QR code",shareLink:"Copy link",
  legendL:"Shape = level",typesH:["Type","What it recognises","How it is earned","Awarded","Stacks into","Expiry","Shareable"]
 },ar:{
- title:"مسار التعلّم في أكاديمية الشارقة للتعليم",subtitle:"أكاديمية الشارقة للتعليم · مستكشف الشهادات",tabMap:"الخريطة",mmOverview:"نظرة عامة",mmStep:"خطوة بخطوة",tabList:"المسارات",tabLevels:"المستويات",tabBadges:"الشارات",
+ title:"مسار التعلّم في أكاديمية الشارقة للتعليم",subtitle:"أكاديمية الشارقة للتعليم · مستكشف الشهادات",tabMap:"الخريطة",mmOverview:"نظرة عامة",mmStep:"خطوة بخطوة",mmRoute:"المسار المباشر",tabList:"المسارات",tabLevels:"المستويات",tabBadges:"الشارات",
  myPath:"مساري",modeLearner:"المتعلم",modeStaff:"الموظفون",draft:"الإطار · مسودة",startHere:"ابدأ من هنا",guideTitle:"كيف يعمل المسار",
  guideLead:"يبدأ كل متعلم من المركز ويتقدّم نحو الخارج. اختر خطوة لتراها على الخريطة.",shapeKey:"الشكل واللون يدلّان على المستوى",
  findTrack:"اعثر على مساري",playTour:"شغّل الجولة",stopTour:"أوقف الجولة",hide:"إخفاء",howItWorks:"كيف يعمل",hint:"مرّر المؤشر على شارة لملخص · اخترها لترى إلى أين تقود",
@@ -1172,9 +1239,9 @@ body.addEventListener("click",function(e){
   var n=e.target.closest("[data-id],[data-track]");if(n&&!n.hasAttribute("data-have")){stopTour();S.sel=null;select(keyOf(n))}});
 function setTrack(k){S.track=k;store("sea-track",k);if(k){JT=k;store("sea-jtrack",k)}paintMe();if(typeof buildJourney==="function")buildJourney()}
 function paintMe(){document.getElementById("mepct").textContent=S.track?overall(S.track)+"%":""}
-document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!=="list"&&S.view!=="jr")setView(narrow()?"jr":"net");if(S.sel&&S.sel.kind==="me")select(null);else{S.sel=null;select({kind:"me"})}};
-function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v||(x==="net"&&v==="jr"))});["net","jr","list","lv","cr"].forEach(function(x){document.getElementById("view-"+x).hidden=x!==v});var isMap=v==="net"||v==="jr";document.body.classList.toggle("v-map",isMap);document.body.classList.toggle("mm-jr",v==="jr");if(isMap){MM=v;if(arguments[1]!==false)store("sea-mapmode",v);document.querySelectorAll("[data-mm]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-mm")===v)})}
-  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"&&v!=="jr"&&v!=="lv"){document.body.classList.remove("panel-open")}else showPanel();if(v==="jr")buildJourney();if(arguments[1]!==false)store("sea-view",v)}
+document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!=="list"&&S.view!=="jr"&&S.view!=="rt")setView(narrow()?"jr":"net");if(S.sel&&S.sel.kind==="me")select(null);else{S.sel=null;select({kind:"me"})}};
+function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v||(x==="net"&&(v==="jr"||v==="rt")))});["net","jr","rt","list","lv","cr"].forEach(function(x){document.getElementById("view-"+x).hidden=x!==v});var isMap=v==="net"||v==="jr"||v==="rt";document.body.classList.toggle("v-map",isMap);document.body.classList.toggle("mm-jr",v==="jr"||v==="rt");if(isMap){MM=v;if(arguments[1]!==false)store("sea-mapmode",v);document.querySelectorAll("[data-mm]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-mm")===v)})}
+  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"&&v!=="jr"&&v!=="lv"&&v!=="rt"){document.body.classList.remove("panel-open")}else showPanel();if(v==="jr")buildJourney();if(v==="rt")buildRoute();if(arguments[1]!==false)store("sea-view",v)}
 var MM=store("sea-mapmode");["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x==="net"?(MM||(innerWidth<760?"jr":"net")):x)}});
 document.getElementById("mapswitch").addEventListener("click",function(e){var b=e.target.closest("[data-mm]");if(b)setView(b.getAttribute("data-mm"))});
 function listCount(){var q=S.q.trim().toLowerCase();if(!q)return 0;var tks=TRACKS.filter(function(x){return (x.en+" "+x.ar).toLowerCase().indexOf(q)>=0}).map(function(x){return x.k});
@@ -1259,7 +1326,47 @@ jEl.addEventListener("click",function(e){if(e.target.closest(".term"))return;
   if(e.target.closest("[data-golist]")){setView("list");return}
   var go=e.target.closest("[data-go]");if(go){setView("cr");return}
   var n=e.target.closest("[data-id]");if(n){S.sel=null;select({kind:"item",id:n.getAttribute("data-id")})}});
-var _render=render;render=function(){_render();buildJourney()};
+var _render=render;render=function(){_render();buildJourney();buildRoute()};
+
+
+/* ===================================================================== Route view: one track, Start → Expert as an ascending road */
+var rtEl=document.getElementById("route");
+var RCOL=["#8590bd","#2bb3a6","#4a90e2","#6c6fe6","#a9b4d0","#e5b94e"];
+function rtCard(z,k){var hd=isHeld(z.id),other=z.tracks.length===2?nm(tr(z.tracks[0]===k?z.tracks[1]:z.tracks[0])):"";
+  var cls="rcard"+(hd?" held":"")+(z.type==="tbc"?" tbc":"");
+  return '<button class="'+cls+'" data-id="'+z.id+'">'+thumb(z,46)+'<span class="tx"><b>'+esc(itemName(z))+'</b>'+(other?'<span class="sh2">⇄ '+esc(other)+'</span>':'<span class="sh2">'+esc(typeNm(z.type))+'</span>')+'</span>'+(hd?'<span class="ck">✓</span>':'')+'</button>'}
+function buildRoute(){if(!rtEl||S.view!=="rt")return;var ar=S.lang==="ar",k=jtrack(),x=tr(k),h=[];
+  var nx=(held.length||S.track===k)?nextFor(k):{},nid=nx.id;
+  h.push('<div class="rhead"><div class="jchips" role="tablist">'+TRACKS.map(function(z){return '<button type="button" data-jt="'+z.k+'" aria-pressed="'+(z.k===k)+'" style="--c:'+z.color+'"><i style="background:'+z.color+'"></i>'+esc(nm(z))+(S.track===z.k?'<span class="mine">✓</span>':'')+'</button>'}).join("")+'</div>');
+  h.push('<div class="rtitle" style="--c:'+x.color+'">'+embThumb(k,52)+'<div><div class="eyebrow">'+(ar?"مسارك من البداية إلى الخبير":"Your route from first step to Expert")+'</div><h2>'+esc(nm(x))+'</h2><p>'+esc(ar?x.dar:x.den)+'</p></div><div class="racts">'+regBtn(k)+(S.track!==k?'<button class="btn ghost" data-settrack="'+k+'">'+(ar?"اجعله مساري":"Set as mine")+'</button>':'')+'</div></div></div>');
+  var stops=[];
+  for(var n=0;n<=5;n++){var list;
+    if(n===0)list=[item("orient")];else if(n===1)list=[item("core1"),item("core2")];else if(n===5)list=[item("expert")];
+    else list=ITEMS.filter(function(z){return z.level===n&&z.tracks.indexOf(k)>=0&&visible(z)});
+    var hereLv=nid?item(nid).level:-1;
+    var med=n?'<img src="'+bsrc(LVBADGE[n])+'" alt="">':'<span class="lv0">0</span>';
+    var cards=list.length?list.map(function(z){var c=rtCard(z,k);if(z.id===nid&&!isHeld(z.id))c=c.replace('class="rcard','class="rcard next').replace('</button>','<span class="nxt">'+(ar?"التالي":"Next")+'</span></button>');return c}).join(""):'<div class="rsoon">'+t("emptyLevel")+'</div>';
+    var earn=(n>=1&&n<=4)?'<div class="rearn"><img src="'+bsrc(LVBADGE[n])+'" alt=""><span>'+(ar?"تمنح ":"Earns ")+'<b>'+esc(L2(LEVELS[n].earns))+'</b></span></div>':'';
+    stops.push('<div class="rstop s'+n+(n===hereLv?' here':'')+'" style="--sc:'+RCOL[n]+';--i:'+n+'"><button class="rmed" data-lv="'+n+'" aria-label="'+esc(nm(LEVELS[n]))+'">'+med+(n===hereLv?'<span class="you">'+(ar?"أنت هنا":"You are here")+'</span>':'')+'</button><div class="rlab"><span class="k">'+(n?t("level")+" "+n:(ar?"البداية":"Start"))+'</span><b>'+esc(nm(LEVELS[n]))+'</b><span class="tg">'+esc(L2(LEVELS[n].tag))+'</span></div><div class="rcards">'+cards+'</div>'+earn+'</div>')}
+  h.push('<div class="rscroll"><div class="rtrack" style="--c:'+x.color+'"><svg class="rroad" aria-hidden="true"></svg>'+stops.join("")+'</div></div>');
+  h.push('<p class="rhint">'+(ar?"اضغط على أي مستوى أو مقرر لعرض التفاصيل. ⇄ = يُحتسب لمسار آخر أيضًا.":"Select any level or course for details. ⇄ = also counts for another track.")+'</p>');
+  var sl=(rtEl.querySelector(".rscroll")||{}).scrollLeft||0;rtEl.innerHTML=h.join("");var sc=rtEl.querySelector(".rscroll");if(sc)sc.scrollLeft=sl;
+  var pr=rtEl.querySelector(".jchips [aria-pressed=true]"),cr=rtEl.querySelector(".jchips");if(pr&&cr){var cb=cr.getBoundingClientRect(),pb=pr.getBoundingClientRect();cr.scrollLeft+=(pb.left+pb.width/2)-(cb.left+cb.width/2)}
+  requestAnimationFrame(drawRoad)}
+function drawRoad(){var tk=rtEl.querySelector(".rtrack"),svg=rtEl.querySelector(".rroad");if(!tk||!svg)return;
+  var tb=tk.getBoundingClientRect();if(!tb.width)return;var pts=[].map.call(tk.querySelectorAll(".rmed"),function(m){var r=m.getBoundingClientRect();return [r.left-tb.left+r.width/2,r.top-tb.top+r.height/2]});
+  if(getComputedStyle(tk).flexDirection==="column"){svg.innerHTML="";return}
+  svg.setAttribute("width",tb.width);svg.setAttribute("height",tb.height);svg.setAttribute("viewBox","0 0 "+tb.width+" "+tb.height);
+  var d="M"+pts[0][0]+" "+pts[0][1];for(var i=1;i<pts.length;i++){var a=pts[i-1],b=pts[i],mx=(a[0]+b[0])/2;d+=" C"+mx+" "+a[1]+" "+mx+" "+b[1]+" "+b[0]+" "+b[1]}
+  var stops=RCOL.map(function(c,i){return '<stop offset="'+(i/5*100)+'%" stop-color="'+c+'"/>'}).join("");
+  var here=tk.querySelector(".rstop.here"),hi=here?+getComputedStyle(here).getPropertyValue("--i"):-1;
+  svg.innerHTML='<defs><linearGradient id="rgrad" x1="'+(S.lang==="ar"?1:0)+'" x2="'+(S.lang==="ar"?0:1)+'" y1="0" y2="0">'+stops+'</linearGradient></defs><path d="'+d+'" class="rbase"/><path d="'+d+'" class="rline" stroke="url(#rgrad)"/>'+(RM?'':'<path d="'+d+'" class="rflow"/>')}
+addEventListener("resize",function(){if(S.view==="rt")drawRoad()});
+rtEl.addEventListener("click",function(e){if(e.target.closest(".term"))return;
+  var c=e.target.closest("[data-jt]");if(c){JT=c.getAttribute("data-jt");store("sea-jtrack",JT);buildRoute();if(typeof buildJourney==="function")buildJourney();return}
+  var st=e.target.closest("[data-settrack]");if(st){setTrack(st.getAttribute("data-settrack"));buildRoute();return}
+  var lv=e.target.closest("[data-lv]");if(lv){select({kind:"level",n:+lv.getAttribute("data-lv")});return}
+  var n=e.target.closest("[data-id]");if(n){S.sel=null;select({kind:"item",id:n.getAttribute("data-id")})}});
 
 /* ===================================================================== phone step bar: steps show over the map, guide steps aside */
 var stepbar=document.getElementById("stepbar");
@@ -1275,7 +1382,7 @@ var _select=select;select=function(sel){_select(sel);
 /* ===================================================================== boot */
 if(store("sea-guide")==="off"||innerWidth<700)document.body.classList.add("guide-off");
 layout();setMode(S.mode);setLang(S.lang);paintTheme();
-var v0=store("sea-view");setView(v0&&["net","jr","list","lv","cr"].indexOf(v0)>=0?v0:(innerWidth<760?"jr":"net"),false);
+var v0=store("sea-view");setView(v0&&["net","jr","rt","list","lv","cr"].indexOf(v0)>=0?v0:(innerWidth<760?"jr":"net"),false);
 /* ===================================================================== direct links: ?course=research-ethics  ?track=research  ?level=2  ?lang=ar */
 (function(){var P;try{P=new URLSearchParams(location.search)}catch(e){return}
   var lg=P.get("lang");if(lg==="ar"||lg==="en")setLang(lg);
