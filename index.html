@@ -410,6 +410,8 @@ body.staff-off .draft{display:none}
 }
 @media (max-width:640px){.wallet{grid-template-columns:1fr}.search{flex:1 1 100%}.search input{width:100%}}
 html,body{margin:0;overflow:hidden}
+.tab .tcount{margin-inline-start:6px;display:inline-block;min-width:18px;padding:1px 6px;border-radius:999px;background:var(--gold);color:#fff;font-size:11px;font-weight:700;line-height:16px;text-align:center;font-variant-numeric:tabular-nums}
+.tab .tcount:empty{display:none}
 .stage{overflow:hidden}
 .guide .g-actions{flex-wrap:wrap}
 .guide .g-actions #quizbtn{flex:1 1 100%}
@@ -422,7 +424,7 @@ html,body{margin:0;overflow:hidden}
     <div class="t"><b data-t="title">SEA Learning Pathway</b><span data-t="subtitle">Sharjah Education Academy · Credential explorer</span></div>
     <div class="tabs" role="tablist" aria-label="Views">
       <button class="tab" role="tab" id="tab-net" aria-selected="true" data-t="tabMap">Map</button>
-      <button class="tab" role="tab" id="tab-list" aria-selected="false" data-t="tabList">Tracks</button>
+      <button class="tab" role="tab" id="tab-list" aria-selected="false"><span data-t="tabList">Tracks</span><span class="tcount" id="tabcount" aria-live="polite"></span></button>
       <button class="tab" role="tab" id="tab-lv" aria-selected="false" data-t="tabLevels">Levels</button>
       <button class="tab" role="tab" id="tab-cr" aria-selected="false" data-t="tabBadges">Badges</button>
     </div>
@@ -945,7 +947,9 @@ document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!==
 function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v);document.getElementById("view-"+x).hidden=x!==v});
   if(v==="list")buildList();if(v!=="net"&&v!=="list"){document.body.classList.remove("panel-open")}else showPanel();store("sea-v",v)}
 ["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x)}});
-var qi=document.getElementById("q");qi.addEventListener("input",function(){S.q=qi.value;var h=searchHits();document.getElementById("qcount").textContent=h&&S.q.trim()?t("results",{n:h.ids.length+h.tks.length}):"";if(S.view==="list")buildList();else{if(S.view!=="net")setView("list");applyHL()}});
+function listCount(){var q=S.q.trim().toLowerCase();if(!q)return 0;var tks=TRACKS.filter(function(x){return (x.en+" "+x.ar).toLowerCase().indexOf(q)>=0}).map(function(x){return x.k});
+  return ITEMS.filter(function(it){if(it.type==="tbc"||it.type==="nucleus")return false;if((it.en+" "+(it.ar||"")+" "+(it.sen||"")).toLowerCase().indexOf(q)>=0)return true;return it.tracks.some(function(k){return tks.indexOf(k)>=0})}).length}
+var qi=document.getElementById("q");qi.addEventListener("input",function(){S.q=qi.value;var n=listCount();document.getElementById("qcount").textContent=S.q.trim()?t("results",{n:n}):"";document.getElementById("tabcount").textContent=S.q.trim()?n:"";if(S.view==="list")buildList();else{if(S.view!=="net")setView("list");applyHL()}});
 function setMode(m){S.mode=m;store("sea-mode",m);document.getElementById("m-learner").setAttribute("aria-pressed",m==="learner");document.getElementById("m-staff").setAttribute("aria-pressed",m==="staff");document.body.classList.toggle("staff-off",m!=="staff");layout();buildSteps();render();if(S.view==="list")buildList();showPanel();buildLegend()}
 document.getElementById("m-learner").onclick=function(){setMode("learner")};document.getElementById("m-staff").onclick=function(){setMode("staff")};
 function setLang(l){S.lang=l;store("sea-lang",l);document.documentElement.lang=l;document.documentElement.dir=l==="ar"?"rtl":"ltr";
