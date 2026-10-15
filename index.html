@@ -1198,7 +1198,7 @@ function drawQuiz(){var Q=QZ[S.lang];var pr='<div class="qprog">'+Q.map(function
 qb.addEventListener("click",function(e){var o=e.target.closest("[data-o]");if(o){var opt=QZ[S.lang][qz.i].o[+o.getAttribute("data-o")][1];Object.keys(opt).forEach(function(k){if(k==="_s")qz.start=opt[k];else qz.score[k]=(qz.score[k]||0)+opt[k]});qz.i++;drawQuiz();return}
   if(e.target.closest("[data-qback]")){qz.i=Math.max(0,qz.i-1);drawQuiz();return}
   if(e.target.closest("[data-qretake]")){openQuiz();return}
-  var st=e.target.closest("[data-settrack]");if(st){setTrack(st.getAttribute("data-settrack"));quiz.hidden=true;setView(narrow()?"jr":"net");S.sel=null;select({kind:"me"})}});
+  var st=e.target.closest("[data-settrack]");if(st){setTrack(st.getAttribute("data-settrack"));quiz.hidden=true;setView("rt");S.sel=null;select({kind:"me"})}});
 document.getElementById("quiz-close").onclick=function(){quiz.hidden=true};
 quiz.addEventListener("click",function(e){if(e.target===quiz)quiz.hidden=true});
 document.getElementById("quizbtn").onclick=openQuiz;
@@ -1239,10 +1239,10 @@ body.addEventListener("click",function(e){
   var n=e.target.closest("[data-id],[data-track]");if(n&&!n.hasAttribute("data-have")){stopTour();S.sel=null;select(keyOf(n))}});
 function setTrack(k){S.track=k;store("sea-track",k);if(k){JT=k;store("sea-jtrack",k)}paintMe();if(typeof buildJourney==="function")buildJourney()}
 function paintMe(){document.getElementById("mepct").textContent=S.track?overall(S.track)+"%":""}
-document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!=="list"&&S.view!=="jr"&&S.view!=="rt")setView(narrow()?"jr":"net");if(S.sel&&S.sel.kind==="me")select(null);else{S.sel=null;select({kind:"me"})}};
-function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v||(x==="net"&&(v==="jr"||v==="rt")))});["net","jr","rt","list","lv","cr"].forEach(function(x){document.getElementById("view-"+x).hidden=x!==v});var isMap=v==="net"||v==="jr"||v==="rt";document.body.classList.toggle("v-map",isMap);document.body.classList.toggle("mm-jr",v==="jr"||v==="rt");if(isMap){MM=v;if(arguments[1]!==false)store("sea-mapmode",v);document.querySelectorAll("[data-mm]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-mm")===v)})}
-  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"&&v!=="jr"&&v!=="lv"&&v!=="rt"){document.body.classList.remove("panel-open")}else showPanel();if(v==="jr")buildJourney();if(v==="rt")buildRoute();if(arguments[1]!==false)store("sea-view",v)}
-var MM=store("sea-mapmode");["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x==="net"?(MM||(innerWidth<760?"jr":"net")):x)}});
+document.getElementById("mebtn").onclick=function(){if(S.view!=="net"&&S.view!=="list"&&S.view!=="jr"&&S.view!=="rt")setView("rt");if(S.sel&&S.sel.kind==="me")select(null);else{S.sel=null;select({kind:"me"})}};
+function setView(v){S.view=v;["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).setAttribute("aria-selected",x===v||(x==="net"&&(v==="jr"||v==="rt")))});["net","jr","rt","list","lv","cr"].forEach(function(x){document.getElementById("view-"+x).hidden=x!==v});var isMap=v==="net"||v==="jr"||v==="rt";document.body.classList.toggle("v-map",isMap);document.body.classList.toggle("mm-jr",v==="jr"||v==="rt");if(isMap){MM=v;if(arguments[1]!==false)store("sea-mapmode2",v);document.querySelectorAll("[data-mm]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-mm")===v)})}
+  if(v==="net")requestAnimationFrame(applyZ);if(v==="list")buildList();if(v!=="net"&&v!=="list"&&v!=="jr"&&v!=="lv"&&v!=="rt"){document.body.classList.remove("panel-open")}else showPanel();if(v==="jr")buildJourney();if(v==="rt")buildRoute();if(arguments[1]!==false)store("sea-view2",v)}
+var MM=store("sea-mapmode2");["net","list","lv","cr"].forEach(function(x){document.getElementById("tab-"+x).onclick=function(){setView(x==="net"?(MM||("rt")):x)}});
 document.getElementById("mapswitch").addEventListener("click",function(e){var b=e.target.closest("[data-mm]");if(b)setView(b.getAttribute("data-mm"))});
 function listCount(){var q=S.q.trim().toLowerCase();if(!q)return 0;var tks=TRACKS.filter(function(x){return (x.en+" "+x.ar).toLowerCase().indexOf(q)>=0}).map(function(x){return x.k});
   return ITEMS.filter(function(it){if(it.type==="tbc"||it.type==="nucleus")return false;if((it.en+" "+(it.ar||"")+" "+(it.sen||"")).toLowerCase().indexOf(q)>=0)return true;return it.tracks.some(function(k){return tks.indexOf(k)>=0})}).length}
@@ -1382,7 +1382,7 @@ var _select=select;select=function(sel){_select(sel);
 /* ===================================================================== boot */
 if(store("sea-guide")==="off"||innerWidth<700)document.body.classList.add("guide-off");
 layout();setMode(S.mode);setLang(S.lang);paintTheme();
-var v0=store("sea-view");setView(v0&&["net","jr","rt","list","lv","cr"].indexOf(v0)>=0?v0:(innerWidth<760?"jr":"net"),false);
+var v0=store("sea-view2");setView(v0&&["net","jr","rt","list","lv","cr"].indexOf(v0)>=0?v0:("rt"),false);
 /* ===================================================================== direct links: ?course=research-ethics  ?track=research  ?level=2  ?lang=ar */
 (function(){var P;try{P=new URLSearchParams(location.search)}catch(e){return}
   var lg=P.get("lang");if(lg==="ar"||lg==="en")setLang(lg);
@@ -1390,8 +1390,8 @@ var v0=store("sea-view");setView(v0&&["net","jr","rt","list","lv","cr"].indexOf(
   if(c){var lvl=null;Object.keys(LVBADGE).forEach(function(n){if(LVBADGE[n]===c&&c!=="expert-recognition")lvl=+n});
     if(lvl!==null){setView("lv",false);S.sel=null;select({kind:"level",n:lvl});return}
     var id=ITEMS.filter(function(x){return x.id===c||BADGE[x.id]===c})[0];
-    if(id){id=id.id;var it=item(id);if(it.tracks.length){JT=it.tracks[0]}setView(innerWidth<760?"jr":"net",false);S.sel=null;select({kind:"item",id:id});return}}
-  if(tk&&tr(tk)){JT=tk;setView(innerWidth<760?"jr":"net",false);S.sel=null;select({kind:"track",k:tk});return}
+    if(id){id=id.id;var it=item(id);if(it.tracks.length){JT=it.tracks[0]}setView("rt",false);S.sel=null;select({kind:"item",id:id});return}}
+  if(tk&&tr(tk)){JT=tk;setView("rt",false);S.sel=null;select({kind:"track",k:tk});return}
   if(lv!==null&&lv!==""&&LEVELS[+lv]){setView("lv",false);S.sel=null;select({kind:"level",n:+lv})}
 })();
 setTimeout(function(){net.classList.remove("enter")},60);
