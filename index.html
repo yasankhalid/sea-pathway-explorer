@@ -414,49 +414,56 @@ html,body{margin:0;overflow:hidden}
 
 
 
-/* ============ day mode refinement ============ */
+/* ============ day mode: soft brand palette (no white) ============ */
 .logo-l{display:none}
-html[data-theme="light"] .logo-d{display:none}
-html[data-theme="light"] .logo-l{display:block}
-html[data-theme="light"]{
-  --bg:#F5F7FB; --bg-2:#E6ECF6; --glow-a:rgba(31,91,181,.08); --glow-b:rgba(14,138,158,.06);
-  --ink:#14215C; --ink-2:#36427A; --ink-3:#5A6590;
-  --line:rgba(20,33,92,.11); --line-2:rgba(20,33,92,.2);
-  --glass:rgba(255,255,255,.94); --glass-2:#FFFFFF; --card:#FFFFFF; --card-h:#F3F6FC;
-  --gold:#1F5BB5; --gold-2:#2B6CC9; --gold-soft:rgba(31,91,181,.09);
-  --teal:#0E8A9E; --teal-soft:rgba(14,138,158,.10);
-  --shadow:0 12px 32px rgba(20,33,92,.10),0 2px 6px rgba(20,33,92,.05);
-  --t-digital:#2563C4; --t-tl:#4152C2; --t-ec:#0E8A9E; --t-lead:#3F4E80; --t-research:#1477BD; --t-assess:#5B6687; --t-incl:#13866F;
+:root[data-theme="light"]{
+  --bg:#D9E1EC; --bg-2:#CBD5E4; --glow-a:rgba(26,39,102,.10); --glow-b:rgba(14,138,158,.08);
+  --ink:#14215C; --ink-2:#34407A; --ink-3:#535E88;
+  --line:rgba(20,33,92,.13); --line-2:rgba(20,33,92,.22);
+  --glass:rgba(232,237,245,.96); --glass-2:#E6EBF3; --card:#E8EDF4; --card-h:#EEF2F8;
+  --gold:#2A5CAA; --gold-2:#3366A3; --gold-soft:rgba(42,92,170,.12);
+  --teal:#0E8090; --teal-soft:rgba(14,128,144,.12);
+  --shadow:0 10px 28px rgba(20,33,92,.12),0 2px 6px rgba(20,33,92,.06);
+  --t-digital:#2559B0; --t-tl:#3B4BB0; --t-ec:#0E8090; --t-lead:#36457A; --t-research:#14699F; --t-assess:#4F5A7E; --t-incl:#11735F;
 }
-html[data-theme="light"] body{background:linear-gradient(180deg,#F8FAFD 0%,#EEF2F9 100%)}
-html[data-theme="light"] .mast{background:#FFFFFF;box-shadow:0 1px 0 var(--line),0 4px 18px rgba(20,33,92,.05)}
-html[data-theme="light"] .lv,html[data-theme="light"] .row,html[data-theme="light"] .lgroup,html[data-theme="light"] .lstat,html[data-theme="light"] .wstep,html[data-theme="light"] .sharecard,html[data-theme="light"] .callout,html[data-theme="light"] .way,html[data-theme="light"] .jintro,html[data-theme="light"] .earnrow,html[data-theme="light"] .tbl-wrap,html[data-theme="light"] .stackrow,html[data-theme="light"] .earned>div{box-shadow:0 1px 2px rgba(20,33,92,.05),0 4px 14px rgba(20,33,92,.05);border-color:rgba(20,33,92,.10)}
-html[data-theme="light"] .row:hover,html[data-theme="light"] .lv:hover{box-shadow:0 2px 4px rgba(20,33,92,.06),0 10px 24px rgba(20,33,92,.09);border-color:var(--gold)}
-html[data-theme="light"] .guide,html[data-theme="light"] .panel{background:#FFFFFF}
+html[data-theme="light"] body{background:linear-gradient(180deg,#DFE6F0 0%,#D2DBE8 100%)}
+html[data-theme="light"] .backdrop{background-color:#D9E1EC}
+/* navy brand header: keeps the original logo */
+html[data-theme="light"] .mast{
+  --ink:#F1F2FA; --ink-2:rgba(241,242,250,.8); --ink-3:rgba(241,242,250,.58);
+  --line:rgba(241,242,250,.14); --line-2:rgba(241,242,250,.24); --glass-2:rgba(255,255,255,.08);
+  --gold:#5BC0EB; --gold-soft:rgba(91,192,235,.16); --bg:#1A2766;
+  background:#1A2766;color:var(--ink);border-bottom-color:transparent;box-shadow:0 4px 18px rgba(20,33,92,.18)}
+html[data-theme="light"] .mast .search input{color:#F1F2FA}
+/* cards and panels: mist, not white */
+html[data-theme="light"] .lv,html[data-theme="light"] .row,html[data-theme="light"] .lgroup,html[data-theme="light"] .lstat,html[data-theme="light"] .wstep,html[data-theme="light"] .sharecard,html[data-theme="light"] .callout,html[data-theme="light"] .way,html[data-theme="light"] .jintro,html[data-theme="light"] .earnrow,html[data-theme="light"] .tbl-wrap,html[data-theme="light"] .stackrow,html[data-theme="light"] .earned>div{background:var(--card);border-color:rgba(20,33,92,.12);box-shadow:0 1px 2px rgba(20,33,92,.05),0 3px 10px rgba(20,33,92,.05)}
+html[data-theme="light"] .row:hover,html[data-theme="light"] .lv:hover{background:var(--card-h);border-color:var(--gold)}
+html[data-theme="light"] .guide,html[data-theme="light"] .panel,html[data-theme="light"] .mcard,html[data-theme="light"] .tip{background:#E6EBF3}
+html[data-theme="light"] .jst .dot{background:var(--bg)}
+html[data-theme="light"] tr.grp td{background:rgba(20,33,92,.05)}
 /* map contrast */
 html[data-theme="light"] .lbl{fill:var(--ink);font-weight:600}
 html[data-theme="light"] .lbl.tbc{fill:var(--ink-3)}
-html[data-theme="light"] .tname{font-weight:700}
-html[data-theme="light"] .cfill{opacity:.08}
+html[data-theme="light"] .cfill{opacity:.09}
 html[data-theme="light"] .cring{opacity:.75;stroke-width:1.4}
 html[data-theme="light"] .cdots{opacity:.7}
 html[data-theme="light"] .link{opacity:.5}
 html[data-theme="light"] .link.spur{opacity:.45}
 html[data-theme="light"] .link.bridge{opacity:.65}
-html[data-theme="light"] .orbit{stroke:rgba(20,33,92,.16)}
-html[data-theme="light"] #net.dim .node:not(.hl) .lift{opacity:.22}
-html[data-theme="light"] #net.dim .lbl:not(.hl),html[data-theme="light"] #net.dim .tname:not(.hl){opacity:.22}
+html[data-theme="light"] .orbit{stroke:rgba(20,33,92,.18)}
+html[data-theme="light"] #net.dim .node:not(.hl) .lift{opacity:.25}
+html[data-theme="light"] #net.dim .lbl:not(.hl),html[data-theme="light"] #net.dim .tname:not(.hl){opacity:.25}
 html[data-theme="light"] .watermark{opacity:.05}
-/* text on blue = white in day mode */
+/* text on blue = white */
 html[data-theme="light"] .mapswitch button[aria-pressed="true"],html[data-theme="light"] .jst .row .nx,html[data-theme="light"] .tab .tcount{color:#FFFFFF}
-html[data-theme="light"] .btn.primary[disabled]{background:#C9D3E6;color:#4E5A80;opacity:1}
-/* level rail colours with enough contrast on white */
-html[data-theme="light"] .ladder{--c0:#8A93B5;--c1:#0E9A8E;--c2:#2F7BD8;--c3:#5257D6;--c4:#7C88AA;--c5:#D9A520}
-html[data-theme="light"] .ladder .nd{background:#FFFFFF}
-html[data-theme="light"] .ladder .ln::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent)}
-html[data-theme="light"] .lv .lvprog-bar i{background:linear-gradient(90deg,#8A93B5,#0E9A8E,#2F7BD8,#5257D6,#7C88AA,#D9A520)}
-html[data-theme="light"] .modal{background:rgba(20,33,92,.35)}
-html[data-theme="light"] .tip{background:#FFFFFF;box-shadow:var(--shadow)}
+html[data-theme="light"] .btn.primary[disabled]{background:#B9C4D8;color:#3F4B72;opacity:1}
+/* level rail */
+html[data-theme="light"] .ladder{--c0:#7D87AB;--c1:#0E8A80;--c2:#2A6FC9;--c3:#4B50C8;--c4:#6E7AA0;--c5:#C99714}
+html[data-theme="light"] .ladder .nd{background:#E8EDF4}
+html[data-theme="light"] .ladder .ln{background:rgba(20,33,92,.14)}
+html[data-theme="light"] .ladder .ln::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent)}
+html[data-theme="light"] .lv .lvprog-bar i{background:linear-gradient(90deg,#7D87AB,#0E8A80,#2A6FC9,#4B50C8,#6E7AA0,#C99714)}
+html[data-theme="light"] .modal{background:rgba(20,33,92,.4)}
 /* levels page: equal cards + level meter */
 #ascent{align-items:stretch}
 #ascent .lv{min-height:0!important}
