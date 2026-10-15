@@ -535,6 +535,37 @@ html[data-theme="light"] .amed{background:#E8EDF4}
   .alc .mlv{display:block;width:100%;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
   html[lang="ar"] .alc .mlv{letter-spacing:0;font-family:inherit;font-size:11px}
 }
+
+/* route polish */
+#view-rt,#view-jr{-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 52px,#000 76px);mask-image:linear-gradient(to bottom,transparent 0,transparent 52px,#000 76px)}
+@media (max-width:760px){#view-rt,#view-jr{-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 50px,#000 68px);mask-image:linear-gradient(to bottom,transparent 0,transparent 50px,#000 68px)}}
+.rtitle.compact h2{font-size:20px;margin:0 0 2px}
+.rtitle.compact p{font-size:12.5px}
+.rtitle.compact .eyebrow{display:none}
+.route{gap:10px}
+.rall{row-gap:6px}
+.rall .alc{min-height:40px;padding:2px 0}
+.rall .ahdr .amed{--sz:50px!important}
+.rall .ahdr .rlab .tg{display:none}
+.rall .alab{padding:6px 10px}
+.rall .alab svg{width:30px;height:30px}
+.rall .achip img,.rall .achip svg{width:26px;height:26px}
+.rall .achip{font-size:11.5px;padding:3px 10px 3px 3px}
+.rall .astart .amed{--sz:72px!important}.rall .al1 .amed{--sz:82px!important}.rall .aexp .amed{--sz:98px!important}
+.rlane.mine .alab{background:color-mix(in srgb,var(--tc) 18%,var(--card));border-color:var(--tc);box-shadow:0 0 0 2px color-mix(in srgb,var(--tc) 35%,transparent)}
+.ymine{font-style:normal;font-weight:700;color:var(--gold)}
+.alab .go{width:16px!important;height:16px!important;margin-inline-start:auto;color:var(--ink-3);flex:none;transition:transform .2s,color .2s}
+.alab:hover .go{color:var(--tc);transform:translateX(3px)}
+html[dir="rtl"] .alab:hover .go{transform:translateX(-3px)}
+.alab>span{min-width:0}
+.aroad .alane.mine .afan{opacity:1;stroke-width:5}.aroad .alane.mine .atrk{opacity:.6}
+.rall.intro .afan,.rall.intro .aline{stroke-dasharray:1400;stroke-dashoffset:1400;animation:adraw 1.3s ease-out forwards}
+.rall.intro .acell{animation:afade .6s ease-out both}
+.rall.intro .rlane .acell{animation-delay:.35s}.rall.intro .aexp{animation-delay:.8s}
+@keyframes adraw{to{stroke-dashoffset:0}}
+@keyframes afade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:760px){.rall .astart .amed,.rall .al1 .amed,.rall .aexp .amed{--sz:56px!important}}
+@media (max-height:820px) and (min-width:761px){.rhead .jchips button{padding:5px 10px;font-size:12px}}
 /* ============ day mode: soft brand palette (no white) ============ */
 .logo-l{display:none}
 :root[data-theme="light"]{
@@ -1426,14 +1457,15 @@ function aMed(n,size){return '<button class="amed s'+n+'" data-lv="'+n+'" style=
 function aLab(n){var ar=S.lang==="ar";return '<div class="rlab" style="--sc:'+RCOL[n]+'"><span class="k">'+(n?t("level")+" "+n:(ar?"البداية":"Start"))+'</span><b>'+esc(nm(LEVELS[n]))+'</b><span class="tg">'+esc(L2(LEVELS[n].tag))+'</span></div>'}
 function buildRouteAll(){var ar=S.lang==="ar",h=[];
   h.push('<div class="rhead"><div class="jchips" role="tablist">'+allChip(true)+TRACKS.map(function(z){return '<button type="button" data-jt="'+z.k+'" aria-pressed="false" style="--c:'+z.color+'"><i style="background:'+z.color+'"></i>'+esc(nm(z))+(S.track===z.k?'<span class="mine">✓</span>':'')+'</button>'}).join("")+'</div>');
-  h.push('<div class="rtitle" style="--c:var(--gold)"><div><div class="eyebrow">'+(ar?"المسار الكامل":"The full pathway")+'</div><h2>'+(ar?"مسار واحد، سبعة مسارات، وجهة واحدة":"One start, seven tracks, one destination")+'</h2><p>'+(ar?"يبدأ الجميع بالتهيئة والجوهر، ثم يختارون مسارًا من المستوى 2، وكل مسار يقود إلى الخبير. اضغط على اسم مسار لعرض طريقه وحده.":"Everyone starts with Orientation and the Core, chooses a track at Level 2, and every track leads to Expert. Select a track name to follow its route on its own.")+'</p></div></div></div>');
+  h.push('<div class="rtitle compact" style="--c:var(--gold)"><div><div class="eyebrow">'+(ar?"المسار الكامل":"The full pathway")+'</div><h2>'+(ar?"مسار واحد، سبعة مسارات، وجهة واحدة":"One start, seven tracks, one destination")+'</h2><p>'+(ar?"يبدأ الجميع بالتهيئة والجوهر، ثم يختارون مسارًا من المستوى 2، وكل مسار يقود إلى الخبير. اضغط على اسم مسار لعرض طريقه وحده.":"Everyone starts with Orientation and the Core, chooses a track at Level 2, and every track leads to Expert. Select a track name to follow its route on its own.")+'</p></div></div></div>');
   var g=[];
   g.push('<div class="acell astart" style="grid-column:1;grid-row:1/span 8">'+aMed(0,84)+aLab(0)+'<div class="acards">'+aChip(item("orient"))+'</div></div>');
   g.push('<div class="acell al1" style="grid-column:2;grid-row:1/span 8">'+aMed(1,92)+aLab(1)+'<div class="acards">'+aChip(item("core1"))+aChip(item("core2"))+'</div><div class="rearn"><img src="'+bsrc(LVBADGE[1])+'" alt=""><span><b>'+esc(L2(LEVELS[1].earns))+'</b></span></div></div>');
   [2,3,4].forEach(function(n,i){g.push('<div class="acell ahdr" style="grid-column:'+(5+i)+';grid-row:1">'+aMed(n,58)+aLab(n)+'</div>')});
   TRACKS.forEach(function(x,r){var row=r+2,cells=[2,3,4].map(function(n,i){var list=ITEMS.filter(function(z){return z.level===n&&z.tracks.indexOf(x.k)>=0&&visible(z)});
       return '<div class="acell alc" style="grid-column:'+(5+i)+';grid-row:'+row+'"><span class="mlv">'+t("level")+' '+n+'</span>'+(list.length?list.map(function(z){return aChip(z,x.k)}).join(""):'<span class="asoon">'+(ar?"قريبًا":"Coming soon")+'</span>')+'</div>'}).join("");
-    g.push('<div class="rlane" data-lane="'+x.k+'" style="--tc:'+x.color+'"><button class="acell alab" style="grid-column:4;grid-row:'+row+'" data-lanepick="'+x.k+'">'+embThumb(x.k,34)+'<span><b>'+esc(nm(x))+'</b><small>'+(ar?"عرض الطريق ←":"View route →")+'</small></span></button>'+cells+'</div>')});
+    var cnt=ITEMS.filter(function(z){return z.tracks.indexOf(x.k)>=0&&z.type!=="tbc"}).length,mine=S.track===x.k;
+    g.push('<div class="rlane'+(mine?' mine':'')+'" data-lane="'+x.k+'" style="--tc:'+x.color+'"><button class="acell alab" style="grid-column:4;grid-row:'+row+'" data-lanepick="'+x.k+'">'+embThumb(x.k,34)+'<span><b>'+esc(nm(x))+'</b><small>'+(mine?'<i class="ymine">'+(ar?"مساري":"Your track")+'</i> · ':'')+(ar?cnt+" مقررات":cnt+(cnt===1?" course":" courses"))+'</small></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="'+(ar?"M15 6l-6 6 6 6":"M9 6l6 6-6 6")+'"/></svg></button>'+cells+'</div>')});
   g.push('<div class="acell aexp" style="grid-column:9;grid-row:1/span 8">'+aMed(5,108)+aLab(5)+'<div class="acards">'+aChip(item("expert"))+'</div></div>');
   h.push('<div class="rscroll"><div class="rall"><svg class="aroad" aria-hidden="true"></svg>'+g.join("")+'</div></div>');
   h.push('<p class="rhint">'+(ar?"اضغط على أي مقرر أو مستوى لعرض التفاصيل. ⇄ = يُحتسب لمسارين، ويظهر في كليهما.":"Select any course or level for details. ⇄ = counts for 2 tracks, so it appears in both lanes.")+'</p>');
@@ -1448,7 +1480,8 @@ function drawAll(){var box=rtEl&&rtEl.querySelector(".rall"),svg=box&&box.queryS
   p.push('<path d="'+cv(out(m0),m0.cy,inn(m1),m1.cy)+'" class="abase"/><path d="'+cv(out(m0),m0.cy,inn(m1),m1.cy)+'" class="aline" stroke="url(#ag01)"/>');
   box.querySelectorAll(".rlane").forEach(function(ln){var c=getComputedStyle(ln).getPropertyValue("--tc").trim(),lab=R(ln.querySelector(".alab")),cells=ln.querySelectorAll(".alc"),last=R(cells[cells.length-1]),y=lab.cy;
     var f=cv(out(m1),m1.cy,inn(lab),y),lane="M"+out(lab)+" "+y+" L"+out(last)+" "+y,mg=cv(out(last),y,inn(m5),m5.cy);
-    p.push('<g class="alane" data-lane="'+ln.getAttribute("data-lane")+'" style="--tc:'+c+'"><path d="'+f+'" class="afan"/><path d="'+lane+'" class="atrk"/><path d="'+mg+'" class="afan"/>'+(RM?'':'<path d="'+f+'" class="aflow"/><path d="'+mg+'" class="aflow"/>')+'</g>')});
+    p.push('<g class="alane'+(ln.classList.contains("mine")?" mine":"")+'" data-lane="'+ln.getAttribute("data-lane")+'" style="--tc:'+c+'"><path d="'+f+'" class="afan"/><path d="'+lane+'" class="atrk"/><path d="'+mg+'" class="afan"/>'+(RM?'':'<path d="'+f+'" class="aflow"/><path d="'+mg+'" class="aflow"/>')+'</g>')});
+  if(!drawAll._anim&&!RM){drawAll._anim=1;box.classList.add("intro");setTimeout(function(){box.classList.remove("intro")},1600)}
   svg.innerHTML='<defs><linearGradient id="ag01" x1="'+(rtl?1:0)+'" x2="'+(rtl?0:1)+'"><stop offset="0" stop-color="'+RCOL[0]+'"/><stop offset="1" stop-color="'+RCOL[1]+'"/></linearGradient></defs>'+p.join("")}
 rtEl.addEventListener("click",function(e){var lp=e.target.closest("[data-lanepick]");if(lp){e.stopPropagation();RMODE="one";store("sea-rmode","one");JT=lp.getAttribute("data-lanepick");store("sea-jtrack",JT);buildRoute();if(typeof buildJourney==="function")buildJourney();rtEl.scrollIntoView({block:"start"})}},true);
 rtEl.addEventListener("mouseover",function(e){var c=e.target.closest(".achip,.alab");if(!c)return;var box=rtEl.querySelector(".rall");if(!box)return;box.classList.add("focus");
