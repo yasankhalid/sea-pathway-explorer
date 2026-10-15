@@ -469,7 +469,7 @@ html,body{margin:0;overflow:hidden}
 
     <section class="view page" id="view-lv" role="tabpanel" hidden>
       <div class="inner">
-        <div><div class="eyebrow" data-t="lvEyebrow">Orientation and five levels</div><h2 style="margin-top:6px" data-t="lvTitle">From first course to Expert</h2></div>
+        <div class="lhead"><div><div class="eyebrow" data-t="lvEyebrow">Orientation and five levels</div><h2 style="margin-top:6px" data-t="lvTitle">From first course to Expert</h2></div><div class="lstats" id="lvstats"></div></div>
         <p class="lead" data-t="lvLead">Each level is aligned to a QFEmirates descriptor band. Each Level Credential unlocks the next level.</p>
         <div class="ascent" id="ascent"></div>
         <div class="ways" id="ways"></div>
@@ -479,7 +479,7 @@ html,body{margin:0;overflow:hidden}
 
     <section class="view page" id="view-cr" role="tabpanel" hidden>
       <div class="inner">
-        <div><div class="eyebrow" data-t="crEyebrow">Badges and your digital wallet</div><h2 style="margin-top:6px" data-t="crTitle">Small achievements build into bigger credentials</h2></div>
+        <div class="lhead"><div><div class="eyebrow" data-t="crEyebrow">Badges and your digital wallet</div><h2 style="margin-top:6px" data-t="crTitle">Small achievements build into bigger credentials</h2></div><div class="lstats" id="crstats"></div></div>
         <div class="stackrow" id="stackrow"></div>
         <h2 data-t="walletTitle" style="font-size:19px">Your digital wallet</h2>
         <div class="wallet" id="wallet"></div>
@@ -881,7 +881,10 @@ function earnRowGeneric(lv){return '<div class="earnrow"><img src="'+bsrc(LVBADG
 document.getElementById("listbody").addEventListener("click",function(e){var n=e.target.closest("[data-id],[data-track]");if(n){S.sel=null;select(keyOf(n))}});
 
 /* ===================================================================== levels + badges pages */
-function buildPages(){
+function statTile(n,l){return '<div class="lstat"><b>'+n+'</b><span>'+esc(l)+'</span></div>'}
+function buildPages(){var arS=S.lang==="ar",designs={};Object.keys(BADGE).forEach(function(k){designs[BADGE[k]]=1});Object.keys(LVBADGE).forEach(function(k){designs[LVBADGE[k]]=1});
+  document.getElementById("lvstats").innerHTML=statTile(5,arS?"مستويات":"levels")+statTile(5,arS?"شهادات مستوى":"Level Credentials")+statTile("4–8",arS?"نطاقات الإطار الوطني":"QFEmirates bands")+statTile("⅓",arS?"حد التعلّم السابق":"max. via prior learning");
+  document.getElementById("crstats").innerHTML=statTile(4,arS?"أنواع شارات موثّقة":"verified badge types")+statTile(3,arS?"أنواع شهادات":"credential types")+statTile(Object.keys(designs).length,arS?"تصاميم شارات":"badge designs")+statTile(1,arS?"محفظة رقمية (Parchment)":"digital wallet (Parchment)");
   document.getElementById("ascent").innerHTML=LEVELS.map(function(l,i){return '<button class="lv" data-lv="'+l.n+'" style="--o:'+(.25+i*.15)+';min-height:'+(210+i*18)+'px">'+(l.n?'<img class="lvb" src="'+bsrc(LVBADGE[l.n])+'" alt="">':'')+'<span class="k">'+(l.n?t("level")+" "+l.n:(S.lang==="ar"?"البداية":"Start"))+'</span><h3>'+esc(nm(l))+'</h3><p class="tg">'+esc(L2(l.tag))+' · '+esc(L2(l.band))+'</p><p class="rq">'+esc(L2(l.req))+'</p><div class="er"><small>'+t("unlocks")+'</small>'+esc(L2(l.unl))+'</div></button>'}).join("");
   document.getElementById("ways").innerHTML='<div class="way"><b>'+t("goDeeper")+'</b><span>'+t("goDeeperTx")+'</span></div><div class="way"><b>'+t("goWider")+'</b><span>'+t("goWiderTx")+'</span></div><div class="way"><b>'+t("prior")+'</b><span>'+t("priorTx")+'</span></div>';
   document.getElementById("prior").outerHTML='<div id="prior">'+priorHTML()+'</div>';
