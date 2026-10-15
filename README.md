@@ -29,3 +29,15 @@ The framework data (levels, tracks, credentials, shared credits) is defined near
 Fonts load from Google Fonts, so the page looks best with an internet connection.
 
 Arabic badge titles are draft translations and should be approved before official use.
+
+## Learner features (v10)
+
+- **My pathway**: choose a track, tick badges you hold, see progress and your next step (saved in the browser only).
+- **Find my track**: a 3-question quiz that suggests a track.
+- **English / Arabic** with right-to-left layout (Arabic text is a draft for approval).
+- **Learner / Staff mode**: learner mode hides draft labels and "still to be added" placeholders.
+- **List view** (default on phones), **search**, plain-language term tooltips, course details with an Enrol button, prior-learning note and a digital wallet explainer.
+
+### Editing course details
+
+Open `index.html` and find `var COURSE=` (marked `EDIT HERE`). Fill in `hours`, `format`, `start`, `url`, `outcome_en`, `outcome_ar` for each course. Links for the prior-learning form and wallet help page go in `var LINKCFG=` just below.
