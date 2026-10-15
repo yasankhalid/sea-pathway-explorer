@@ -503,6 +503,9 @@ html[dir="rtl"] .ladder .ln::after{animation-name:railflowr}
 @media (max-width:640px){#ways{grid-template-columns:1fr}}
 #ascent .lv.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-soft),var(--shadow)}
 .ladder .nd.on{transform:scale(1.15)}
+.jreg{display:flex;margin-top:12px}
+#panel-body>.btn{flex:none;align-self:flex-start}
+#view-jr .jhead{margin-top:10px}
 /* keep the map clear of the legend */
 #view-net #net-wrap{top:62px}
 @media (min-width:641px){#view-net #net-wrap{bottom:96px}#view-net .legend{z-index:6}}
@@ -717,7 +720,9 @@ var COURSE={
  core1:{hours:"",format:"",start:"",url:"",outcome_en:"",outcome_ar:""},
  core2:{hours:"",format:"",start:"",url:"",outcome_en:"",outcome_ar:""}
 };
-var LINKCFG={priorLearning:"",wallet:"",catalogue:""}; /* EDIT HERE: prior-learning form, Parchment wallet help page, SEA course catalogue */
+var LINKCFG={priorLearning:"",wallet:"",catalogue:"",progress:"https://sea.badges.parchment.eu/"};
+/* EDIT HERE: Catalog registration link for each track's pathway hub (empty = "registration opens soon") */
+var TRACKREG={digital:"",tl:"",ec:"",lead:"",research:"https://sep.sea.ac.ae/courses/sea-pathway-hub-research-and-inquiry-beta",assess:"",incl:""}; /* EDIT HERE: prior-learning form, Parchment wallet help page, SEA course catalogue */
 
 /* ===================================================================== text (EN + draft AR) */
 var T={en:{
@@ -741,7 +746,7 @@ var T={en:{
  priorHow:"How to apply",priorSoon:"Application details coming soon",goDeeper:"Go deeper",goDeeperTx:"Next level, same track.",goWider:"Go wider",
  goWiderTx:"Add a track and reuse courses that count for 2 tracks.",stillAdd:"Still to be added",tbaShort:"more to add",
  quizTitle:"Find your track",quizLead:"Three quick questions. There are no wrong answers.",quizResult:"Your best match",quizAlso:"Also a good fit",
- setTrack:"Set as my track",retake:"Start again",startCore:"Start with Orientation and the two Core courses (Level 1).",
+ setTrack:"Set as my track",registerTrack:"Register for this track",registerSoon:"Track registration opens soon",officialProgress:"See my official progress",officialNote:"Registered for a track? Your verified badges and pathway progress are in your Parchment wallet, under My Pathways.",retake:"Start again",startCore:"Start with Orientation and the two Core courses (Level 1).",
  startL2:"You can begin Level 2 in this track.",startPrior:"Ask about prior learning: it can replace up to a third of a level.",
  next:"Next step →",explore:"Explore the map →",stepOf:"Step {n} of {m}",back:"Back",close:"Close",selectHint:"Select for details",held:"Held",
  named:"named courses",shared:"count for 2 tracks",listStart:"Start here: everyone",listExpert:"Top of the pathway",emptyLevel:"Courses coming soon",
@@ -770,7 +775,7 @@ var T={en:{
  priorHow:"كيفية التقديم",priorSoon:"تفاصيل التقديم قريبًا",goDeeper:"تعمّق أكثر",goDeeperTx:"المستوى التالي في المسار نفسه.",goWider:"توسّع أكثر",
  goWiderTx:"أضف مسارًا واستفد من المقررات التي تُحتسب لمسارين.",stillAdd:"قيد الإضافة",tbaShort:"قيد الإضافة",
  quizTitle:"اعثر على مسارك",quizLead:"ثلاثة أسئلة سريعة، ولا توجد إجابة خاطئة.",quizResult:"المسار الأنسب لك",quizAlso:"مناسب أيضًا",
- setTrack:"اجعله مساري",retake:"ابدأ من جديد",startCore:"ابدأ بالتهيئة ومقرري الجوهر (المستوى 1).",
+ setTrack:"اجعله مساري",registerTrack:"سجّل في هذا المسار",registerSoon:"التسجيل في المسار يفتح قريبًا",officialProgress:"اعرض تقدّمي الرسمي",officialNote:"هل سجّلت في مسار؟ شاراتك الموثّقة وتقدّمك في المسار موجودة في محفظتك على Parchment ضمن «مساراتي».",retake:"ابدأ من جديد",startCore:"ابدأ بالتهيئة ومقرري الجوهر (المستوى 1).",
  startL2:"يمكنك البدء بالمستوى 2 في هذا المسار.",startPrior:"اسأل عن التعلّم السابق: قد يحلّ محل ثلث المستوى.",
  next:"الخطوة التالية ←",explore:"استكشف الخريطة ←",stepOf:"الخطوة {n} من {m}",back:"رجوع",close:"إغلاق",selectHint:"اختر لعرض التفاصيل",held:"لديك",
  named:"مقررات مسمّاة",shared:"تُحتسب لمسارين",listStart:"ابدأ من هنا: للجميع",listExpert:"قمة المسار",emptyLevel:"مقررات قادمة قريبًا",
@@ -975,6 +980,7 @@ function earnedHTML(){function b(l,lab,sub){return '<div><svg viewBox="-16 -16 3
 function rowHTML(x,ctx){var sub=x.tracks.length===2?t("counts2")+" · "+nm(tr(x.tracks[0]===ctx?x.tracks[1]:x.tracks[0])):(t("level")+" "+x.level+" · "+typeNm(x.type));
   return '<button class="row'+(x.type==="tbc"?" tbc":"")+'" data-id="'+x.id+'">'+thumb(x,38)+'<span class="tx"><span class="nm">'+esc(itemName(x))+'</span><br><span class="sm">'+esc(sub)+'</span></span>'+(isHeld(x.id)?'<span class="ok">'+t("held")+'</span>':'')+'</button>'}
 function earnRow(lv,k){return '<div class="earnrow"><img src="'+bsrc(LVBADGE[lv])+'" alt=""><span>'+t("earnsIn",{c:'<b>'+esc(L2(LEVELS[lv].earns))+'</b>',t:esc(nm(tr(k)))})+'</span></div>'}
+function regBtn(k,ghost){var u=TRACKREG[k];return u?'<a class="btn '+(ghost?"ghost":"primary")+'" href="'+esc(u)+'" target="_blank" rel="noopener">'+t("registerTrack")+'</a>':'<button class="btn ghost" disabled>'+t("registerSoon")+'</button>'}
 function priorHTML(){return '<div class="callout"><b>'+t("prior")+'</b><span>'+t("priorTx")+' '+term("prior",S.lang==="ar"?"ما المقصود؟":"What is this?")+'</span>'+(LINKCFG.priorLearning?'<a class="btn ghost" href="'+esc(LINKCFG.priorLearning)+'" target="_blank" rel="noopener">'+t("priorHow")+'</a>':'<span class="illus">'+t("priorSoon")+'</span>')+'</div>'}
 function detailsHTML(it){var c=COURSE[it.id];if(!c)return "";function v(x){return x?'<dd>'+esc(x)+'</dd>':'<dd class="tba">'+t("tba")+'</dd>'}
   var out=S.lang==="ar"?c.outcome_ar:c.outcome_en;
@@ -1001,12 +1007,12 @@ function panelItem(it){var lv=LEVELS[it.level],h=[];
   body.innerHTML=h.join("")}
 function panelTrack(k){var x=tr(k),h=[];
   h.push('<div class="hero"><div class="art">'+embThumb(k,104)+'</div><div><div class="eyebrow">'+t("track")+' · '+(S.lang==="ar"?"من المستوى 2":"from Level 2")+'</div><h2 style="color:'+x.color+'">'+esc(nm(x))+'</h2></div></div><p>'+esc(S.lang==="ar"?x.dar:x.den)+'</p>');
-  if(S.track!==k)h.push('<button class="btn ghost" data-settrack="'+k+'">'+t("setTrack")+'</button>');
+  h.push('<div class="g-actions" style="flex-wrap:wrap">'+regBtn(k)+'</div>');if(S.track!==k)h.push('<button class="btn ghost" data-settrack="'+k+'">'+t("setTrack")+'</button>');
   [2,3,4].forEach(function(lv){var list=ITEMS.filter(function(z){return z.level===lv&&z.tracks.indexOf(k)>=0&&visible(z)});
     h.push('<div class="sec"><h3>'+t("level")+' '+lv+' · '+esc(nm(LEVELS[lv]))+'</h3><div class="rows">'+(list.length?list.map(function(z){return rowHTML(z,k)}).join(""):'<p class="note">'+t("emptyLevel")+'</p>')+'</div>'+earnRow(lv,k)+'</div>')});
   h.push(priorHTML());body.innerHTML=h.join("")}
 function panelMe(){var h=[];
-  h.push('<div class="eyebrow">'+t("me")+'</div><h2>'+t("me")+'</h2><p>'+t("meLead")+'</p>');
+  h.push('<div class="eyebrow">'+t("me")+'</div><h2>'+t("me")+'</h2><p>'+t("meLead")+'</p>');h.push('<div class="callout"><b>'+t("officialProgress")+'</b><span>'+t("officialNote")+'</span>'+(LINKCFG.progress?'<a class="btn primary" href="'+esc(LINKCFG.progress)+'" target="_blank" rel="noopener" style="align-self:flex-start">'+t("officialProgress")+'</a>':'')+'</div>');
   h.push('<div class="sec"><h3>'+t("chooseTrack")+'</h3><div class="trackpick">'+TRACKS.map(function(x){return '<button class="chip" data-pick="'+x.k+'" aria-pressed="'+(S.track===x.k)+'"><i style="background:'+x.color+'"></i>'+esc(nm(x))+'</button>'}).join("")+'</div></div>');
   if(!S.track){h.push('<p class="note">'+t("noTrack")+'</p><button class="btn primary" data-quiz="1">'+t("findTrack")+'</button>')}
   else{var p=trackProgress(S.track),nx=nextFor(S.track);
@@ -1121,7 +1127,7 @@ function drawQuiz(){var Q=QZ[S.lang];var pr='<div class="qprog">'+Q.map(function
   if(qz.i<Q.length){var c=Q[qz.i];qb.innerHTML='<div class="eyebrow">'+t("quizTitle")+'</div>'+pr+'<p class="note">'+t("quizLead")+'</p><p class="q" id="quiz-title">'+esc(c.q)+'</p><div class="opts">'+c.o.map(function(o,j){return '<button class="opt" data-o="'+j+'">'+esc(o[0])+'</button>'}).join("")+'</div>'+(qz.i?'<button class="link-btn" data-qback="1" style="align-self:flex-start">'+t("back")+'</button>':'');return}
   var r=Object.keys(qz.score).sort(function(a,b){return qz.score[b]-qz.score[a]});var best=r[0]||"tl",second=r[1];
   var sx={core:t("startCore"),l2:t("startL2"),prior:t("startPrior")}[qz.start];
-  qb.innerHTML='<div class="eyebrow">'+t("quizTitle")+'</div>'+pr+'<h2 id="quiz-title">'+t("quizResult")+'</h2><div class="result">'+embThumb(best,60)+'<div><b style="color:'+tr(best).color+'">'+esc(nm(tr(best)))+'</b><span class="note">'+esc(S.lang==="ar"?tr(best).dar:tr(best).den)+'</span></div></div><p>'+esc(sx)+'</p>'+(second?'<p class="note">'+t("quizAlso")+': <b>'+esc(nm(tr(second)))+'</b></p>':'')+'<div class="g-actions"><button class="btn primary" data-settrack="'+best+'">'+t("setTrack")+'</button><button class="btn ghost" data-qretake="1">'+t("retake")+'</button></div>'}
+  qb.innerHTML='<div class="eyebrow">'+t("quizTitle")+'</div>'+pr+'<h2 id="quiz-title">'+t("quizResult")+'</h2><div class="result">'+embThumb(best,60)+'<div><b style="color:'+tr(best).color+'">'+esc(nm(tr(best)))+'</b><span class="note">'+esc(S.lang==="ar"?tr(best).dar:tr(best).den)+'</span></div></div><p>'+esc(sx)+'</p>'+(second?'<p class="note">'+t("quizAlso")+': <b>'+esc(nm(tr(second)))+'</b></p>':'')+'<div class="g-actions" style="flex-wrap:wrap">'+regBtn(best)+'</div><div class="g-actions"><button class="btn ghost" data-settrack="'+best+'">'+t("setTrack")+'</button><button class="btn ghost" data-qretake="1">'+t("retake")+'</button></div>'}
 qb.addEventListener("click",function(e){var o=e.target.closest("[data-o]");if(o){var opt=QZ[S.lang][qz.i].o[+o.getAttribute("data-o")][1];Object.keys(opt).forEach(function(k){if(k==="_s")qz.start=opt[k];else qz.score[k]=(qz.score[k]||0)+opt[k]});qz.i++;drawQuiz();return}
   if(e.target.closest("[data-qback]")){qz.i=Math.max(0,qz.i-1);drawQuiz();return}
   if(e.target.closest("[data-qretake]")){openQuiz();return}
@@ -1228,7 +1234,7 @@ function buildJourney(){if(!jEl)return;var ar=S.lang==="ar",k=jtrack(),x=tr(k);
   jEl.style.setProperty("--c",x.color);var open=store("sea-jintro")!=="closed",h=[];
   h.push('<details class="jintro"'+(open?' open':'')+'><summary>'+(ar?"كيف يعمل المسار":"How the pathway works")+'</summary><p>'+(ar?"ابدأ من الأعلى وتقدّم نحو الأسفل. كل شارة "+term("micro","شهادة مصغّرة")+"، وعند إكمال متطلبات المستوى تحصل على "+term("levelcred","شهادة المستوى")+" التي تفتح المستوى التالي. اختر مسارًا لترى مقرراته.":"Start at the top and work down. Each badge is a "+term("micro")+". Finish what a level needs to earn its "+term("levelcred")+", which unlocks the next level. Pick a track below to see its courses.")+'</p><div class="acts"><button class="btn primary" data-quiz="1">'+t("findTrack")+'</button><button class="btn ghost" data-me="1">'+t("myPath")+'</button></div></details>');
   h.push('<div class="jlab">'+(ar?"اختر مسارًا":"Choose a track")+'</div><div class="jchips" role="tablist">'+TRACKS.map(function(z){return '<button type="button" data-jt="'+z.k+'" aria-pressed="'+(z.k===k)+'" style="--c:'+z.color+'"><i style="background:'+z.color+'"></i>'+esc(nm(z))+(S.track===z.k?'<span class="mine">✓</span>':'')+'</button>'}).join("")+'</div>');
-  h.push('<div class="jhead">'+embThumb(k,46)+'<div><h3>'+esc(nm(x))+'</h3><p>'+esc(ar?x.dar:x.den)+'</p></div>'+(S.track!==k?'<button class="btn ghost" data-settrack="'+k+'">'+(ar?"اجعله مساري":"Set as mine")+'</button>':'')+'</div>');
+  h.push('<div class="jreg">'+regBtn(k)+'</div>');h.push('<div class="jhead">'+embThumb(k,46)+'<div><h3>'+esc(nm(x))+'</h3><p>'+esc(ar?x.dar:x.den)+'</p></div>'+(S.track!==k?'<button class="btn ghost" data-settrack="'+k+'">'+(ar?"اجعله مساري":"Set as mine")+'</button>':'')+'</div>');
   var nx=(held.length||S.track===k)?nextFor(k):{},nid=nx.id;
   function rows(list,ctx){return '<div class="rows">'+list.map(function(z){var r=rowHTML(z,ctx);if(z.id===nid&&!isHeld(z.id))r=r.replace('<button class="row','<button class="row next').replace('</button>','<span class="nx">'+(ar?"التالي":"Next")+'</span></button>');if(S.sel&&S.sel.kind==="item"&&S.sel.id===z.id)r=r.replace('<button class="row','<button class="row on');return r}).join("")+'</div>'}
   function st(dot,lab,title,rq,body){return '<div class="jst"><span class="dot">'+dot+'</span><div class="k">'+lab+'</div><h4>'+esc(title)+'</h4>'+(rq?'<p class="rq">'+esc(rq)+'</p>':'')+body+'</div>'}

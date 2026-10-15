@@ -55,3 +55,7 @@ Open the explorer at a specific place (useful for Parchment badge criteria links
 - `?track=research` opens a track
 - `?level=3` opens a level
 - add `&lang=ar` for Arabic
+
+### Track registration and official progress
+
+In `index.html`, `var TRACKREG=` holds the Catalog registration link for each track's pathway hub course (empty shows "Track registration opens soon"). `LINKCFG.progress` is the Parchment link used by "See my official progress".
